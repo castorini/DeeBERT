@@ -32,6 +32,5 @@ python -um examples.run_glue \
   --save_steps 0 \
   --seed 42 \
   --output_dir ./saved_models/${MODEL_TYPE}-${MODEL_SIZE}/$DATASET/raw \
-  --plot_data_dir ./plotting/ \
   --overwrite_cache \
   --overwrite_output_dir
