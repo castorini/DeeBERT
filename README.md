@@ -1,8 +1,8 @@
 # DeeBERT
 
-This is the code base for the paper [DeeBERT: Dynamic Early Exiting for Accelerating BERT Inference](https://arxiv.org/abs/2004.12993).
+This is the code base for the paper [DeeBERT: Dynamic Early Exiting for Accelerating BERT Inference](https://www.aclweb.org/anthology/2020.acl-main.204/).
 
-
+Check [this page](https://huggingface.co/ji-xin) for models that we have trained in advance (the latest version of Huggingface Transformers Library is needed).
 
 
 ## Installation
@@ -57,14 +57,22 @@ This is for evaluating fine-tuned DeeBERT models, given a number of different ea
 
 ## Citation
 
-The paper is currently on arxiv and will appear in proceedings of ACL 2020 soon.
+Please cite our paper if you find the repository useful:
 ```
-@article{Xin2020deebert,
-	title={DeeBERT: Dynamic Early Exiting for Accelerating BERT Inference},
-	author={Ji Xin and Raphael Tang and Jaejun Lee and Yaoliang Yu and Jimmy Lin},
-	journal={ArXiv},
-	year={2020},
-	volume={abs/2004.12993}
+@inproceedings{xin-etal-2020-deebert,
+    title = "{D}ee{BERT}: Dynamic Early Exiting for Accelerating {BERT} Inference",
+    author = "Xin, Ji  and
+      Tang, Raphael  and
+      Lee, Jaejun  and
+      Yu, Yaoliang  and
+      Lin, Jimmy",
+    booktitle = "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics",
+    month = jul,
+    year = "2020",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/2020.acl-main.204",
+    pages = "2246--2251",
 }
 ```
 
