@@ -66,12 +66,27 @@ TF_XXX_PRETRAINED_MODEL_ARCHIVE_MAP = {
 ####################################################
 class TFXxxLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFXxxLayer, self).__init__(**kwargs)
         self.attention = TFXxxAttention(config, name='attention')
         self.intermediate = TFXxxIntermediate(config, name='intermediate')
         self.transformer_output = TFXxxOutput(config, name='output')
 
     def call(self, inputs, training=False):
+        """
+        Transformer computation.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         hidden_states, attention_mask, head_mask = inputs
 
         attention_outputs = self.attention([hidden_states, attention_mask, head_mask], training=training)
@@ -88,15 +103,48 @@ class TFXxxLayer(tf.keras.layers.Layer):
 ####################################################
 class TFXxxMainLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the component.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFXxxMainLayer, self).__init__(**kwargs)
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Resize token embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         raise NotImplementedError  # Not implemented yet in the library fr TF 2.0 models
 
     def _prune_heads(self, heads_to_prune):
+        """
+        Prune a list of the dispatches.
+
+        Args:
+            self: (todo): write your description
+            heads_to_prune: (list): write your description
+        """
         raise NotImplementedError  # Not implemented yet in the library fr TF 2.0 models
 
     def call(self, inputs, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, training=False):
+        """
+        Perform the encoder.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            attention_mask: (int): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (array): write your description
+            training: (bool): write your description
+        """
         # We allow three types of multi-inputs:
         # - traditional keyword arguments in the call method
         # - all the arguments provided as a dict in the first positional argument of call
@@ -296,10 +344,25 @@ class TFXxxModel(TFXxxPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the xxx.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXxxModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFXxxMainLayer(config, name='transformer')
 
     def call(self, inputs, **kwargs):
+        """
+        Execute the given inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
         return outputs
 
@@ -332,12 +395,27 @@ class TFXxxForMaskedLM(TFXxxPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize an embedding.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXxxForMaskedLM, self).__init__(config, *inputs, **kwargs)
 
         self.transformer = TFXxxMainLayer(config, name='transformer')
         self.mlm = TFXxxMLMHead(config, self.transformer.embeddings, name='mlm')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
 
         sequence_output = outputs[0]
@@ -377,6 +455,14 @@ class TFXxxForSequenceClassification(TFXxxPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXxxForSequenceClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -387,6 +473,13 @@ class TFXxxForSequenceClassification(TFXxxPreTrainedModel):
                                                 name='classifier')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
 
         pooled_output = outputs[1]
@@ -428,6 +521,14 @@ class TFXxxForTokenClassification(TFXxxPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXxxForTokenClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -438,6 +539,13 @@ class TFXxxForTokenClassification(TFXxxPreTrainedModel):
                                                 name='classifier')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
 
         sequence_output = outputs[0]
@@ -481,6 +589,14 @@ class TFXxxForQuestionAnswering(TFXxxPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXxxForQuestionAnswering, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -490,6 +606,13 @@ class TFXxxForQuestionAnswering(TFXxxPreTrainedModel):
                                                 name='qa_outputs')
 
     def call(self, inputs, **kwargs):
+        """
+        Perform the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
 
         sequence_output = outputs[0]

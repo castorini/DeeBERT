@@ -68,6 +68,34 @@ class XLNetModelTest(CommonTestCases.CommonModelTester):
                      seed=1,
                      type_vocab_size=2,
             ):
+            """
+            Initialize the embeddings.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                mem_len: (todo): write your description
+                clamp_len: (int): write your description
+                reuse_len: (bool): write your description
+                is_training: (bool): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                cutoffs: (float): write your description
+                hidden_size: (int): write your description
+                num_attention_heads: (int): write your description
+                d_inner: (int): write your description
+                num_hidden_layers: (int): write your description
+                max_position_embeddings: (int): write your description
+                type_sequence_label_size: (int): write your description
+                untie_r: (todo): write your description
+                bi_data: (todo): write your description
+                same_length: (int): write your description
+                initializer_range: (todo): write your description
+                seed: (int): write your description
+                type_vocab_size: (int): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -93,6 +121,12 @@ class XLNetModelTest(CommonTestCases.CommonModelTester):
             self.type_sequence_label_size = type_sequence_label_size
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the input_config_config_and_inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids_1 = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
             input_ids_2 = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
             segment_ids = ids_tensor([self.batch_size, self.seq_length], self.type_vocab_size)
@@ -132,11 +166,34 @@ class XLNetModelTest(CommonTestCases.CommonModelTester):
                     target_mapping, segment_ids, lm_labels, sequence_labels, is_impossible_labels)
 
         def set_seed(self):
+            """
+            Sets the seed.
+
+            Args:
+                self: (todo): write your description
+            """
             random.seed(self.seed)
             torch.manual_seed(self.seed)
 
         def create_and_check_xlnet_base_model(self, config, input_ids_1, input_ids_2, input_ids_q, perm_mask, input_mask,
                 target_mapping, segment_ids, lm_labels, sequence_labels, is_impossible_labels):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids_1: (str): write your description
+                input_ids_2: (str): write your description
+                input_ids_q: (str): write your description
+                perm_mask: (todo): write your description
+                input_mask: (str): write your description
+                target_mapping: (str): write your description
+                segment_ids: (str): write your description
+                lm_labels: (todo): write your description
+                sequence_labels: (todo): write your description
+                is_impossible_labels: (bool): write your description
+            """
             model = XLNetModel(config)
             model.eval()
 
@@ -165,6 +222,23 @@ class XLNetModelTest(CommonTestCases.CommonModelTester):
 
         def create_and_check_xlnet_lm_head(self, config, input_ids_1, input_ids_2, input_ids_q, perm_mask, input_mask,
                 target_mapping, segment_ids, lm_labels, sequence_labels, is_impossible_labels):
+            """
+            Create the network.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids_1: (str): write your description
+                input_ids_2: (str): write your description
+                input_ids_q: (str): write your description
+                perm_mask: (todo): write your description
+                input_mask: (str): write your description
+                target_mapping: (str): write your description
+                segment_ids: (str): write your description
+                lm_labels: (int): write your description
+                sequence_labels: (todo): write your description
+                is_impossible_labels: (bool): write your description
+            """
             model = XLNetLMHeadModel(config)
             model.eval()
 
@@ -205,6 +279,23 @@ class XLNetModelTest(CommonTestCases.CommonModelTester):
 
         def create_and_check_xlnet_qa(self, config, input_ids_1, input_ids_2, input_ids_q, perm_mask, input_mask,
                 target_mapping, segment_ids, lm_labels, sequence_labels, is_impossible_labels):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids_1: (str): write your description
+                input_ids_2: (str): write your description
+                input_ids_q: (str): write your description
+                perm_mask: (todo): write your description
+                input_mask: (todo): write your description
+                target_mapping: (str): write your description
+                segment_ids: (str): write your description
+                lm_labels: (todo): write your description
+                sequence_labels: (todo): write your description
+                is_impossible_labels: (bool): write your description
+            """
             model = XLNetForQuestionAnswering(config)
             model.eval()
 
@@ -263,6 +354,23 @@ class XLNetModelTest(CommonTestCases.CommonModelTester):
 
         def create_and_check_xlnet_sequence_classif(self, config, input_ids_1, input_ids_2, input_ids_q, perm_mask, input_mask,
                 target_mapping, segment_ids, lm_labels, sequence_labels, is_impossible_labels):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids_1: (str): write your description
+                input_ids_2: (str): write your description
+                input_ids_q: (str): write your description
+                perm_mask: (todo): write your description
+                input_mask: (todo): write your description
+                target_mapping: (todo): write your description
+                segment_ids: (str): write your description
+                lm_labels: (todo): write your description
+                sequence_labels: (todo): write your description
+                is_impossible_labels: (bool): write your description
+            """
             model = XLNetForSequenceClassification(config)
             model.eval()
 
@@ -286,6 +394,12 @@ class XLNetModelTest(CommonTestCases.CommonModelTester):
                 [[self.seq_length, self.batch_size, self.hidden_size]] * self.num_hidden_layers)
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for input inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids_1, input_ids_2, input_ids_q, perm_mask, input_mask,
                 target_mapping, segment_ids, lm_labels,
@@ -295,34 +409,76 @@ class XLNetModelTest(CommonTestCases.CommonModelTester):
 
 
     def setUp(self):
+        """
+        Sets upter model
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = XLNetModelTest.XLNetModelTester(self)
         self.config_tester = ConfigTester(self, config_class=XLNetConfig, d_inner=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_xlnet_base_model(self):
+        """
+        Test if the model was created
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester.set_seed()
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xlnet_base_model(*config_and_inputs)
 
     def test_xlnet_lm_head(self):
+        """
+        Creates a lmnet model.
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester.set_seed()
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xlnet_lm_head(*config_and_inputs) 
 
     def test_xlnet_sequence_classif(self):
+        """
+        Test for the model for a model.
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester.set_seed()
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xlnet_sequence_classif(*config_and_inputs)
 
     def test_xlnet_qa(self):
+        """
+        Test if the model was clicked
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester.set_seed()
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xlnet_qa(*config_and_inputs)
 
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test for a pre - based on - trained.
+
+        Args:
+            self: (todo): write your description
+        """
         cache_dir = "/tmp/transformers_test/"
         for model_name in list(XLNET_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             model = XLNetModel.from_pretrained(model_name, cache_dir=cache_dir)

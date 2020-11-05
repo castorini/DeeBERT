@@ -27,6 +27,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 def convert_tf_checkpoint_to_pytorch(tf_checkpoint_path, xxx_config_file, pytorch_dump_path):
+    """
+    Converts checkpoint_tf_checkpoint_path.
+
+    Args:
+        tf_checkpoint_path: (str): write your description
+        xxx_config_file: (str): write your description
+        pytorch_dump_path: (str): write your description
+    """
     # Initialise PyTorch model
     config = XxxConfig.from_json_file(xxx_config_file)
     print("Building PyTorch model from configuration: {}".format(str(config)))

@@ -62,6 +62,30 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
                      scope=None,
                      seed=1,
                      ):
+            """
+            Initialize a batch.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                mem_len: (todo): write your description
+                clamp_len: (int): write your description
+                is_training: (bool): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                cutoffs: (float): write your description
+                hidden_size: (int): write your description
+                d_embed: (int): write your description
+                num_attention_heads: (int): write your description
+                d_head: (todo): write your description
+                d_inner: (int): write your description
+                div_val: (todo): write your description
+                num_hidden_layers: (int): write your description
+                scope: (str): write your description
+                seed: (int): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -83,6 +107,12 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
             self.seed = seed
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the model and target and target.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids_1 = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
             input_ids_2 = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
 
@@ -106,10 +136,26 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
             return (config, input_ids_1, input_ids_2, lm_labels)
 
         def set_seed(self):
+            """
+            Sets the seed.
+
+            Args:
+                self: (todo): write your description
+            """
             random.seed(self.seed)
             torch.manual_seed(self.seed)
 
         def create_transfo_xl_model(self, config, input_ids_1, input_ids_2, lm_labels):
+            """
+            Vel factory function
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids_1: (str): write your description
+                input_ids_2: (str): write your description
+                lm_labels: (str): write your description
+            """
             model = TransfoXLModel(config)
             model.eval()
 
@@ -124,6 +170,13 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
             return outputs
 
         def check_transfo_xl_model_output(self, result):
+            """
+            Perform the model checking on the parent batch.
+
+            Args:
+                self: (todo): write your description
+                result: (todo): write your description
+            """
             self.parent.assertListEqual(
                 list(result["hidden_states_1"].size()),
                 [self.batch_size, self.seq_length, self.hidden_size])
@@ -139,6 +192,16 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
 
 
         def create_transfo_xl_lm_head(self, config, input_ids_1, input_ids_2, lm_labels):
+            """
+            Create an lm model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids_1: (str): write your description
+                input_ids_2: (str): write your description
+                lm_labels: (str): write your description
+            """
             model = TransfoXLLMHeadModel(config)
             model.eval()
 
@@ -158,6 +221,13 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
             return outputs
 
         def check_transfo_xl_lm_head_output(self, result):
+            """
+            Check for lm output. lm output.
+
+            Args:
+                self: (todo): write your description
+                result: (todo): write your description
+            """
             self.parent.assertListEqual(
                 list(result["loss_1"].size()),
                 [self.batch_size, self.seq_length])
@@ -179,6 +249,12 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
                 [[self.mem_len, self.batch_size, self.hidden_size]] * self.num_hidden_layers)
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for config inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids_1, input_ids_2, lm_labels) = config_and_inputs
             inputs_dict = {'input_ids': input_ids_1}
@@ -186,19 +262,43 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
 
 
     def setUp(self):
+        """
+        Set the transfoter model
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = TransfoXLModelTest.TransfoXLModelTester(self)
         self.config_tester = ConfigTester(self, config_class=TransfoXLConfig, d_embed=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_transfo_xl_model(self):
+        """
+        Test if xl_xl_model.
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester.set_seed()
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         output_result = self.model_tester.create_transfo_xl_model(*config_and_inputs)
         self.model_tester.check_transfo_xl_model_output(output_result)
 
     def test_transfo_xl_lm_head(self):
+        """
+        Test if lm_xlm.
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester.set_seed()
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         output_result = self.model_tester.create_transfo_xl_lm_head(*config_and_inputs)
@@ -206,6 +306,12 @@ class TransfoXLModelTest(CommonTestCases.CommonModelTester):
 
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test if a model from the same model.
+
+        Args:
+            self: (todo): write your description
+        """
         cache_dir = "/tmp/transformers_test/"
         for model_name in list(TRANSFO_XL_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             model = TransfoXLModel.from_pretrained(model_name, cache_dir=cache_dir)

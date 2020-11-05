@@ -28,6 +28,12 @@ from transformers import BERT_PRETRAINED_CONFIG_ARCHIVE_MAP, GPT2_PRETRAINED_CON
 class AutoTokenizerTest(unittest.TestCase):
     @pytest.mark.slow
     def test_tokenizer_from_pretrained(self):
+        """
+        Initialize a tokenizer from - only one - to - one.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         for model_name in list(BERT_PRETRAINED_CONFIG_ARCHIVE_MAP.keys())[:1]:
             tokenizer = AutoTokenizer.from_pretrained(model_name)

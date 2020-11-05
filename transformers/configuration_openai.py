@@ -119,16 +119,40 @@ class OpenAIGPTConfig(PretrainedConfig):
 
     @property
     def max_position_embeddings(self):
+        """
+        The maximum positions of the maximum positions.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_positions
 
     @property
     def hidden_size(self):
+        """
+        The number of the hidden hidden size.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_embd
 
     @property
     def num_attention_heads(self):
+        """
+        The number of available attention.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_head
 
     @property
     def num_hidden_layers(self):
+        """
+        Return the number of hidden hidden layers.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_layer

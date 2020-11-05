@@ -36,6 +36,11 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
 def get_setup_file():
+    """
+    Get the command line argument parser.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('-f')
     args = parser.parse_args()
@@ -44,6 +49,12 @@ def get_setup_file():
 class ExamplesTests(unittest.TestCase):
 
     def test_run_glue(self):
+        """
+        Run glue of the main program.
+
+        Args:
+            self: (todo): write your description
+        """
         stream_handler = logging.StreamHandler(sys.stdout)
         logger.addHandler(stream_handler)
 
@@ -68,6 +79,12 @@ class ExamplesTests(unittest.TestCase):
                 self.assertGreaterEqual(value, 0.75)
 
     def test_run_squad(self):
+        """
+        Run the test test.
+
+        Args:
+            self: (todo): write your description
+        """
         stream_handler = logging.StreamHandler(sys.stdout)
         logger.addHandler(stream_handler)
 
@@ -94,6 +111,12 @@ class ExamplesTests(unittest.TestCase):
             self.assertGreaterEqual(result['exact'], 30)
 
     def test_generation(self):
+        """
+        Test for generation.
+
+        Args:
+            self: (todo): write your description
+        """
         stream_handler = logging.StreamHandler(sys.stdout)
         logger.addHandler(stream_handler)
 

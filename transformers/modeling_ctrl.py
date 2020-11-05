@@ -40,10 +40,26 @@ CTRL_PRETRAINED_MODEL_ARCHIVE_MAP = {"ctrl": "https://storage.googleapis.com/sf-
 
 
 def angle_defn(pos, i, d_model_size):
+    """
+    Return the angle of the angle at pos.
+
+    Args:
+        pos: (int): write your description
+        i: (todo): write your description
+        d_model_size: (int): write your description
+    """
     angle_rates = 1 / torch.pow(10000, (2 * (i//2)) / d_model_size)
     return pos * angle_rates
 
 def positional_encoding(position, d_model_size, dtype):
+    """
+    Positional encoding of the position.
+
+    Args:
+        position: (int): write your description
+        d_model_size: (int): write your description
+        dtype: (todo): write your description
+    """
     # create the sinusoidal pattern for the positional encoding
     angle_rads = (angle_defn(torch.arange(position, dtype=dtype).unsqueeze(1),
                   torch.arange(d_model_size, dtype=dtype).unsqueeze(0),
@@ -56,6 +72,17 @@ def positional_encoding(position, d_model_size, dtype):
     return pos_encoding
 
 def scaled_dot_product_attention(q, k, v, mask, attention_mask=None, head_mask=None):
+    """
+    Compute dot product.
+
+    Args:
+        q: (todo): write your description
+        k: (todo): write your description
+        v: (todo): write your description
+        mask: (array): write your description
+        attention_mask: (int): write your description
+        head_mask: (todo): write your description
+    """
     # calculate attention
     matmul_qk = torch.matmul(q, k.permute(0,1,3,2))
 
@@ -82,6 +109,15 @@ def scaled_dot_product_attention(q, k, v, mask, attention_mask=None, head_mask=N
 
 class MultiHeadAttention(torch.nn.Module):
     def __init__(self, d_model_size, num_heads, output_attentions=False):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            d_model_size: (int): write your description
+            num_heads: (int): write your description
+            output_attentions: (todo): write your description
+        """
         super(MultiHeadAttention, self).__init__()
         self.output_attentions = output_attentions
         self.num_heads = num_heads
@@ -96,10 +132,31 @@ class MultiHeadAttention(torch.nn.Module):
         self.dense = torch.nn.Linear(d_model_size, d_model_size)
 
     def split_into_heads(self, x, batch_size):
+        """
+        Split a list of a multi - layer.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+            batch_size: (int): write your description
+        """
         x = x.reshape(batch_size, -1, self.num_heads, self.depth)
         return x.permute([0, 2, 1, 3])
 
     def forward(self, v, k, q, mask, layer_past=None, attention_mask=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            v: (todo): write your description
+            k: (todo): write your description
+            q: (todo): write your description
+            mask: (todo): write your description
+            layer_past: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+        """
         batch_size = q.shape[0]
 
         q = self.Wq(q)
@@ -129,6 +186,13 @@ class MultiHeadAttention(torch.nn.Module):
 
 
 def point_wise_feed_forward_network(d_model_size, dff):
+    """
+    Point - wise convolutional layer.
+
+    Args:
+        d_model_size: (int): write your description
+        dff: (todo): write your description
+    """
     return torch.nn.Sequential(torch.nn.Linear(d_model_size, dff),
                                torch.nn.ReLU(),
                                torch.nn.Linear(dff, d_model_size))
@@ -136,6 +200,17 @@ def point_wise_feed_forward_network(d_model_size, dff):
 
 class EncoderLayer(torch.nn.Module):
     def __init__(self, d_model_size, num_heads, dff, rate=0.1, output_attentions=False):
+        """
+        Initialize self.
+
+        Args:
+            self: (todo): write your description
+            d_model_size: (int): write your description
+            num_heads: (int): write your description
+            dff: (todo): write your description
+            rate: (todo): write your description
+            output_attentions: (todo): write your description
+        """
         super(EncoderLayer, self).__init__()
 
         self.multi_head_attention = MultiHeadAttention(d_model_size, num_heads, output_attentions)
@@ -148,6 +223,17 @@ class EncoderLayer(torch.nn.Module):
         self.dropout2 = torch.nn.Dropout(rate)
 
     def forward(self, x, mask, layer_past=None, attention_mask=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            mask: (todo): write your description
+            layer_past: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+        """
         normed = self.layernorm1(x)
         attn_outputs = self.multi_head_attention(normed, normed, normed, mask,
                                                       layer_past=layer_past,
@@ -273,6 +359,13 @@ class CTRLModel(CTRLPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(CTRLModel, self).__init__(config)
         self.output_hidden_states = config.output_hidden_states
         self.output_attentions = config.output_attentions
@@ -296,9 +389,22 @@ class CTRLModel(CTRLPreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of the embedded inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.w
 
     def set_input_embeddings(self, new_embeddings):
+        """
+        Parameters ---------- new_embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_embeddings: (todo): write your description
+        """
         self.w = new_embeddings
 
     def _prune_heads(self, heads_to_prune):
@@ -309,6 +415,19 @@ class CTRLModel(CTRLPreTrainedModel):
             self.h[layer].attn.prune_heads(heads)
 
     def forward(self, input_ids=None, past=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation. forward.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            past: (todo): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None and inputs_embeds is not None:
             raise ValueError("You cannot specify both input_ids and inputs_embeds at the same time")
         elif input_ids is not None:
@@ -463,6 +582,13 @@ class CTRLLMHeadModel(CTRLPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(CTRLLMHeadModel, self).__init__(config)
         self.transformer = CTRLModel(config)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=True)
@@ -470,10 +596,30 @@ class CTRLLMHeadModel(CTRLPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        : returns : class : class :.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head
 
     def forward(self, input_ids=None, past=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            past: (todo): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                past=past,
                                                attention_mask=attention_mask,

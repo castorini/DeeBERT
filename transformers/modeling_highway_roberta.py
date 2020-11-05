@@ -53,15 +53,35 @@ class RobertaModel(BertModel):
     base_model_prefix = "roberta"
 
     def __init__(self, config):
+        """
+        Initialize the calibration
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaModel, self).__init__(config)
 
         self.embeddings = RobertaEmbeddings(config)
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings.word_embeddings
 
     def set_input_embeddings(self, value):
+        """
+        Set the embeddings.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self.embeddings.word_embeddings = value
 
 
@@ -101,6 +121,13 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
     base_model_prefix = "roberta"
 
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.num_layers = config.num_hidden_layers
@@ -113,6 +140,21 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
                 inputs_embeds=None,
                 labels=None,
                 output_layer=-1, train_highway=False):
+        """
+        Perform forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+            output_layer: (todo): write your description
+            train_highway: (todo): write your description
+        """
 
         exit_layer = self.num_layers
         try:

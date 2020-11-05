@@ -543,6 +543,24 @@ class XLMTokenizer(PreTrainedTokenizer):
                  "<special6>", "<special7>", "<special8>", "<special9>"],
                  lang2id=None, id2lang=None, do_lowercase_and_remove_accent=True,
                  **kwargs):
+        """
+        Loads a corpus from a file.
+
+        Args:
+            self: (todo): write your description
+            vocab_file: (str): write your description
+            merges_file: (str): write your description
+            unk_token: (str): write your description
+            bos_token: (str): write your description
+            sep_token: (str): write your description
+            pad_token: (str): write your description
+            cls_token: (str): write your description
+            mask_token: (str): write your description
+            additional_special_tokens: (todo): write your description
+            lang2id: (str): write your description
+            id2lang: (str): write your description
+            do_lowercase_and_remove_accent: (todo): write your description
+        """
         super(XLMTokenizer, self).__init__(unk_token=unk_token, bos_token=bos_token,
                                            sep_token=sep_token, pad_token=pad_token,
                                            cls_token=cls_token, mask_token=mask_token,
@@ -572,6 +590,14 @@ class XLMTokenizer(PreTrainedTokenizer):
         self.cache = {}
 
     def moses_punct_norm(self, text, lang):
+        """
+        Returns a normalized punctuation string.
+
+        Args:
+            self: (todo): write your description
+            text: (str): write your description
+            lang: (str): write your description
+        """
         if lang not in self.cache_moses_punct_normalizer:
             punct_normalizer = sm.MosesPunctNormalizer(lang=lang)
             self.cache_moses_punct_normalizer[lang] = punct_normalizer
@@ -580,6 +606,14 @@ class XLMTokenizer(PreTrainedTokenizer):
         return punct_normalizer.normalize(text)
 
     def moses_tokenize(self, text, lang):
+        """
+        Tokenize a text.
+
+        Args:
+            self: (todo): write your description
+            text: (str): write your description
+            lang: (str): write your description
+        """
         if lang not in self.cache_moses_tokenizer:
             moses_tokenizer = sm.MosesTokenizer(lang=lang)
             self.cache_moses_tokenizer[lang] = moses_tokenizer
@@ -588,12 +622,27 @@ class XLMTokenizer(PreTrainedTokenizer):
         return moses_tokenizer.tokenize(text, return_str=False, escape=False)
 
     def moses_pipeline(self, text, lang):
+        """
+        Moses the given text.
+
+        Args:
+            self: (todo): write your description
+            text: (str): write your description
+            lang: (str): write your description
+        """
         text = replace_unicode_punct(text)
         text = self.moses_punct_norm(text, lang)
         text = remove_non_printing_char(text)
         return text
 
     def ja_tokenize(self, text):
+        """
+        Tokenize a text.
+
+        Args:
+            self: (todo): write your description
+            text: (str): write your description
+        """
         if self.ja_word_tokenizer is None:
             try:
                 import Mykytea
@@ -610,9 +659,22 @@ class XLMTokenizer(PreTrainedTokenizer):
 
     @property
     def vocab_size(self):
+        """
+        The length : class : class.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.encoder)
 
     def bpe(self, token):
+        """
+        Returns the first token.
+
+        Args:
+            self: (todo): write your description
+            token: (str): write your description
+        """
         word = tuple(token[:-1]) + (token[-1] + '</w>',)
         if token in self.cache:
             return self.cache[token]

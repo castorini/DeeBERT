@@ -30,6 +30,12 @@ class XLNetTokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = XLNetTokenizer
 
     def setUp(self):
+        """
+        Set tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         super(XLNetTokenizationTest, self).setUp()
 
         # We have a SentencePiece fixture for testing
@@ -37,15 +43,33 @@ class XLNetTokenizationTest(CommonTestCases.CommonTokenizerTester):
         tokenizer.save_pretrained(self.tmpdirname)
 
     def get_tokenizer(self, **kwargs):
+        """
+        Return a tokenizer instance.
+
+        Args:
+            self: (todo): write your description
+        """
         return XLNetTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"This is a test"
         output_text = u"This is a test"
         return input_text, output_text
 
 
     def test_full_tokenizer(self):
+        """
+        Returns a list of tokens.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = XLNetTokenizer(SAMPLE_VOCAB, keep_accents=True)
 
         tokens = tokenizer.tokenize(u'This is a test')
@@ -74,6 +98,12 @@ class XLNetTokenizationTest(CommonTestCases.CommonTokenizerTester):
                                         u'<unk>', u'.'])
 
     def test_tokenizer_lower(self):
+        """
+        Tokenizes tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = XLNetTokenizer(SAMPLE_VOCAB, do_lower_case=True)
         tokens = tokenizer.tokenize(u"I was born in 92000, and this is falsé.")
         self.assertListEqual(tokens, [SPIECE_UNDERLINE + u'', u'i', SPIECE_UNDERLINE + u'was', SPIECE_UNDERLINE + u'b',
@@ -83,6 +113,12 @@ class XLNetTokenizationTest(CommonTestCases.CommonTokenizerTester):
         self.assertListEqual(tokenizer.tokenize(u"H\u00E9llo"), [u"▁he", u"ll", u"o"])
 
     def test_tokenizer_no_lower(self):
+        """
+        Test if the tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = XLNetTokenizer(SAMPLE_VOCAB, do_lower_case=False)
         tokens = tokenizer.tokenize(u"I was born in 92000, and this is falsé.")
         self.assertListEqual(tokens, [SPIECE_UNDERLINE + u'I', SPIECE_UNDERLINE + u'was', SPIECE_UNDERLINE + u'b', u'or',
@@ -92,6 +128,12 @@ class XLNetTokenizationTest(CommonTestCases.CommonTokenizerTester):
 
     @pytest.mark.slow
     def test_sequence_builders(self):
+        """
+        Test for the sequence.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = XLNetTokenizer.from_pretrained("xlnet-base-cased")
 
         text = tokenizer.encode("sequence builders", add_special_tokens=False)

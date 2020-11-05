@@ -51,6 +51,13 @@ logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(messa
 logger = logging.getLogger(__name__)
 
 def accuracy(out, labels):
+    """
+    Calculate accuracy.
+
+    Args:
+        out: (array): write your description
+        labels: (todo): write your description
+    """
     outputs = np.argmax(out, axis=1)
     return np.sum(outputs == labels)
 
@@ -92,6 +99,11 @@ def pre_process_datasets(encoded_datasets, input_len, cap_length, start_token, d
     return tensor_datasets
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name', type=str, default='openai-gpt',
                         help='pretrained model name')

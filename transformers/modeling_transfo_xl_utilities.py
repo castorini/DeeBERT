@@ -31,6 +31,18 @@ import torch.nn.functional as F
 class ProjectedAdaptiveLogSoftmax(nn.Module):
     def __init__(self, n_token, d_embed, d_proj, cutoffs, div_val=1,
                  keep_order=False):
+        """
+        Parameters ---------- n_token : list of tokens ).
+
+        Args:
+            self: (todo): write your description
+            n_token: (int): write your description
+            d_embed: (int): write your description
+            d_proj: (str): write your description
+            cutoffs: (float): write your description
+            div_val: (todo): write your description
+            keep_order: (str): write your description
+        """
         super(ProjectedAdaptiveLogSoftmax, self).__init__()
 
         self.n_token = n_token
@@ -76,6 +88,16 @@ class ProjectedAdaptiveLogSoftmax(nn.Module):
         self.keep_order = keep_order
 
     def _compute_logit(self, hidden, weight, bias, proj):
+        """
+        Compute the log - likelihood.
+
+        Args:
+            self: (todo): write your description
+            hidden: (todo): write your description
+            weight: (str): write your description
+            bias: (todo): write your description
+            proj: (todo): write your description
+        """
         if proj is None:
             logit = F.linear(hidden, weight, bias=bias)
         else:

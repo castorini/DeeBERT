@@ -73,32 +73,90 @@ TF_WEIGHTS_NAME = 'model.ckpt'
 CONFIG_NAME = "config.json"
 
 def is_torch_available():
+    """
+    Returns true if the current availability?
+
+    Args:
+    """
     return _torch_available
 
 def is_tf_available():
+    """
+    Return true if all tensors are available.
+
+    Args:
+    """
     return _tf_available
 
 if not six.PY2:
     def add_start_docstrings(*docstr):
+        """
+        Decorator to add docstrings.
+
+        Args:
+            docstr: (str): write your description
+        """
         def docstring_decorator(fn):
+            """
+            R decorator for decorates docstring.
+
+            Args:
+                fn: (todo): write your description
+            """
             fn.__doc__ = ''.join(docstr) + fn.__doc__
             return fn
         return docstring_decorator
 
     def add_end_docstrings(*docstr):
+        """
+        A decorator to add docstring.
+
+        Args:
+            docstr: (str): write your description
+        """
         def docstring_decorator(fn):
+            """
+            Decorator for docstring decorators.
+
+            Args:
+                fn: (todo): write your description
+            """
             fn.__doc__ = fn.__doc__ + ''.join(docstr)
             return fn
         return docstring_decorator
 else:
     # Not possible to update class docstrings on python2
     def add_start_docstrings(*docstr):
+        """
+        Decorator for docstring docstring is_start.
+
+        Args:
+            docstr: (str): write your description
+        """
         def docstring_decorator(fn):
+            """
+            Decorator to register a function that function.
+
+            Args:
+                fn: (todo): write your description
+            """
             return fn
         return docstring_decorator
 
     def add_end_docstrings(*docstr):
+        """
+        Add endpoints to the endpoints.
+
+        Args:
+            docstr: (str): write your description
+        """
         def docstring_decorator(fn):
+            """
+            Decorator to register a function that function.
+
+            Args:
+                fn: (todo): write your description
+            """
             return fn
         return docstring_decorator
 
@@ -206,6 +264,12 @@ def s3_request(func):
 
     @wraps(func)
     def wrapper(url, *args, **kwargs):
+        """
+        Decorator for url.
+
+        Args:
+            url: (str): write your description
+        """
         try:
             return func(url, *args, **kwargs)
         except ClientError as exc:
@@ -235,6 +299,14 @@ def s3_get(url, temp_file, proxies=None):
 
 
 def http_get(url, temp_file, proxies=None):
+    """
+    Download http request.
+
+    Args:
+        url: (str): write your description
+        temp_file: (todo): write your description
+        proxies: (str): write your description
+    """
     req = requests.get(url, stream=True, proxies=proxies)
     content_length = req.headers.get('Content-Length')
     total = int(content_length) if content_length is not None else None

@@ -147,24 +147,61 @@ class XLNetConfig(PretrainedConfig):
 
     @property
     def max_position_embeddings(self):
+        """
+        The number of the maximum position.
+
+        Args:
+            self: (todo): write your description
+        """
         return -1
 
     @property
     def vocab_size(self):
+        """
+        The size of the vocabulary.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_token
 
     @vocab_size.setter
     def vocab_size(self, value):
+        """
+        Set the vocab size.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self.n_token = value
 
     @property
     def hidden_size(self):
+        """
+        The size of the d_model.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.d_model
 
     @property
     def num_attention_heads(self):
+        """
+        The number of available attention.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_head
 
     @property
     def num_hidden_layers(self):
+        """
+        Return the number of hidden hidden layers.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_layer

@@ -58,6 +58,12 @@ class TFAutoModel(object):
         This class cannot be instantiated using `__init__()` (throws an error).
     """
     def __init__(self):
+        """
+        Initialize the environment.
+
+        Args:
+            self: (todo): write your description
+        """
         raise EnvironmentError("TFAutoModel is designed to be instantiated "
             "using the `TFAutoModel.from_pretrained(pretrained_model_name_or_path)` method.")
 
@@ -182,6 +188,12 @@ class TFAutoModelWithLMHead(object):
         This class cannot be instantiated using `__init__()` (throws an error).
     """
     def __init__(self):
+        """
+        Initialize the environment.
+
+        Args:
+            self: (todo): write your description
+        """
         raise EnvironmentError("TFAutoModelWithLMHead is designed to be instantiated "
             "using the `TFAutoModelWithLMHead.from_pretrained(pretrained_model_name_or_path)` method.")
 
@@ -306,6 +318,12 @@ class TFAutoModelForSequenceClassification(object):
         This class cannot be instantiated using `__init__()` (throws an error).
     """
     def __init__(self):
+        """
+        Initialize the environment.
+
+        Args:
+            self: (todo): write your description
+        """
         raise EnvironmentError("TFAutoModelWithLMHead is designed to be instantiated "
             "using the `TFAutoModelWithLMHead.from_pretrained(pretrained_model_name_or_path)` method.")
 
@@ -419,6 +437,12 @@ class TFAutoModelForQuestionAnswering(object):
         This class cannot be instantiated using `__init__()` (throws an error).
     """
     def __init__(self):
+        """
+        Initialize the environment.
+
+        Args:
+            self: (todo): write your description
+        """
         raise EnvironmentError("TFAutoModelWithLMHead is designed to be instantiated "
             "using the `TFAutoModelWithLMHead.from_pretrained(pretrained_model_name_or_path)` method.")
 

@@ -1,5 +1,10 @@
 # coding: utf8
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     import sys
     if (len(sys.argv) < 4 or len(sys.argv) > 6) or sys.argv[1] not in ["bert", "gpt", "transfo_xl", "gpt2", "xlnet", "xlm"]:
         print(

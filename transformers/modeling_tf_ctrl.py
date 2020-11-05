@@ -33,10 +33,25 @@ logger = logging.getLogger(__name__)
 TF_CTRL_PRETRAINED_MODEL_ARCHIVE_MAP = {"ctrl": "https://s3.amazonaws.com/models.huggingface.co/bert/ctrl-tf_model.h5"}
 
 def angle_defn(pos, i, d_model_size):
+    """
+    Returns the angle of the angle i.
+
+    Args:
+        pos: (int): write your description
+        i: (todo): write your description
+        d_model_size: (int): write your description
+    """
     angle_rates = 1 / np.power(10000, (2 * (i//2)) / np.float32(d_model_size))
     return pos * angle_rates
 
 def positional_encoding(position, d_model_size):
+    """
+    Positional encoding for the model.
+
+    Args:
+        position: (int): write your description
+        d_model_size: (int): write your description
+    """
     # create the sinusoidal pattern for the positional encoding
     angle_rads = angle_defn(np.arange(position)[:, np.newaxis],
                             np.arange(d_model_size)[np.newaxis, :],
@@ -50,6 +65,17 @@ def positional_encoding(position, d_model_size):
     return pos_encoding
 
 def scaled_dot_product_attention(q, k, v, mask, attention_mask=None, head_mask=None):
+    """
+    Compute the attention.
+
+    Args:
+        q: (todo): write your description
+        k: (todo): write your description
+        v: (todo): write your description
+        mask: (array): write your description
+        attention_mask: (int): write your description
+        head_mask: (todo): write your description
+    """
     # calculate attention
     matmul_qk = tf.matmul(q, k, transpose_b=True)
     
@@ -76,6 +102,15 @@ def scaled_dot_product_attention(q, k, v, mask, attention_mask=None, head_mask=N
 
 class TFMultiHeadAttention(tf.keras.layers.Layer):
     def __init__(self, d_model_size, num_heads, output_attentions=False, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            d_model_size: (int): write your description
+            num_heads: (int): write your description
+            output_attentions: (todo): write your description
+        """
         super(TFMultiHeadAttention, self).__init__(**kwargs)
         self.output_attentions = output_attentions
         self.num_heads = num_heads
@@ -90,10 +125,26 @@ class TFMultiHeadAttention(tf.keras.layers.Layer):
         self.dense = tf.keras.layers.Dense(d_model_size, name='dense')
 
     def split_into_heads(self, x, batch_size):
+        """
+        Split the tensor.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            batch_size: (int): write your description
+        """
         x = tf.reshape(x, (batch_size, -1, self.num_heads, self.depth))
         return tf.transpose(x, perm=[0, 2, 1, 3])
 
     def call(self, inputs, training=False):
+        """
+        Perform the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         v, k, q, mask, layer_past, attention_mask, head_mask = inputs
         batch_size = q.shape[0]
 
@@ -124,6 +175,14 @@ class TFMultiHeadAttention(tf.keras.layers.Layer):
 
 
 def point_wise_feed_forward_network(d_model_size, dff, name=""):
+    """
+    The keras model.
+
+    Args:
+        d_model_size: (int): write your description
+        dff: (todo): write your description
+        name: (str): write your description
+    """
     return tf.keras.Sequential([
             tf.keras.layers.Dense(dff, activation='relu', name="0"), 
             tf.keras.layers.Dense(d_model_size, name="2")
@@ -132,6 +191,18 @@ def point_wise_feed_forward_network(d_model_size, dff, name=""):
 
 class TFEncoderLayer(tf.keras.layers.Layer):
     def __init__(self, d_model_size, num_heads, dff, rate=0.1, layer_norm_epsilon=1e-6, output_attentions=False, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            d_model_size: (int): write your description
+            num_heads: (int): write your description
+            dff: (todo): write your description
+            rate: (todo): write your description
+            layer_norm_epsilon: (int): write your description
+            output_attentions: (todo): write your description
+        """
         super(TFEncoderLayer, self).__init__(**kwargs)
 
         self.multi_head_attention = TFMultiHeadAttention(d_model_size,
@@ -147,6 +218,14 @@ class TFEncoderLayer(tf.keras.layers.Layer):
         self.dropout2 = tf.keras.layers.Dropout(rate)
 
     def call(self, inputs, training=False):
+        """
+        Compute the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         x, mask, layer_past, attention_mask, head_mask = inputs
         normed = self.layernorm1(x)
         attn_outputs = self.multi_head_attention([normed, normed, normed, mask, layer_past,
@@ -166,6 +245,13 @@ class TFEncoderLayer(tf.keras.layers.Layer):
 
 class TFCTRLMainLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFCTRLMainLayer, self).__init__(**kwargs)
         self.output_hidden_states = config.output_hidden_states
         self.output_attentions = config.output_attentions
@@ -193,9 +279,22 @@ class TFCTRLMainLayer(tf.keras.layers.Layer):
         self.layernorm = tf.keras.layers.LayerNormalization(epsilon=config.layer_norm_epsilon, name="layernorm")
 
     def get_input_embeddings(self):
+        """
+        Returns a list of the embedded inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.w
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Resize token embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         raise NotImplementedError
 
     def _prune_heads(self, heads_to_prune):
@@ -205,6 +304,20 @@ class TFCTRLMainLayer(tf.keras.layers.Layer):
         raise NotImplementedError
 
     def call(self, inputs, past=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None, training=False):
+        """
+        Perform the encoder.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            past: (todo): write your description
+            attention_mask: (int): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             past = inputs[1] if len(inputs) > 1 else past
@@ -424,16 +537,39 @@ class TFCTRLModel(TFCTRLPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize inputs : class.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFCTRLModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFCTRLMainLayer(config, name='transformer')
 
     def call(self, inputs, **kwargs):
+        """
+        Execute the given inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
         return outputs
 
 
 class TFCTRLLMHead(tf.keras.layers.Layer):
     def __init__(self, config, input_embeddings, **kwargs):
+        """
+        Initialize embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            input_embeddings: (todo): write your description
+        """
         super(TFCTRLLMHead, self).__init__(**kwargs)
         self.vocab_size = config.vocab_size
 
@@ -442,6 +578,13 @@ class TFCTRLLMHead(tf.keras.layers.Layer):
         self.input_embeddings = input_embeddings
 
     def build(self, input_shape):
+        """
+        Builds the model.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         self.bias = self.add_weight(shape=(self.vocab_size,),
                                     initializer='zeros',
                                     trainable=True,
@@ -449,6 +592,13 @@ class TFCTRLLMHead(tf.keras.layers.Layer):
         super(TFCTRLLMHead, self).build(input_shape)
 
     def call(self, hidden_states):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (int): write your description
+        """
         hidden_states = self.input_embeddings(hidden_states, mode="linear")
         hidden_states = hidden_states + self.bias
         return hidden_states
@@ -487,15 +637,36 @@ class TFCTRLLMHeadModel(TFCTRLPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the lm module.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFCTRLLMHeadModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFCTRLMainLayer(config, name='transformer')
 
         self.lm_head = TFCTRLLMHead(config, self.transformer.w, name="lm_head")
 
     def get_output_embeddings(self):
+        """
+        Returns a list of tuples of the embedding.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head.input_embeddings
 
     def call(self, inputs, **kwargs):
+        """
+        Parameters ---------- inputs : np.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         transformer_outputs = self.transformer(inputs, **kwargs)
         hidden_states = transformer_outputs[0]
 

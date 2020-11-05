@@ -38,6 +38,13 @@ from .tokenization_tests_commons import TemporaryDirectory
 
 
 def unwrap_schedule(scheduler, num_steps=10):
+    """
+    Unwrap a list of scheduler instances.
+
+    Args:
+        scheduler: (todo): write your description
+        num_steps: (int): write your description
+    """
     lrs = []
     for _ in range(num_steps):
         scheduler.step()
@@ -45,6 +52,13 @@ def unwrap_schedule(scheduler, num_steps=10):
     return lrs
 
 def unwrap_and_save_reload_schedule(scheduler, num_steps=10):
+    """
+    Unwrap a schedule.
+
+    Args:
+        scheduler: (todo): write your description
+        num_steps: (int): write your description
+    """
     lrs = []
     for step in range(num_steps):
         scheduler.step()
@@ -61,11 +75,26 @@ def unwrap_and_save_reload_schedule(scheduler, num_steps=10):
 class OptimizationTest(unittest.TestCase):
 
     def assertListAlmostEqual(self, list1, list2, tol):
+        """
+        Asserts that two lists.
+
+        Args:
+            self: (todo): write your description
+            list1: (list): write your description
+            list2: (list): write your description
+            tol: (float): write your description
+        """
         self.assertEqual(len(list1), len(list2))
         for a, b in zip(list1, list2):
             self.assertAlmostEqual(a, b, delta=tol)
 
     def test_adam_w(self):
+        """
+        Perform the optimizer.
+
+        Args:
+            self: (todo): write your description
+        """
         w = torch.tensor([0.1, -0.2, -0.1], requires_grad=True)
         target = torch.tensor([0.4, 0.2, -0.5])
         criterion = torch.nn.MSELoss()
@@ -86,11 +115,26 @@ class ScheduleInitTest(unittest.TestCase):
     num_steps = 10
 
     def assertListAlmostEqual(self, list1, list2, tol):
+        """
+        Asserts that two lists.
+
+        Args:
+            self: (todo): write your description
+            list1: (list): write your description
+            list2: (list): write your description
+            tol: (float): write your description
+        """
         self.assertEqual(len(list1), len(list2))
         for a, b in zip(list1, list2):
             self.assertAlmostEqual(a, b, delta=tol)
 
     def test_constant_scheduler(self):
+        """
+        Sets up the schedule schedule.
+
+        Args:
+            self: (todo): write your description
+        """
         scheduler = get_constant_schedule(self.optimizer)
         lrs = unwrap_schedule(scheduler, self.num_steps)
         expected_learning_rates = [10.] * self.num_steps
@@ -102,6 +146,12 @@ class ScheduleInitTest(unittest.TestCase):
         self.assertListEqual([l[0] for l in lrs], [l[0] for l in lrs_2])
 
     def test_warmup_constant_scheduler(self):
+        """
+        Sets up the scheduler.
+
+        Args:
+            self: (todo): write your description
+        """
         scheduler = get_constant_schedule_with_warmup(self.optimizer, num_warmup_steps=4)
         lrs = unwrap_schedule(scheduler, self.num_steps)
         expected_learning_rates = [2.5, 5.0, 7.5, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
@@ -113,6 +163,12 @@ class ScheduleInitTest(unittest.TestCase):
         self.assertListEqual([l[0] for l in lrs], [l[0] for l in lrs_2])
 
     def test_warmup_linear_scheduler(self):
+        """
+        Test the linear linear schedule.
+
+        Args:
+            self: (todo): write your description
+        """
         scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=2, num_training_steps=10)
         lrs = unwrap_schedule(scheduler, self.num_steps)
         expected_learning_rates = [5.0, 10.0, 8.75, 7.5, 6.25, 5.0, 3.75, 2.5, 1.25, 0.0]
@@ -124,6 +180,12 @@ class ScheduleInitTest(unittest.TestCase):
         self.assertListEqual([l[0] for l in lrs], [l[0] for l in lrs_2])
 
     def test_warmup_cosine_scheduler(self):
+        """
+        Sets up todo schedule.
+
+        Args:
+            self: (todo): write your description
+        """
         scheduler = get_cosine_schedule_with_warmup(self.optimizer, num_warmup_steps=2, num_training_steps=10)
         lrs = unwrap_schedule(scheduler, self.num_steps)
         expected_learning_rates = [5.0, 10.0, 9.61, 8.53, 6.91, 5.0, 3.08, 1.46, 0.38, 0.0]
@@ -135,6 +197,12 @@ class ScheduleInitTest(unittest.TestCase):
         self.assertListEqual([l[0] for l in lrs], [l[0] for l in lrs_2])
 
     def test_warmup_cosine_hard_restart_scheduler(self):
+        """
+        Test to start and end schedule.
+
+        Args:
+            self: (todo): write your description
+        """
         scheduler = get_cosine_with_hard_restarts_schedule_with_warmup(self.optimizer, num_warmup_steps=2, num_cycles=2, num_training_steps=10)
         lrs = unwrap_schedule(scheduler, self.num_steps)
         expected_learning_rates = [5.0, 10.0, 8.53, 5.0, 1.46, 10.0, 8.53, 5.0, 1.46, 0.0]

@@ -64,6 +64,20 @@ class SwagExample(object):
                  ending_2,
                  ending_3,
                  label = None):
+        """
+        Initialize a sentence.
+
+        Args:
+            self: (todo): write your description
+            swag_id: (str): write your description
+            context_sentence: (todo): write your description
+            start_ending: (todo): write your description
+            ending_0: (str): write your description
+            ending_1: (todo): write your description
+            ending_2: (str): write your description
+            ending_3: (str): write your description
+            label: (str): write your description
+        """
         self.swag_id = swag_id
         self.context_sentence = context_sentence
         self.start_ending = start_ending
@@ -76,9 +90,21 @@ class SwagExample(object):
         self.label = label
 
     def __str__(self):
+        """
+        Return a string representation of this object.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.__repr__()
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this sentence.
+
+        Args:
+            self: (todo): write your description
+        """
         l = [
             "swag_id: {}".format(self.swag_id),
             "context_sentence: {}".format(self.context_sentence),
@@ -101,6 +127,15 @@ class InputFeatures(object):
                  label
 
     ):
+        """
+        Initialize a segment.
+
+        Args:
+            self: (todo): write your description
+            example_id: (str): write your description
+            choices_features: (todo): write your description
+            label: (str): write your description
+        """
         self.example_id = example_id
         self.choices_features = [
             {
@@ -113,6 +148,13 @@ class InputFeatures(object):
         self.label = label
 
 def read_swag_examples(input_file, is_training=True):
+    """
+    Reads csv files.
+
+    Args:
+        input_file: (str): write your description
+        is_training: (bool): write your description
+    """
     with open(input_file, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         lines = []
@@ -238,10 +280,24 @@ def _truncate_seq_pair(tokens_a, tokens_b, max_length):
             tokens_b.pop()
 
 def accuracy(out, labels):
+    """
+    Calculate accuracy.
+
+    Args:
+        out: (array): write your description
+        labels: (todo): write your description
+    """
     outputs = np.argmax(out, axis=1)
     return np.sum(outputs == labels)
 
 def select_field(features, field):
+    """
+    Select a list of choices from a list of choices.
+
+    Args:
+        features: (todo): write your description
+        field: (todo): write your description
+    """
     return [
         [
             choice[field]
@@ -252,6 +308,11 @@ def select_field(features, field):
 
 
 def set_seed(args):
+    """
+    Sets random seed.
+
+    Args:
+    """
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -259,6 +320,14 @@ def set_seed(args):
         torch.cuda.manual_seed_all(args.seed)
 
 def load_and_cache_examples(args, tokenizer, evaluate=False, output_examples=False):
+    """
+    Loads examples.
+
+    Args:
+        tokenizer: (str): write your description
+        evaluate: (str): write your description
+        output_examples: (str): write your description
+    """
     if args.local_rank not in [-1, 0]:
         torch.distributed.barrier()  # Make sure only the first process in distributed training process the dataset, and the others will use the cache
 
@@ -425,6 +494,14 @@ def train(args, train_dataset, model, tokenizer):
     return global_step, tr_loss / global_step
 
 def evaluate(args, model, tokenizer, prefix=""):
+    """
+    Evaluate the model on the given dataset.
+
+    Args:
+        model: (todo): write your description
+        tokenizer: (str): write your description
+        prefix: (str): write your description
+    """
     dataset, examples, features = load_and_cache_examples(args, tokenizer, evaluate=True, output_examples=True)
 
     if not os.path.exists(args.output_dir) and args.local_rank in [-1, 0]:
@@ -484,6 +561,11 @@ def evaluate(args, model, tokenizer, prefix=""):
     return result
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
 
     ## Required parameters

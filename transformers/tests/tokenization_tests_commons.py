@@ -27,9 +27,24 @@ if sys.version_info[0] == 2:
     class TemporaryDirectory(object):
         """Context manager for tempfile.mkdtemp() so it's usable with "with" statement."""
         def __enter__(self):
+            """
+            Return a temporary file.
+
+            Args:
+                self: (todo): write your description
+            """
             self.name = tempfile.mkdtemp()
             return self.name
         def __exit__(self, exc_type, exc_value, traceback):
+            """
+            Exit the given exception.
+
+            Args:
+                self: (todo): write your description
+                exc_type: (todo): write your description
+                exc_value: (todo): write your description
+                traceback: (todo): write your description
+            """
             shutil.rmtree(self.name)
 else:
     import pickle
@@ -44,18 +59,48 @@ class CommonTestCases:
         tokenizer_class = None
 
         def setUp(self):
+            """
+            Set the temporary directory.
+
+            Args:
+                self: (todo): write your description
+            """
             self.tmpdirname = tempfile.mkdtemp()
 
         def tearDown(self):
+            """
+            Tear down this directory.
+
+            Args:
+                self: (todo): write your description
+            """
             shutil.rmtree(self.tmpdirname)
 
         def get_tokenizer(self, **kwargs):
+            """
+            Returns a list of tokenizer objects.
+
+            Args:
+                self: (todo): write your description
+            """
             raise NotImplementedError
 
         def get_input_output_texts(self):
+            """
+            Returns a list of inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             raise NotImplementedError
 
         def test_tokenizers_common_properties(self):
+            """
+            Set token properties.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
             attributes_list = ["bos_token", "eos_token", "unk_token", "sep_token",
                                 "pad_token", "cls_token", "mask_token"]
@@ -72,6 +117,12 @@ class CommonTestCases:
                 self.assertTrue(hasattr(tokenizer, attr))
 
         def test_save_and_load_tokenizer(self):
+            """
+            Loads a tokenizer.
+
+            Args:
+                self: (todo): write your description
+            """
             # safety check on max_len default value so we are sure the test works
             tokenizer = self.get_tokenizer()
             self.assertNotEqual(tokenizer.max_len, 42)
@@ -93,6 +144,12 @@ class CommonTestCases:
                 self.assertEqual(tokenizer.max_len, 43)
 
         def test_pickle_tokenizer(self):
+            """
+            * generate the tokenizer *
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
             self.assertIsNotNone(tokenizer)
 
@@ -112,6 +169,12 @@ class CommonTestCases:
 
 
         def test_add_tokens_tokenizer(self):
+            """
+            Create a new tokenizer.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
 
             vocab_size = tokenizer.vocab_size
@@ -161,6 +224,12 @@ class CommonTestCases:
             self.assertEqual(tokens[-2], tokenizer.pad_token_id)
 
         def test_add_special_tokens(self):
+            """
+            Add special special characters.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
             input_text, output_text = self.get_input_output_texts()
 
@@ -182,6 +251,12 @@ class CommonTestCases:
             assert special_token not in decoded
 
         def test_required_methods_tokenizer(self):
+            """
+            Returns a list of tokenizer.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
             input_text, output_text = self.get_input_output_texts()
 
@@ -200,6 +275,12 @@ class CommonTestCases:
 
 
         def test_pretrained_model_lists(self):
+            """
+            Returns a list of files.
+
+            Args:
+                self: (todo): write your description
+            """
             weights_list = list(self.tokenizer_class.max_model_input_sizes.keys())
             weights_lists_2 = []
             for file_id, map_list in self.tokenizer_class.pretrained_vocab_files_map.items():
@@ -209,6 +290,12 @@ class CommonTestCases:
                 self.assertListEqual(weights_list, weights_list_2)
 
         def test_mask_output(self):
+            """
+            Test that the mask.
+
+            Args:
+                self: (todo): write your description
+            """
             if sys.version_info <= (3, 0):
                 return
 
@@ -222,6 +309,12 @@ class CommonTestCases:
                 self.assertEqual(len(sequences), len(mask))
 
         def test_number_of_added_tokens(self):
+            """
+            Encode sequence number of tokens.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
 
             seq_0 = "Test this method."
@@ -235,6 +328,12 @@ class CommonTestCases:
                 self.assertEqual(tokenizer.num_added_tokens(pair=True), len(attached_sequences) - len(sequences))
 
         def test_maximum_encoding_length_single_input(self):
+            """
+            Generate the maximum length of the input sequence.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
 
             seq_0 = "This is a sentence to be encoded."
@@ -254,6 +353,12 @@ class CommonTestCases:
             self.assertEqual(truncated_sequence, tokenizer.build_inputs_with_special_tokens(sequence[:-2]))
 
         def test_maximum_encoding_length_pair_input(self):
+            """
+            The maximum length - wise sequence.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
 
             seq_0 = "This is a sentence to be encoded."
@@ -286,6 +391,12 @@ class CommonTestCases:
             self.assertEqual(truncated_sequence, truncated_second_sequence)
 
         def test_encode_input_type(self):
+            """
+            Convert the input tokenizer.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
 
             sequence = "Let's encode this sequence"
@@ -298,6 +409,12 @@ class CommonTestCases:
             self.assertEqual(tokenizer.encode(input_ids, add_special_tokens=True), formatted_input)
 
         def test_special_tokens_mask(self):
+            """
+            Test if the tokenizer.
+
+            Args:
+                self: (todo): write your description
+            """
             tokenizer = self.get_tokenizer()
 
             sequence_0 = "Encode this."

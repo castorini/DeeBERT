@@ -67,6 +67,35 @@ class CTRLModelTest(CommonTestCases.CommonModelTester):
                      num_choices=4,
                      scope=None,
                      ):
+            """
+            Initialize the encoder.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_token_type_ids: (str): write your description
+                use_input_mask: (bool): write your description
+                use_labels: (bool): write your description
+                use_mc_token_ids: (str): write your description
+                vocab_size: (int): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                intermediate_size: (int): write your description
+                hidden_act: (todo): write your description
+                hidden_dropout_prob: (todo): write your description
+                attention_probs_dropout_prob: (todo): write your description
+                max_position_embeddings: (int): write your description
+                type_vocab_size: (int): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                num_choices: (int): write your description
+                scope: (str): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -92,6 +121,12 @@ class CTRLModelTest(CommonTestCases.CommonModelTester):
             self.scope = scope
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the embeddings.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
 
             input_mask = None
@@ -134,11 +169,29 @@ class CTRLModelTest(CommonTestCases.CommonModelTester):
             return config, input_ids, input_mask, head_mask, token_type_ids, mc_token_ids, sequence_labels, token_labels, choice_labels
 
         def check_loss_output(self, result):
+            """
+            Check that the output.
+
+            Args:
+                self: (todo): write your description
+                result: (todo): write your description
+            """
             self.parent.assertListEqual(
                 list(result["loss"].size()),
                 [])
 
         def create_and_check_ctrl_model(self, config, input_ids, input_mask, head_mask, token_type_ids, *args):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                head_mask: (todo): write your description
+                token_type_ids: (str): write your description
+            """
             model = CTRLModel(config=config)
             model.eval()
 
@@ -156,6 +209,17 @@ class CTRLModelTest(CommonTestCases.CommonModelTester):
             self.parent.assertEqual(len(result["presents"]), config.n_layer)
 
         def create_and_check_lm_head_model(self, config, input_ids, input_mask, head_mask, token_type_ids, *args):
+            """
+            Create the lm_ids.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (str): write your description
+                head_mask: (str): write your description
+                token_type_ids: (str): write your description
+            """
             model = CTRLLMHeadModel(config)
             model.eval()
 
@@ -174,6 +238,12 @@ class CTRLModelTest(CommonTestCases.CommonModelTester):
 
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
 
             (config, input_ids, input_mask, head_mask, token_type_ids,
@@ -188,22 +258,52 @@ class CTRLModelTest(CommonTestCases.CommonModelTester):
             return config, inputs_dict
 
     def setUp(self):
+        """
+        Sets the configuration
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = CTRLModelTest.CTRLModelTester(self)
         self.config_tester = ConfigTester(self, config_class=CTRLConfig, n_embd=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_ctrl_model(self):
+        """
+        Test if the model was clicked
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_ctrl_model(*config_and_inputs)
 
     def test_ctrl_lm_head_model(self):
+        """
+        Test if lm_headter
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_lm_head_model(*config_and_inputs)
 
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test if a pre - specific pre - level.
+
+        Args:
+            self: (todo): write your description
+        """
         cache_dir = "/tmp/transformers_test/"
         for model_name in list(CTRL_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             model = CTRLModel.from_pretrained(model_name, cache_dir=cache_dir)

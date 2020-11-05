@@ -67,6 +67,13 @@ def gelu_new(x):
 
 class TFEmbeddings(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFEmbeddings, self).__init__(**kwargs)
         self.vocab_size = config.vocab_size
         self.dim = config.dim
@@ -171,6 +178,13 @@ class TFEmbeddings(tf.keras.layers.Layer):
 
 class TFMultiHeadSelfAttention(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFMultiHeadSelfAttention, self).__init__(**kwargs)
 
         self.n_heads = config.n_heads
@@ -196,6 +210,13 @@ class TFMultiHeadSelfAttention(tf.keras.layers.Layer):
         self.pruned_heads = set()
 
     def prune_heads(self, heads):
+        """
+        Prune a list of the specified bytestring.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         raise NotImplementedError
 
     def call(self, inputs, training=False):
@@ -260,6 +281,13 @@ class TFMultiHeadSelfAttention(tf.keras.layers.Layer):
 
 class TFFFN(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFFFN, self).__init__(**kwargs)
         self.dropout = tf.keras.layers.Dropout(config.dropout)
         self.lin1 = tf.keras.layers.Dense(config.hidden_dim,
@@ -272,6 +300,14 @@ class TFFFN(tf.keras.layers.Layer):
         self.activation = tf.keras.layers.Activation(gelu) if config.activation=='gelu' else tf.keras.activations.relu
 
     def call(self, input, training=False):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            input: (array): write your description
+            training: (bool): write your description
+        """
         x = self.lin1(input)
         x = self.activation(x)
         x = self.lin2(x)
@@ -281,6 +317,13 @@ class TFFFN(tf.keras.layers.Layer):
 
 class TFTransformerBlock(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFTransformerBlock, self).__init__(**kwargs)
 
         self.n_heads = config.n_heads
@@ -335,6 +378,13 @@ class TFTransformerBlock(tf.keras.layers.Layer):
 
 class TFTransformer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFTransformer, self).__init__(**kwargs)
         self.n_layers = config.n_layers
         self.output_attentions = config.output_attentions
@@ -397,6 +447,13 @@ class TFTransformer(tf.keras.layers.Layer):
 
 class TFDistilBertMainLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFDistilBertMainLayer, self).__init__(**kwargs)
         self.num_hidden_layers = config.num_hidden_layers
 
@@ -404,15 +461,46 @@ class TFDistilBertMainLayer(tf.keras.layers.Layer):
         self.transformer = TFTransformer(config, name="transformer") # Encoder
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Resize token embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         raise NotImplementedError
 
     def _prune_heads(self, heads_to_prune):
+        """
+        Prune a list of the dispatches.
+
+        Args:
+            self: (todo): write your description
+            heads_to_prune: (list): write your description
+        """
         raise NotImplementedError
 
     def call(self, inputs, attention_mask=None, head_mask=None, inputs_embeds=None, training=False):
+        """
+        Perform the computation.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            attention_mask: (int): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             attention_mask = inputs[1] if len(inputs) > 1 else attention_mask
@@ -561,16 +649,39 @@ class TFDistilBertModel(TFDistilBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the imililililil module.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFDistilBertModel, self).__init__(config, *inputs, **kwargs)
         self.distilbert = TFDistilBertMainLayer(config, name="distilbert")   # Embeddings
 
     def call(self, inputs, **kwargs):
+        """
+        Call the abstractelement.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.distilbert(inputs, **kwargs)
         return outputs
 
 
 class TFDistilBertLMHead(tf.keras.layers.Layer):
     def __init__(self, config, input_embeddings, **kwargs):
+        """
+        Initialize the embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            input_embeddings: (todo): write your description
+        """
         super(TFDistilBertLMHead, self).__init__(**kwargs)
         self.vocab_size = config.vocab_size
 
@@ -579,6 +690,13 @@ class TFDistilBertLMHead(tf.keras.layers.Layer):
         self.input_embeddings = input_embeddings
 
     def build(self, input_shape):
+        """
+        Connects the model.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         self.bias = self.add_weight(shape=(self.vocab_size,),
                                     initializer='zeros',
                                     trainable=True,
@@ -586,6 +704,13 @@ class TFDistilBertLMHead(tf.keras.layers.Layer):
         super(TFDistilBertLMHead, self).build(input_shape)
 
     def call(self, hidden_states):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (int): write your description
+        """
         hidden_states = self.input_embeddings(hidden_states, mode="linear")
         hidden_states = hidden_states + self.bias
         return hidden_states
@@ -619,6 +744,14 @@ class TFDistilBertForMaskedLM(TFDistilBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFDistilBertForMaskedLM, self).__init__(config, *inputs, **kwargs)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -633,9 +766,22 @@ class TFDistilBertForMaskedLM(TFDistilBertPreTrainedModel):
         self.vocab_projector = TFDistilBertLMHead(config, self.distilbert.embeddings, name="vocab_projector")
 
     def get_output_embeddings(self):
+        """
+        Returns the vocab embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.vocab_projector.input_embeddings
 
     def call(self, inputs, **kwargs):
+        """
+        Parameters ---------- inputs : np. array shapes. inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         distilbert_output = self.distilbert(inputs, **kwargs)
 
         hidden_states = distilbert_output[0]                               # (bs, seq_length, dim)
@@ -677,6 +823,14 @@ class TFDistilBertForSequenceClassification(TFDistilBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFDistilBertForSequenceClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -691,6 +845,13 @@ class TFDistilBertForSequenceClassification(TFDistilBertPreTrainedModel):
         self.dropout = tf.keras.layers.Dropout(config.seq_classif_dropout)
 
     def call(self, inputs, **kwargs):
+        """
+        Run the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         distilbert_output = self.distilbert(inputs, **kwargs)
 
         hidden_state = distilbert_output[0]                    # (bs, seq_len, dim)
@@ -734,6 +895,14 @@ class TFDistilBertForQuestionAnswering(TFDistilBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFDistilBertForQuestionAnswering, self).__init__(config, *inputs, **kwargs)
 
         self.distilbert = TFDistilBertMainLayer(config, name="distilbert")
@@ -744,6 +913,13 @@ class TFDistilBertForQuestionAnswering(TFDistilBertPreTrainedModel):
         self.dropout = tf.keras.layers.Dropout(config.qa_dropout)
 
     def call(self, inputs, **kwargs):
+        """
+        Parameters ---------- forward computation.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         distilbert_output = self.distilbert(inputs, **kwargs)
 
         hidden_states = distilbert_output[0]                                 # (bs, max_query_len, dim)

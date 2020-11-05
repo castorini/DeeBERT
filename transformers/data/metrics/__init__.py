@@ -29,15 +29,34 @@ except (AttributeError, ImportError) as e:
     _has_sklearn = False
 
 def is_sklearn_available():
+    """
+    Return a generator that is available?
+
+    Args:
+    """
     return _has_sklearn
 
 if _has_sklearn:
 
     def simple_accuracy(preds, labels):
+        """
+        Calculate accuracy.
+
+        Args:
+            preds: (array): write your description
+            labels: (array): write your description
+        """
         return (preds == labels).mean()
 
 
     def acc_and_f1(preds, labels):
+        """
+        Compute f1 score.
+
+        Args:
+            preds: (array): write your description
+            labels: (list): write your description
+        """
         acc = simple_accuracy(preds, labels)
         f1 = f1_score(y_true=labels, y_pred=preds)
         return {
@@ -48,6 +67,13 @@ if _has_sklearn:
 
 
     def pearson_and_spearman(preds, labels):
+        """
+        Compute the correlation coefficient coefficient.
+
+        Args:
+            preds: (array): write your description
+            labels: (list): write your description
+        """
         pearson_corr = pearsonr(preds, labels)[0]
         spearman_corr = spearmanr(preds, labels)[0]
         return {
@@ -58,6 +84,14 @@ if _has_sklearn:
 
 
     def glue_compute_metrics(task_name, preds, labels):
+        """
+        Compute the metrics.
+
+        Args:
+            task_name: (str): write your description
+            preds: (todo): write your description
+            labels: (str): write your description
+        """
         assert len(preds) == len(labels)
         if task_name == "cola":
             return {"mcc": matthews_corrcoef(labels, preds)}

@@ -49,6 +49,15 @@ def convert_transfo_xl_checkpoint_to_pytorch(tf_checkpoint_path,
                                              transfo_xl_config_file,
                                              pytorch_dump_folder_path,
                                              transfo_xl_dataset_file):
+    """
+    Converts dataset totorchch model.
+
+    Args:
+        tf_checkpoint_path: (str): write your description
+        transfo_xl_config_file: (str): write your description
+        pytorch_dump_folder_path: (str): write your description
+        transfo_xl_dataset_file: (str): write your description
+    """
     if transfo_xl_dataset_file:
         # Convert a pre-processed corpus (see original TensorFlow repo)
         with open(transfo_xl_dataset_file, "rb") as fp:

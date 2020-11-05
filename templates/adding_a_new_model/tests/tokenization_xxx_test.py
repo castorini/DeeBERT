@@ -27,6 +27,12 @@ class XxxTokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = XxxTokenizer
 
     def setUp(self):
+        """
+        Set vocab vocabulary.
+
+        Args:
+            self: (todo): write your description
+        """
         super(XxxTokenizationTest, self).setUp()
 
         vocab_tokens = [
@@ -38,14 +44,32 @@ class XxxTokenizationTest(CommonTestCases.CommonTokenizerTester):
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
     def get_tokenizer(self, **kwargs):
+        """
+        Return a tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         return XxxTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"UNwant\u00E9d,running"
         output_text = u"unwanted, running"
         return input_text, output_text
 
     def test_full_tokenizer(self):
+        """
+        Reads a list of the corpus.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = self.tokenizer_class(self.vocab_file)
 
         tokens = tokenizer.tokenize(u"UNwant\u00E9d,running")

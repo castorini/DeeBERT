@@ -131,12 +131,28 @@ def load_tf_weights_in_xxx(model, config, tf_checkpoint_path):
 ####################################################
 class XxxLayer(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XxxLayer, self).__init__()
         self.attention = XxxAttention(config)
         self.intermediate = XxxIntermediate(config)
         self.output = XxxOutput(config)
 
     def forward(self, hidden_states, attention_mask=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+        """
         attention_outputs = self.attention(hidden_states, attention_mask, head_mask)
         attention_output = attention_outputs[0]
         intermediate_output = self.intermediate(attention_output)
@@ -276,6 +292,13 @@ class XxxModel(XxxPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XxxModel, self).__init__(config)
 
         self.embeddings = XxxEmbeddings(config)
@@ -285,9 +308,22 @@ class XxxModel(XxxPreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings.word_embeddings
 
     def set_input_embeddings(self, new_embeddings):
+        """
+        Parameters ---------- new_embeddings : np. array )
+
+        Args:
+            self: (todo): write your description
+            new_embeddings: (todo): write your description
+        """
         self.embeddings.word_embeddings = new_embeddings
 
     def _prune_heads(self, heads_to_prune):
@@ -299,6 +335,18 @@ class XxxModel(XxxPreTrainedModel):
             self.encoder.layer[layer].attention.prune_heads(heads)
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None and inputs_embeds is not None:
             raise ValueError("You cannot specify both input_ids and inputs_embeds at the same time")
         elif input_ids is not None:
@@ -388,6 +436,13 @@ class XxxForMaskedLM(XxxPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XxxForMaskedLM, self).__init__(config)
 
         self.transformer = XxxModel(config)
@@ -396,10 +451,29 @@ class XxxForMaskedLM(XxxPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        : returns : class : class :.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 masked_lm_labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            masked_lm_labels: (todo): write your description
+        """
 
         outputs = self.transformer(input_ids,
                             attention_mask=attention_mask,
@@ -455,6 +529,13 @@ class XxxForSequenceClassification(XxxPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the classifier.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XxxForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -466,6 +547,19 @@ class XxxForSequenceClassification(XxxPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
                 position_ids=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Perform forward.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
 
         outputs = self.transformer(input_ids,
                             attention_mask=attention_mask,
@@ -527,6 +621,13 @@ class XxxForTokenClassification(XxxPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the classifier.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XxxForTokenClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -538,6 +639,19 @@ class XxxForTokenClassification(XxxPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
                 position_ids=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
 
         outputs = self.transformer(input_ids,
                             attention_mask=attention_mask,
@@ -612,6 +726,13 @@ class XxxForQuestionAnswering(XxxPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XxxForQuestionAnswering, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -622,6 +743,20 @@ class XxxForQuestionAnswering(XxxPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 start_positions=None, end_positions=None):
+        """
+        Perform forward computation_ids.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            start_positions: (todo): write your description
+            end_positions: (todo): write your description
+        """
 
         outputs = self.transformer(input_ids,
                             attention_mask=attention_mask,

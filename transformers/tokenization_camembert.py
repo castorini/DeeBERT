@@ -52,6 +52,21 @@ class CamembertTokenizer(PreTrainedTokenizer):
     def __init__(self, vocab_file, bos_token="<s>", eos_token="</s>", sep_token="</s>",
                  cls_token="<s>", unk_token="<unk>", pad_token='<pad>', mask_token='<mask>',
                  additional_special_tokens=['<s>NOTUSED', '<s>NOTUSED'], **kwargs):
+        """
+        Initialize word embedding file.
+
+        Args:
+            self: (todo): write your description
+            vocab_file: (str): write your description
+            bos_token: (str): write your description
+            eos_token: (str): write your description
+            sep_token: (str): write your description
+            cls_token: (str): write your description
+            unk_token: (str): write your description
+            pad_token: (str): write your description
+            mask_token: (str): write your description
+            additional_special_tokens: (todo): write your description
+        """
         super(CamembertTokenizer, self).__init__(max_len=512, bos_token=bos_token, eos_token=eos_token, unk_token=unk_token,
                                                  sep_token=sep_token, cls_token=cls_token, pad_token=pad_token,
                                                  mask_token=mask_token, additional_special_tokens=additional_special_tokens,
@@ -125,9 +140,22 @@ class CamembertTokenizer(PreTrainedTokenizer):
 
     @property
     def vocab_size(self):
+        """
+        Returns the size of vocab_model.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.fairseq_offset + len(self.sp_model)
 
     def _tokenize(self, text):
+        """
+        Tokenize text.
+
+        Args:
+            self: (todo): write your description
+            text: (str): write your description
+        """
         return self.sp_model.EncodeAsPieces(text)
 
     def _convert_token_to_id(self, token):

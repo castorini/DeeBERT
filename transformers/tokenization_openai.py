@@ -85,6 +85,15 @@ class OpenAIGPTTokenizer(PreTrainedTokenizer):
     max_model_input_sizes = PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES
 
     def __init__(self, vocab_file, merges_file, unk_token="<unk>", **kwargs):
+        """
+        Initialize word embedding file. vocab file.
+
+        Args:
+            self: (todo): write your description
+            vocab_file: (str): write your description
+            merges_file: (str): write your description
+            unk_token: (str): write your description
+        """
         super(OpenAIGPTTokenizer, self).__init__(unk_token=unk_token, **kwargs)
 
         self.max_len_single_sentence = self.max_len # no default special tokens - you can update this value if you add special tokens
@@ -110,9 +119,22 @@ class OpenAIGPTTokenizer(PreTrainedTokenizer):
 
     @property
     def vocab_size(self):
+        """
+        The length : class : class.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.encoder)
 
     def bpe(self, token):
+        """
+        Returns the first token.
+
+        Args:
+            self: (todo): write your description
+            token: (str): write your description
+        """
         word = tuple(token[:-1]) + (token[-1] + '</w>',)
         if token in self.cache:
             return self.cache[token]

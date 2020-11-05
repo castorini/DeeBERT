@@ -39,6 +39,12 @@ else:
 
 class TFAutoModelTest(unittest.TestCase):
     def test_model_from_pretrained(self):
+        """
+        Test if the hdf5 model from the given hdf5.
+
+        Args:
+            self: (todo): write your description
+        """
         import h5py
         self.assertTrue(h5py.version.hdf5_version.startswith("1.10"))
 
@@ -54,6 +60,12 @@ class TFAutoModelTest(unittest.TestCase):
             self.assertIsInstance(model, TFBertModel)
 
     def test_lmhead_model_from_pretrained(self):
+        """
+        Create a lmhead model is a lmhead configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         # for model_name in list(TF_BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
         for model_name in ['bert-base-uncased']:
@@ -66,6 +78,12 @@ class TFAutoModelTest(unittest.TestCase):
             self.assertIsInstance(model, TFBertForMaskedLM)
 
     def test_sequence_classification_model_from_pretrained(self):
+        """
+        Test for the classification classification.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         # for model_name in list(TF_BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
         for model_name in ['bert-base-uncased']:
@@ -78,6 +96,12 @@ class TFAutoModelTest(unittest.TestCase):
             self.assertIsInstance(model, TFBertForSequenceClassification)
 
     def test_question_answering_model_from_pretrained(self):
+        """
+        Test if a question config file.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         # for model_name in list(TF_BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
         for model_name in ['bert-base-uncased']:

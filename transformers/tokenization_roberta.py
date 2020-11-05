@@ -31,6 +31,11 @@ except ImportError:
     # Just a dummy decorator to get the checks to run on python2
     # because honestly I don't want to support a byte-level unicode BPE tokenizer on python 2 right now.
     def lru_cache():
+        """
+        Decorator to cache a function cache.
+
+        Args:
+        """
         return lambda func: func
 
 logger = logging.getLogger(__name__)
@@ -86,6 +91,22 @@ class RobertaTokenizer(GPT2Tokenizer):
 
     def __init__(self, vocab_file, merges_file, errors='replace', bos_token="<s>", eos_token="</s>", sep_token="</s>",
                  cls_token="<s>", unk_token="<unk>", pad_token='<pad>', mask_token='<mask>', **kwargs):
+        """
+        Initialize the vocabulary file.
+
+        Args:
+            self: (todo): write your description
+            vocab_file: (str): write your description
+            merges_file: (str): write your description
+            errors: (str): write your description
+            bos_token: (str): write your description
+            eos_token: (str): write your description
+            sep_token: (str): write your description
+            cls_token: (str): write your description
+            unk_token: (str): write your description
+            pad_token: (str): write your description
+            mask_token: (str): write your description
+        """
         super(RobertaTokenizer, self).__init__(vocab_file=vocab_file, merges_file=merges_file, errors=errors,
                                                bos_token=bos_token, eos_token=eos_token, unk_token=unk_token,
                                                sep_token=sep_token, cls_token=cls_token, pad_token=pad_token,

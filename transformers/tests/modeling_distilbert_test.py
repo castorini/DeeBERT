@@ -67,6 +67,34 @@ class DistilBertModelTest(CommonTestCases.CommonModelTester):
                      num_choices=4,
                      scope=None,
                     ):
+            """
+            Initialize the model.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_input_mask: (bool): write your description
+                use_token_type_ids: (str): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                intermediate_size: (int): write your description
+                hidden_act: (todo): write your description
+                hidden_dropout_prob: (todo): write your description
+                attention_probs_dropout_prob: (todo): write your description
+                max_position_embeddings: (int): write your description
+                type_vocab_size: (int): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                num_choices: (int): write your description
+                scope: (str): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -91,6 +119,12 @@ class DistilBertModelTest(CommonTestCases.CommonModelTester):
             self.scope = scope
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the embeddings.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
 
             input_mask = None
@@ -120,11 +154,30 @@ class DistilBertModelTest(CommonTestCases.CommonModelTester):
             return config, input_ids, input_mask, sequence_labels, token_labels, choice_labels
 
         def check_loss_output(self, result):
+            """
+            Check that the output.
+
+            Args:
+                self: (todo): write your description
+                result: (todo): write your description
+            """
             self.parent.assertListEqual(
                 list(result["loss"].size()),
                 [])
 
         def create_and_check_distilbert_model(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a model on a model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (str): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             model = DistilBertModel(config=config)
             model.eval()
             (sequence_output,) = model(input_ids, input_mask)
@@ -138,6 +191,18 @@ class DistilBertModelTest(CommonTestCases.CommonModelTester):
                 [self.batch_size, self.seq_length, self.hidden_size])
 
         def create_and_check_distilbert_for_masked_lm(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Parameters ---------- lmertbertbert_lmertbert_lmertools.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = DistilBertForMaskedLM(config=config)
             model.eval()
             loss, prediction_scores = model(input_ids, attention_mask=input_mask, masked_lm_labels=token_labels)
@@ -151,6 +216,18 @@ class DistilBertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_distilbert_for_question_answering(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of examples.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = DistilBertForQuestionAnswering(config=config)
             model.eval()
             loss, start_logits, end_logits = model(input_ids, attention_mask=input_mask, start_positions=sequence_labels, end_positions=sequence_labels)
@@ -168,6 +245,18 @@ class DistilBertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_distilbert_for_sequence_classification(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of the training.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             config.num_labels = self.num_labels
             model = DistilBertForSequenceClassification(config)
             model.eval()
@@ -182,6 +271,18 @@ class DistilBertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_distilbert_for_token_classification(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the classification on the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             config.num_labels = self.num_labels
             model = DistilBertForTokenClassification(config=config)
             model.eval()
@@ -197,35 +298,83 @@ class DistilBertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids, input_mask, sequence_labels, token_labels, choice_labels) = config_and_inputs
             inputs_dict = {'input_ids': input_ids, 'attention_mask': input_mask}
             return config, inputs_dict
 
     def setUp(self):
+        """
+        Sets the configuration
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = DistilBertModelTest.DistilBertModelTester(self)
         self.config_tester = ConfigTester(self, config_class=DistilBertConfig, dim=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_distilbert_model(self):
+        """
+        Perform a model setup
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_model(*config_and_inputs)
 
     def test_for_masked_lm(self):
+        """
+        Vel factory function inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_for_masked_lm(*config_and_inputs)
 
     def test_for_question_answering(self):
+        """
+        Test for all question question question
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_for_question_answering(*config_and_inputs)
 
     def test_for_sequence_classification(self):
+        """
+        Deter sequence classification.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_for_sequence_classification(*config_and_inputs)
 
     def test_for_token_classification(self):
+        """
+        Set the classification classification classification classification.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_for_token_classification(*config_and_inputs)
 

@@ -69,6 +69,35 @@ class BertModelTest(CommonTestCases.CommonModelTester):
                      scope=None,
                      device='cpu',
                      ):
+            """
+            Initialize the model.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_input_mask: (bool): write your description
+                use_token_type_ids: (str): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                intermediate_size: (int): write your description
+                hidden_act: (todo): write your description
+                hidden_dropout_prob: (todo): write your description
+                attention_probs_dropout_prob: (todo): write your description
+                max_position_embeddings: (int): write your description
+                type_vocab_size: (int): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                num_choices: (int): write your description
+                scope: (str): write your description
+                device: (todo): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -94,6 +123,12 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.device = device
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the input tensors.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids = ids_tensor([self.batch_size, self.seq_length], self.vocab_size).to(self.device)
 
             input_mask = None
@@ -129,6 +164,12 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             return config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels
 
         def prepare_config_and_inputs_for_decoder(self):
+            """
+            Prepare the encoder for training.
+
+            Args:
+                self: (todo): write your description
+            """
             config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels = self.prepare_config_and_inputs()
 
             config.is_decoder = True
@@ -138,11 +179,31 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             return config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels, encoder_hidden_states, encoder_attention_mask
 
         def check_loss_output(self, result):
+            """
+            Check that the output.
+
+            Args:
+                self: (todo): write your description
+                result: (todo): write your description
+            """
             self.parent.assertListEqual(
                 list(result["loss"].size()),
                 [])
 
         def create_and_check_bert_model(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (str): write your description
+                sequence_labels: (str): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             model = BertModel(config=config)
             model.to(input_ids.device)
             model.eval()
@@ -160,6 +221,21 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.parent.assertListEqual(list(result["pooled_output"].size()), [self.batch_size, self.hidden_size])
 
         def create_and_check_bert_model_as_decoder(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels, encoder_hidden_states, encoder_attention_mask):
+            """
+            Builds the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (str): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+                encoder_hidden_states: (todo): write your description
+                encoder_attention_mask: (todo): write your description
+            """
             model = BertModel(config)
             model.eval()
             sequence_output, pooled_output = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids, encoder_hidden_states=encoder_hidden_states, encoder_attention_mask=encoder_attention_mask)
@@ -176,6 +252,19 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.parent.assertListEqual(list(result["pooled_output"].size()), [self.batch_size, self.hidden_size])
 
         def create_and_check_bert_for_masked_lm(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Parameters ----------
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = BertForMaskedLM(config=config)
             model.eval()
             loss, prediction_scores = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids, masked_lm_labels=token_labels)
@@ -189,6 +278,21 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_bert_model_for_masked_lm_as_decoder(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels, encoder_hidden_states, encoder_attention_mask):
+            """
+            Create the model for training.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+                encoder_hidden_states: (todo): write your description
+                encoder_attention_mask: (todo): write your description
+            """
             model = BertForMaskedLM(config=config)
             model.eval()
             loss, prediction_scores = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids, masked_lm_labels=token_labels, encoder_hidden_states=encoder_hidden_states, encoder_attention_mask=encoder_attention_mask)
@@ -203,6 +307,19 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_bert_for_next_sequence_prediction(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Parameters ---------- batch_prediction.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = BertForNextSentencePrediction(config=config)
             model.eval()
             loss, seq_relationship_score = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids, next_sentence_label=sequence_labels)
@@ -216,6 +333,19 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_bert_for_pretraining(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the model_ids for a batch_ids.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = BertForPreTraining(config=config)
             model.eval()
             loss, prediction_scores, seq_relationship_score = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids,
@@ -234,6 +364,19 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_bert_for_question_answering(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of targets.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = BertForQuestionAnswering(config=config)
             model.eval()
             loss, start_logits, end_logits = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids,
@@ -252,6 +395,19 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_bert_for_sequence_classification(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create train and embeddask.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             config.num_labels = self.num_labels
             model = BertForSequenceClassification(config)
             model.eval()
@@ -266,6 +422,19 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_bert_for_token_classification(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the model on the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             config.num_labels = self.num_labels
             model = BertForTokenClassification(config=config)
             model.eval()
@@ -280,6 +449,19 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def create_and_check_bert_for_multiple_choice(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the model that is a batch of training set.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             config.num_choices = self.num_choices
             model = BertForMultipleChoice(config=config)
             model.eval()
@@ -300,6 +482,12 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             self.check_loss_output(result)
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids, token_type_ids, input_mask,
              sequence_labels, token_labels, choice_labels) = config_and_inputs
@@ -307,13 +495,32 @@ class BertModelTest(CommonTestCases.CommonModelTester):
             return config, inputs_dict
 
     def setUp(self):
+        """
+        Sets the tester
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = BertModelTest.BertModelTester(self)
         self.config_tester = ConfigTester(self, config_class=BertConfig, hidden_size=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_bert_model(self, use_cuda=False):
+        """
+        Test if the device model
+
+        Args:
+            self: (todo): write your description
+            use_cuda: (bool): write your description
+        """
         # ^^ This could be a real fixture
         if use_cuda:
             self.model_tester.device = "cuda"
@@ -321,43 +528,103 @@ class BertModelTest(CommonTestCases.CommonModelTester):
         self.model_tester.create_and_check_bert_model(*config_and_inputs)
 
     def test_bert_model_as_decoder(self):
+        """
+        Test if the decoder
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs_for_decoder()
         self.model_tester.create_and_check_bert_model_as_decoder(*config_and_inputs)
 
     def test_for_masked_lm(self):
+        """
+        Create masked masked masked inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_masked_lm(*config_and_inputs)
 
     def test_for_masked_lm_decoder(self):
+        """
+        Vel factory for lm inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs_for_decoder()
         self.model_tester.create_and_check_bert_model_for_masked_lm_as_decoder(*config_and_inputs)
 
     def test_for_multiple_choice(self):
+        """
+        Create a choice choice choice
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_multiple_choice(*config_and_inputs)
 
     def test_for_next_sequence_prediction(self):
+        """
+        Create a model sequence for the given model.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_next_sequence_prediction(*config_and_inputs)
 
     def test_for_pretraining(self):
+        """
+        Test if the model inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_pretraining(*config_and_inputs)
 
     def test_for_question_answering(self):
+        """
+        Test for all question question for all possible
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_question_answering(*config_and_inputs)
 
     def test_for_sequence_classification(self):
+        """
+        Create a classification classification classification.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_sequence_classification(*config_and_inputs)
 
     def test_for_token_classification(self):
+        """
+        Test if the classification classification.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_token_classification(*config_and_inputs)
 
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test if a pre - trained model is already been built - trained.
+
+        Args:
+            self: (todo): write your description
+        """
         cache_dir = "/tmp/transformers_test/"
         for model_name in list(BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             model = BertModel.from_pretrained(model_name, cache_dir=cache_dir)

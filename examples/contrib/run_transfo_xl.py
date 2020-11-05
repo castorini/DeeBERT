@@ -36,6 +36,11 @@ logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(messa
 logger = logging.getLogger(__name__)
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser(description='PyTorch Transformer Language Model')
     parser.add_argument('--model_name', type=str, default='transfo-xl-wt103',
                         help='pretrained model name')
@@ -106,6 +111,12 @@ def main():
     # Evaluation code
     ###############################################################################
     def evaluate(eval_iter):
+        """
+        Evaluate the model.
+
+        Args:
+            eval_iter: (int): write your description
+        """
         # Turn on evaluation mode which disables dropout.
         model.eval()
         total_len, total_loss = 0, 0.
@@ -135,6 +146,13 @@ def main():
         valid_loss = None
 
     def format_log(loss, split):
+        """
+        Format loss.
+
+        Args:
+            loss: (todo): write your description
+            split: (todo): write your description
+        """
         log_str = '| {0} loss {1:5.2f} | {0} ppl {2:9.3f} '.format(
             split, loss, math.exp(loss))
         return log_str

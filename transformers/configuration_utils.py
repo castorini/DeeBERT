@@ -49,6 +49,12 @@ class PretrainedConfig(object):
     pretrained_config_archive_map = {}
 
     def __init__(self, **kwargs):
+        """
+        Initialize the class
+
+        Args:
+            self: (todo): write your description
+        """
         self.finetuning_task = kwargs.pop('finetuning_task', None)
         self.num_labels = kwargs.pop('num_labels', 2)
         self.output_attentions = kwargs.pop('output_attentions', False)
@@ -188,9 +194,22 @@ class PretrainedConfig(object):
         return cls.from_dict(json.loads(text))
 
     def __eq__(self, other):
+        """
+        Return true if other objects.
+
+        Args:
+            self: (todo): write your description
+            other: (todo): write your description
+        """
         return self.__dict__ == other.__dict__
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this object.
+
+        Args:
+            self: (todo): write your description
+        """
         return str(self.to_json_string())
 
     def to_dict(self):

@@ -64,6 +64,15 @@ MODEL_CLASSES = {
 
 class TextDataset(Dataset):
     def __init__(self, tokenizer, args, file_path='train', block_size=512):
+        """
+        Initialize the classizer.
+
+        Args:
+            self: (todo): write your description
+            tokenizer: (todo): write your description
+            file_path: (str): write your description
+            block_size: (int): write your description
+        """
         assert os.path.isfile(file_path)
         directory, filename = os.path.split(file_path)
         cached_features_file = os.path.join(directory, args.model_name_or_path + '_cached_lm_' + str(block_size) + '_' + filename)
@@ -92,18 +101,43 @@ class TextDataset(Dataset):
                 pickle.dump(self.examples, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     def __len__(self):
+        """
+        Returns the number of examples.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.examples)
 
     def __getitem__(self, item):
+        """
+        Return the item from the given item.
+
+        Args:
+            self: (todo): write your description
+            item: (str): write your description
+        """
         return torch.tensor(self.examples[item])
 
 
 def load_and_cache_examples(args, tokenizer, evaluate=False):
+    """
+    Loads the examples.
+
+    Args:
+        tokenizer: (str): write your description
+        evaluate: (str): write your description
+    """
     dataset = TextDataset(tokenizer, args, file_path=args.eval_data_file if evaluate else args.train_data_file, block_size=args.block_size)
     return dataset
 
 
 def set_seed(args):
+    """
+    Sets random seed.
+
+    Args:
+    """
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -112,6 +146,13 @@ def set_seed(args):
 
 
 def _rotate_checkpoints(args, checkpoint_prefix, use_mtime=False):
+    """
+    Rotate checkpoint checkpoint.
+
+    Args:
+        checkpoint_prefix: (str): write your description
+        use_mtime: (bool): write your description
+    """
     if not args.save_total_limit:
         return
     if args.save_total_limit <= 0:
@@ -287,6 +328,14 @@ def train(args, train_dataset, model, tokenizer):
 
 
 def evaluate(args, model, tokenizer, prefix=""):
+    """
+    Evaluate the model on the given dataset.
+
+    Args:
+        model: (todo): write your description
+        tokenizer: (str): write your description
+        prefix: (str): write your description
+    """
     # Loop to handle MNLI double evaluation (matched, mis-matched)
     eval_output_dir = args.output_dir
 
@@ -341,6 +390,11 @@ def evaluate(args, model, tokenizer, prefix=""):
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
 
     ## Required parameters

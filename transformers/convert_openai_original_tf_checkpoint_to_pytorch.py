@@ -31,6 +31,14 @@ logging.basicConfig(level=logging.INFO)
 
 
 def convert_openai_checkpoint_to_pytorch(openai_checkpoint_folder_path, openai_config_file, pytorch_dump_folder_path):
+    """
+    Convert pytorch model to json.
+
+    Args:
+        openai_checkpoint_folder_path: (str): write your description
+        openai_config_file: (str): write your description
+        pytorch_dump_folder_path: (str): write your description
+    """
     # Construct model
     if openai_config_file == "":
         config = OpenAIGPTConfig()

@@ -135,34 +135,90 @@ class PreTrainedTokenizer(object):
 
     @bos_token.setter
     def bos_token(self, value):
+        """
+        Set the token.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self._bos_token = value
 
     @eos_token.setter
     def eos_token(self, value):
+        """
+        Set the token of the eos.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self._eos_token = value
 
     @unk_token.setter
     def unk_token(self, value):
+        """
+        Set the chunk token.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self._unk_token = value
 
     @sep_token.setter
     def sep_token(self, value):
+        """
+        Corresponds to access token
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self._sep_token = value
 
     @pad_token.setter
     def pad_token(self, value):
+        """
+        Pad a new token.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self._pad_token = value
 
     @cls_token.setter
     def cls_token(self, value):
+        """
+        Set the token.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self._cls_token = value
 
     @mask_token.setter
     def mask_token(self, value):
+        """
+        Mask token.
+
+        Args:
+            self: (todo): write your description
+            value: (array): write your description
+        """
         self._mask_token = value
 
     @additional_special_tokens.setter
     def additional_special_tokens(self, value):
+        """
+        Add an additional value to the value.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self._additional_special_tokens = value
 
     @property
@@ -206,6 +262,13 @@ class PreTrainedTokenizer(object):
         return self.convert_tokens_to_ids(self.additional_special_tokens)
 
     def __init__(self, max_len=None, **kwargs):
+        """
+        Initialize the next tokenizer.
+
+        Args:
+            self: (todo): write your description
+            max_len: (int): write your description
+        """
         self._bos_token = None
         self._eos_token = None
         self._unk_token = None
@@ -285,6 +348,14 @@ class PreTrainedTokenizer(object):
 
     @classmethod
     def _from_pretrained(cls, pretrained_model_name_or_path, *init_inputs, **kwargs):
+        """
+        Initialize a pre - trained model from a pre - trained model.
+
+        Args:
+            cls: (todo): write your description
+            pretrained_model_name_or_path: (str): write your description
+            init_inputs: (todo): write your description
+        """
         cache_dir = kwargs.pop('cache_dir', None)
         force_download = kwargs.pop('force_download', False)
         proxies = kwargs.pop('proxies', None)
@@ -607,6 +678,13 @@ class PreTrainedTokenizer(object):
             Take care of added tokens.
         """
         def split_on_token(tok, text):
+            """
+            Split text into tokens into tokens.
+
+            Args:
+                tok: (str): write your description
+                text: (str): write your description
+            """
             result = []
             split_text = text.split(tok)
             for i, sub_text in enumerate(split_text):
@@ -625,6 +703,13 @@ class PreTrainedTokenizer(object):
             return result
 
         def split_on_tokens(tok_list, text):
+            """
+            Split text into tokens.
+
+            Args:
+                tok_list: (list): write your description
+                text: (str): write your description
+            """
             if not text:
                 return []
             if not tok_list:
@@ -675,6 +760,13 @@ class PreTrainedTokenizer(object):
         return ids
 
     def _convert_token_to_id_with_added_voc(self, token):
+        """
+        Converts a token to a list of tokens.
+
+        Args:
+            self: (todo): write your description
+            token: (str): write your description
+        """
         if token is None:
             return None
 
@@ -683,6 +775,13 @@ class PreTrainedTokenizer(object):
         return self._convert_token_to_id(token)
 
     def _convert_token_to_id(self, token):
+        """
+        Convert a token to a token.
+
+        Args:
+            self: (todo): write your description
+            token: (str): write your description
+        """
         raise NotImplementedError
 
     def encode(self,
@@ -771,6 +870,12 @@ class PreTrainedTokenizer(object):
         """
 
         def get_input_ids(text):
+            """
+            Converts input text.
+
+            Args:
+                text: (str): write your description
+            """
             if isinstance(text, six.string_types):
                 return self.convert_tokens_to_ids(self.tokenize(text, **kwargs))
             elif isinstance(text, (list, tuple)) and len(text) > 0 and isinstance(text[0], six.string_types):
@@ -922,6 +1027,14 @@ class PreTrainedTokenizer(object):
         return (ids, pair_ids, overflowing_tokens)
 
     def create_token_type_ids_from_sequences(self, token_ids_0, token_ids_1=None):
+        """
+        Parameters ---------- token_ids_ids
+
+        Args:
+            self: (todo): write your description
+            token_ids_0: (str): write your description
+            token_ids_1: (str): write your description
+        """
         logger.warning("This tokenizer does not make use of special tokens.")
         if token_ids_1 is None:
             return len(token_ids_0) * [0]
@@ -980,6 +1093,13 @@ class PreTrainedTokenizer(object):
         return tokens
 
     def _convert_id_to_token(self, index):
+        """
+        Convert a token to a token.
+
+        Args:
+            self: (todo): write your description
+            index: (todo): write your description
+        """
         raise NotImplementedError
 
     def convert_tokens_to_string(self, tokens):

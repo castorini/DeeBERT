@@ -9,6 +9,15 @@ from transformers.modeling_camembert import CamembertForMaskedLM
 
 
 def fill_mask(masked_input, model, tokenizer, topk=5):
+    """
+    Parameters ---------- masked_input with the modelizer.
+
+    Args:
+        masked_input: (str): write your description
+        model: (todo): write your description
+        tokenizer: (todo): write your description
+        topk: (todo): write your description
+    """
     # Adapted from https://github.com/pytorch/fairseq/blob/master/fairseq/models/roberta/hub_interface.py
     assert masked_input.count('<mask>') == 1
     input_ids = torch.tensor(tokenizer.encode(masked_input, add_special_tokens=True)).unsqueeze(0)  # Batch size 1

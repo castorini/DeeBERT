@@ -28,6 +28,12 @@ class RobertaTokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = RobertaTokenizer
 
     def setUp(self):
+        """
+        Set vocab for vocab.
+
+        Args:
+            self: (todo): write your description
+        """
         super(RobertaTokenizationTest, self).setUp()
 
         # Adapted from Sennrich et al. 2015 and https://github.com/rsennrich/subword-nmt
@@ -47,15 +53,33 @@ class RobertaTokenizationTest(CommonTestCases.CommonTokenizerTester):
             fp.write("\n".join(merges))
 
     def get_tokenizer(self, **kwargs):
+        """
+        Returns a tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         kwargs.update(self.special_tokens_map)
         return RobertaTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"lower newer"
         output_text = u"lower newer"
         return input_text, output_text
 
     def test_full_tokenizer(self):
+        """
+        Reads the wordizer file.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = RobertaTokenizer(self.vocab_file, self.merges_file, **self.special_tokens_map)
         text = "lower newer"
         bpe_tokens = ["\u0120low", "er", "\u0120", "n", "e", "w", "er"]
@@ -68,6 +92,12 @@ class RobertaTokenizationTest(CommonTestCases.CommonTokenizerTester):
             tokenizer.convert_tokens_to_ids(input_tokens), input_bpe_tokens)
 
     def roberta_dict_integration_testing(self):
+        """
+        Encode the roberta - roberta token.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = self.get_tokenizer()
 
         self.assertListEqual(
@@ -81,6 +111,12 @@ class RobertaTokenizationTest(CommonTestCases.CommonTokenizerTester):
 
     @pytest.mark.slow
     def test_sequence_builders(self):
+        """
+        Test if the sequence.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
         text = tokenizer.encode("sequence builders", add_special_tokens=False)

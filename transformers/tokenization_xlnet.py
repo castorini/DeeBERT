@@ -66,6 +66,24 @@ class XLNetTokenizer(PreTrainedTokenizer):
                  bos_token="<s>", eos_token="</s>", unk_token="<unk>", sep_token="<sep>",
                  pad_token="<pad>", cls_token="<cls>", mask_token="<mask>",
                  additional_special_tokens=["<eop>", "<eod>"], **kwargs):
+        """
+        Initialize word embedding file.
+
+        Args:
+            self: (todo): write your description
+            vocab_file: (str): write your description
+            do_lower_case: (todo): write your description
+            remove_space: (todo): write your description
+            keep_accents: (bool): write your description
+            bos_token: (str): write your description
+            eos_token: (str): write your description
+            unk_token: (str): write your description
+            sep_token: (str): write your description
+            pad_token: (str): write your description
+            cls_token: (str): write your description
+            mask_token: (str): write your description
+            additional_special_tokens: (todo): write your description
+        """
         super(XLNetTokenizer, self).__init__(bos_token=bos_token, eos_token=eos_token,
                                              unk_token=unk_token, sep_token=sep_token,
                                              pad_token=pad_token, cls_token=cls_token,
@@ -91,14 +109,33 @@ class XLNetTokenizer(PreTrainedTokenizer):
 
     @property
     def vocab_size(self):
+        """
+        Returns the size of the sp_model.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.sp_model)
 
     def __getstate__(self):
+        """
+        Returns a dictionary of the state.
+
+        Args:
+            self: (todo): write your description
+        """
         state = self.__dict__.copy()
         state["sp_model"] = None
         return state
 
     def __setstate__(self, d):
+        """
+        Set the vocabmiece model.
+
+        Args:
+            self: (todo): write your description
+            d: (todo): write your description
+        """
         self.__dict__ = d
         try:
             import sentencepiece as spm
@@ -109,6 +146,13 @@ class XLNetTokenizer(PreTrainedTokenizer):
         self.sp_model.Load(self.vocab_file)
 
     def preprocess_text(self, inputs):
+        """
+        Preprocess text.
+
+        Args:
+            self: (todo): write your description
+            inputs: (str): write your description
+        """
         if self.remove_space:
             outputs = ' '.join(inputs.strip().split())
         else:

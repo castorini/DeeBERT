@@ -175,6 +175,13 @@ def load_tf_weights_in_transfo_xl(model, config, tf_path):
 
 class PositionalEmbedding(nn.Module):
     def __init__(self, demb):
+        """
+        Initialize the driver.
+
+        Args:
+            self: (todo): write your description
+            demb: (todo): write your description
+        """
         super(PositionalEmbedding, self).__init__()
 
         self.demb = demb
@@ -183,6 +190,14 @@ class PositionalEmbedding(nn.Module):
         self.register_buffer('inv_freq', inv_freq)
 
     def forward(self, pos_seq, bsz=None):
+        """
+        Forward forward forward.
+
+        Args:
+            self: (todo): write your description
+            pos_seq: (todo): write your description
+            bsz: (todo): write your description
+        """
         sinusoid_inp = torch.ger(pos_seq, self.inv_freq)
         pos_emb = torch.cat([sinusoid_inp.sin(), sinusoid_inp.cos()], dim=-1)
 
@@ -195,6 +210,17 @@ class PositionalEmbedding(nn.Module):
 
 class PositionwiseFF(nn.Module):
     def __init__(self, d_model, d_inner, dropout, pre_lnorm=False, layer_norm_epsilon=1e-5):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            d_model: (str): write your description
+            d_inner: (int): write your description
+            dropout: (str): write your description
+            pre_lnorm: (todo): write your description
+            layer_norm_epsilon: (int): write your description
+        """
         super(PositionwiseFF, self).__init__()
 
         self.d_model = d_model
@@ -213,6 +239,13 @@ class PositionwiseFF(nn.Module):
         self.pre_lnorm = pre_lnorm
 
     def forward(self, inp):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            inp: (todo): write your description
+        """
         if self.pre_lnorm:
             ##### layer normalization + positionwise feed-forward
             core_out = self.CoreNet(self.layer_norm(inp))
@@ -234,6 +267,25 @@ class RelPartialLearnableMultiHeadAttn(nn.Module):
                  tgt_len=None, ext_len=None, mem_len=None, pre_lnorm=False,
                  r_r_bias=None, r_w_bias=None, output_attentions=False,
                  layer_norm_epsilon=1e-5):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            n_head: (int): write your description
+            d_model: (str): write your description
+            d_head: (todo): write your description
+            dropout: (str): write your description
+            dropatt: (str): write your description
+            tgt_len: (int): write your description
+            ext_len: (str): write your description
+            mem_len: (todo): write your description
+            pre_lnorm: (todo): write your description
+            r_r_bias: (float): write your description
+            r_w_bias: (todo): write your description
+            output_attentions: (todo): write your description
+            layer_norm_epsilon: (int): write your description
+        """
         super(RelPartialLearnableMultiHeadAttn, self).__init__()
 
         self.output_attentions = output_attentions
@@ -264,6 +316,13 @@ class RelPartialLearnableMultiHeadAttn(nn.Module):
         self.r_net = nn.Linear(self.d_model, self.n_head * self.d_head, bias=False)
 
     def _rel_shift(self, x):
+        """
+        Shift the image x.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         zero_pad_shape = (x.size(0), 1) + x.size()[2:]
         zero_pad = torch.zeros(zero_pad_shape, device=x.device, dtype=x.dtype)
         x_padded = torch.cat([zero_pad, x], dim=1)
@@ -276,6 +335,17 @@ class RelPartialLearnableMultiHeadAttn(nn.Module):
         return x
 
     def forward(self, w, r, attn_mask=None, mems=None, head_mask=None):
+        """
+        Perform forward
+
+        Args:
+            self: (todo): write your description
+            w: (todo): write your description
+            r: (todo): write your description
+            attn_mask: (todo): write your description
+            mems: (todo): write your description
+            head_mask: (todo): write your description
+        """
         qlen, rlen, bsz = w.size(0), r.size(0), w.size(1)
 
         if mems is not None:
@@ -370,6 +440,18 @@ class RelPartialLearnableMultiHeadAttn(nn.Module):
 class RelPartialLearnableDecoderLayer(nn.Module):
     def __init__(self, n_head, d_model, d_head, d_inner, dropout, layer_norm_epsilon=1e-5,
                  **kwargs):
+        """
+        Initialize d_att.
+
+        Args:
+            self: (todo): write your description
+            n_head: (int): write your description
+            d_model: (str): write your description
+            d_head: (todo): write your description
+            d_inner: (int): write your description
+            dropout: (str): write your description
+            layer_norm_epsilon: (int): write your description
+        """
         super(RelPartialLearnableDecoderLayer, self).__init__()
 
         self.dec_attn = RelPartialLearnableMultiHeadAttn(n_head, d_model,
@@ -379,6 +461,17 @@ class RelPartialLearnableDecoderLayer(nn.Module):
                                      layer_norm_epsilon=layer_norm_epsilon)
 
     def forward(self, dec_inp, r, dec_attn_mask=None, mems=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            dec_inp: (todo): write your description
+            r: (todo): write your description
+            dec_attn_mask: (todo): write your description
+            mems: (todo): write your description
+            head_mask: (todo): write your description
+        """
 
         attn_outputs = self.dec_attn(dec_inp, r,
                                attn_mask=dec_attn_mask,
@@ -393,6 +486,18 @@ class RelPartialLearnableDecoderLayer(nn.Module):
 class AdaptiveEmbedding(nn.Module):
     def __init__(self, n_token, d_embed, d_proj, cutoffs, div_val=1,
                  sample_softmax=False):
+        """
+        Initialize embedding : np.
+
+        Args:
+            self: (todo): write your description
+            n_token: (int): write your description
+            d_embed: (int): write your description
+            d_proj: (str): write your description
+            cutoffs: (float): write your description
+            div_val: (todo): write your description
+            sample_softmax: (int): write your description
+        """
         super(AdaptiveEmbedding, self).__init__()
 
         self.n_token = n_token
@@ -422,6 +527,13 @@ class AdaptiveEmbedding(nn.Module):
                 self.emb_projs.append(nn.Parameter(torch.FloatTensor(d_proj, d_emb_i)))
 
     def forward(self, inp):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            inp: (todo): write your description
+        """
         if self.div_val == 1:
             embed = self.emb_layers[0](inp)
             if self.d_proj != self.d_embed:
@@ -464,12 +576,26 @@ class TransfoXLPreTrainedModel(PreTrainedModel):
     base_model_prefix = "transformer"
 
     def _init_weight(self, weight):
+        """
+        Initialize the weight.
+
+        Args:
+            self: (todo): write your description
+            weight: (float): write your description
+        """
         if self.config.init == 'uniform':
             nn.init.uniform_(weight, -self.config.init_range, self.config.init_range)
         elif self.config.init == 'normal':
             nn.init.normal_(weight, 0.0, self.config.init_std)
 
     def _init_bias(self, bias):
+        """
+        Initialize bias.
+
+        Args:
+            self: (todo): write your description
+            bias: (todo): write your description
+        """
         nn.init.constant_(bias, 0.0)
 
     def _init_weights(self, m):
@@ -588,6 +714,13 @@ class TransfoXLModel(TransfoXLPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TransfoXLModel, self).__init__(config)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -644,24 +777,66 @@ class TransfoXLModel(TransfoXLPreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of word embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.word_emb
 
     def set_input_embeddings(self, new_embeddings):
+        """
+        Set the embeddings
+
+        Args:
+            self: (todo): write your description
+            new_embeddings: (todo): write your description
+        """
         self.word_emb = new_embeddings
 
     def backward_compatible(self):
+        """
+        Backward backward backward
+
+        Args:
+            self: (todo): write your description
+        """
         self.sample_softmax = -1
 
     def reset_length(self, tgt_len, ext_len, mem_len):
+        """
+        Reset the length of the file.
+
+        Args:
+            self: (todo): write your description
+            tgt_len: (int): write your description
+            ext_len: (todo): write your description
+            mem_len: (todo): write your description
+        """
         self.tgt_len = tgt_len
         self.mem_len = mem_len
         self.ext_len = ext_len
 
     def _prune_heads(self, heads):
+        """
+        Cleans up a list of the given message.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         logger.info("Head pruning is not implemented for Transformer-XL model")
         pass
 
     def init_mems(self, bsz):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            bsz: (todo): write your description
+        """
         if self.mem_len > 0:
             mems = []
             param = next(self.parameters())
@@ -675,6 +850,16 @@ class TransfoXLModel(TransfoXLPreTrainedModel):
             return None
 
     def _update_mems(self, hids, mems, qlen, mlen):
+        """
+        Perform an update of the matrixs.
+
+        Args:
+            self: (todo): write your description
+            hids: (list): write your description
+            mems: (str): write your description
+            qlen: (todo): write your description
+            mlen: (str): write your description
+        """
         # does not deal with None
         if mems is None: return None
 
@@ -698,6 +883,16 @@ class TransfoXLModel(TransfoXLPreTrainedModel):
         return new_mems
 
     def forward(self, input_ids=None, mems=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (todo): write your description
+            mems: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         # the original code for Transformer-XL used shapes [len, bsz] but we want a unified interface in the library
         # so we transpose here from shape [bsz, len] to shape [len, bsz]
         if input_ids is not None and inputs_embeds is not None:
@@ -831,6 +1026,13 @@ class TransfoXLLMHeadModel(TransfoXLPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the model
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TransfoXLLMHeadModel, self).__init__(config)
         self.transformer = TransfoXLModel(config)
         self.sample_softmax = config.sample_softmax
@@ -872,12 +1074,39 @@ class TransfoXLLMHeadModel(TransfoXLPreTrainedModel):
                             self.crit.out_projs[i] = self.transformer.word_emb.emb_projs[i]
 
     def reset_length(self, tgt_len, ext_len, mem_len):
+        """
+        Reset the length of the stream.
+
+        Args:
+            self: (todo): write your description
+            tgt_len: (int): write your description
+            ext_len: (todo): write your description
+            mem_len: (todo): write your description
+        """
         self.transformer.reset_length(tgt_len, ext_len, mem_len)
 
     def init_mems(self, bsz):
+        """
+        Initialize a transformer.
+
+        Args:
+            self: (todo): write your description
+            bsz: (todo): write your description
+        """
         return self.transformer.init_mems(bsz)
 
     def forward(self, input_ids=None, mems=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (todo): write your description
+            mems: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         if input_ids is not None:
             bsz, tgt_len = input_ids.size(0), input_ids.size(1)
         elif inputs_embeds is not None:

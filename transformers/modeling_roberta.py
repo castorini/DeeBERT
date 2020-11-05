@@ -44,6 +44,13 @@ class RobertaEmbeddings(BertEmbeddings):
     Same as BertEmbeddings with a tiny tweak for positional embeddings indexing.
     """
     def __init__(self, config):
+        """
+        Initialize embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaEmbeddings, self).__init__(config)
         self.padding_idx = 1
         self.word_embeddings = nn.Embedding(config.vocab_size, config.hidden_size, padding_idx=self.padding_idx)
@@ -51,6 +58,16 @@ class RobertaEmbeddings(BertEmbeddings):
                                                 padding_idx=self.padding_idx)
 
     def forward(self, input_ids=None, token_type_ids=None, position_ids=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None:
             input_shape = input_ids.size()
         else:
@@ -178,15 +195,35 @@ class RobertaModel(BertModel):
     base_model_prefix = "roberta"
 
     def __init__(self, config):
+        """
+        Initialize the calibration
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaModel, self).__init__(config)
 
         self.embeddings = RobertaEmbeddings(config)
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings.word_embeddings
 
     def set_input_embeddings(self, value):
+        """
+        Set the embeddings.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self.embeddings.word_embeddings = value
 
 @add_start_docstrings("""RoBERTa Model with a `language modeling` head on top. """,
@@ -226,6 +263,13 @@ class RobertaForMaskedLM(BertPreTrainedModel):
     base_model_prefix = "roberta"
 
     def __init__(self, config):
+        """
+        Initialize the rota
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaForMaskedLM, self).__init__(config)
 
         self.roberta = RobertaModel(config)
@@ -234,10 +278,29 @@ class RobertaForMaskedLM(BertPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        Returns a list of lmdings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head.decoder
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 masked_lm_labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            masked_lm_labels: (todo): write your description
+        """
         outputs = self.roberta(input_ids,
                                attention_mask=attention_mask,
                                token_type_ids=token_type_ids,
@@ -261,6 +324,13 @@ class RobertaLMHead(nn.Module):
     """Roberta Head for masked language modeling."""
 
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaLMHead, self).__init__()
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.layer_norm = BertLayerNorm(config.hidden_size, eps=config.layer_norm_eps)
@@ -269,6 +339,13 @@ class RobertaLMHead(nn.Module):
         self.bias = nn.Parameter(torch.zeros(config.vocab_size))
 
     def forward(self, features, **kwargs):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            features: (todo): write your description
+        """
         x = self.dense(features)
         x = gelu(x)
         x = self.layer_norm(x)
@@ -318,6 +395,13 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
     base_model_prefix = "roberta"
 
     def __init__(self, config):
+        """
+        Initialize the configurations.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -326,6 +410,19 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
     
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         outputs = self.roberta(input_ids,
                                attention_mask=attention_mask,
                                token_type_ids=token_type_ids,
@@ -427,6 +524,13 @@ class RobertaForMultipleChoice(BertPreTrainedModel):
     base_model_prefix = "roberta"
 
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaForMultipleChoice, self).__init__(config)
 
         self.roberta = RobertaModel(config)
@@ -437,6 +541,19 @@ class RobertaForMultipleChoice(BertPreTrainedModel):
 
     def forward(self, input_ids=None, token_type_ids=None, attention_mask=None, labels=None,
                 position_ids=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            token_type_ids: (str): write your description
+            attention_mask: (todo): write your description
+            labels: (todo): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         num_choices = input_ids.shape[1]
 
         flat_input_ids = input_ids.view(-1, input_ids.size(-1))
@@ -498,6 +615,13 @@ class RobertaForTokenClassification(BertPreTrainedModel):
     base_model_prefix = "roberta"
 
     def __init__(self, config):
+        """
+        Initialize the super classifier.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaForTokenClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -509,6 +633,19 @@ class RobertaForTokenClassification(BertPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
                 position_ids=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
 
         outputs = self.roberta(input_ids,
                                attention_mask=attention_mask,
@@ -542,12 +679,26 @@ class RobertaClassificationHead(nn.Module):
     """Head for sentence-level classification tasks."""
 
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(RobertaClassificationHead, self).__init__()
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.out_proj = nn.Linear(config.hidden_size, config.num_labels)
 
     def forward(self, features, **kwargs):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            features: (todo): write your description
+        """
         x = features[:, 0, :]  # take <s> token (equiv. to [CLS])
         x = self.dropout(x)
         x = self.dense(x)

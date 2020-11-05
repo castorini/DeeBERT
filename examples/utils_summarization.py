@@ -26,6 +26,15 @@ class CNNDailyMailDataset(Dataset):
     """
 
     def __init__(self, tokenizer, prefix="train", data_dir=""):
+        """
+        Initialize the tokenizer.
+
+        Args:
+            self: (todo): write your description
+            tokenizer: (int): write your description
+            prefix: (str): write your description
+            data_dir: (str): write your description
+        """
         assert os.path.isdir(data_dir)
         self.tokenizer = tokenizer
 
@@ -44,9 +53,22 @@ class CNNDailyMailDataset(Dataset):
                 self.stories_path.append(path_to_story)
 
     def __len__(self):
+        """
+        Returns the number of bytes in - memory.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.stories_path)
 
     def __getitem__(self, idx):
+        """
+        Retrieve the story summary.
+
+        Args:
+            self: (todo): write your description
+            idx: (list): write your description
+        """
         story_path = self.stories_path[idx]
         with open(story_path, encoding="utf-8") as source:
             raw_story = source.read()
@@ -91,6 +113,12 @@ def process_story(raw_story):
 
 
 def _add_missing_period(line):
+    """
+    Add missing missing missing missing period.
+
+    Args:
+        line: (str): write your description
+    """
     END_TOKENS = [".", "!", "?", "...", "'", "`", '"', u"\u2019", u"\u2019", ")"]
     if line.startswith("@highlight"):
         return line

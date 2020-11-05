@@ -135,6 +135,12 @@ def gelu_new(x):
 
 
 def swish(x):
+    """
+    Swish ( x.
+
+    Args:
+        x: (int): write your description
+    """
     return x * torch.sigmoid(x)
 
 
@@ -148,6 +154,13 @@ class BertEmbeddings(nn.Module):
     """Construct the embeddings from word, position and token_type embeddings.
     """
     def __init__(self, config):
+        """
+        Initialize embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertEmbeddings, self).__init__()
         self.word_embeddings = nn.Embedding(config.vocab_size, config.hidden_size, padding_idx=0)
         self.position_embeddings = nn.Embedding(config.max_position_embeddings, config.hidden_size)
@@ -159,6 +172,16 @@ class BertEmbeddings(nn.Module):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
 
     def forward(self, input_ids=None, token_type_ids=None, position_ids=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None:
             input_shape = input_ids.size()
         else:
@@ -185,6 +208,13 @@ class BertEmbeddings(nn.Module):
 
 class BertSelfAttention(nn.Module):
     def __init__(self, config):
+        """
+        Initialize self.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertSelfAttention, self).__init__()
         if config.hidden_size % config.num_attention_heads != 0:
             raise ValueError(
@@ -203,11 +233,29 @@ class BertSelfAttention(nn.Module):
         self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
 
     def transpose_for_scores(self, x):
+        """
+        Transpose the attention.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         new_x_shape = x.size()[:-1] + (self.num_attention_heads, self.attention_head_size)
         x = x.view(*new_x_shape)
         return x.permute(0, 2, 1, 3)
 
     def forward(self, hidden_states, attention_mask=None, head_mask=None, encoder_hidden_states=None, encoder_attention_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            encoder_hidden_states: (todo): write your description
+            encoder_attention_mask: (todo): write your description
+        """
         mixed_query_layer = self.query(hidden_states)
 
         # If this is instantiated as a cross-attention module, the keys
@@ -255,12 +303,27 @@ class BertSelfAttention(nn.Module):
 
 class BertSelfOutput(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertSelfOutput, self).__init__()
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.LayerNorm = BertLayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
 
     def forward(self, hidden_states, input_tensor):
+        """
+        Parameters ---------- hidden_states : np.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            input_tensor: (todo): write your description
+        """
         hidden_states = self.dense(hidden_states)
         hidden_states = self.dropout(hidden_states)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
@@ -269,12 +332,26 @@ class BertSelfOutput(nn.Module):
 
 class BertAttention(nn.Module):
     def __init__(self, config):
+        """
+        Initialize self.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertAttention, self).__init__()
         self.self = BertSelfAttention(config)
         self.output = BertSelfOutput(config)
         self.pruned_heads = set()
 
     def prune_heads(self, heads):
+        """
+        Prune attention.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         if len(heads) == 0:
             return
         mask = torch.ones(self.self.num_attention_heads, self.self.attention_head_size)
@@ -298,6 +375,17 @@ class BertAttention(nn.Module):
         self.pruned_heads = self.pruned_heads.union(heads)
 
     def forward(self, hidden_states, attention_mask=None, head_mask=None, encoder_hidden_states=None, encoder_attention_mask=None):
+        """
+        Transformer computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            encoder_hidden_states: (todo): write your description
+            encoder_attention_mask: (todo): write your description
+        """
         self_outputs = self.self(hidden_states, attention_mask, head_mask, encoder_hidden_states, encoder_attention_mask)
         attention_output = self.output(self_outputs[0], hidden_states)
         outputs = (attention_output,) + self_outputs[1:]  # add attentions if we output them
@@ -306,6 +394,13 @@ class BertAttention(nn.Module):
 
 class BertIntermediate(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertIntermediate, self).__init__()
         self.dense = nn.Linear(config.hidden_size, config.intermediate_size)
         if isinstance(config.hidden_act, str) or (sys.version_info[0] == 2 and isinstance(config.hidden_act, unicode)):
@@ -314,6 +409,13 @@ class BertIntermediate(nn.Module):
             self.intermediate_act_fn = config.hidden_act
 
     def forward(self, hidden_states):
+        """
+        R forward forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+        """
         hidden_states = self.dense(hidden_states)
         hidden_states = self.intermediate_act_fn(hidden_states)
         return hidden_states
@@ -321,12 +423,27 @@ class BertIntermediate(nn.Module):
 
 class BertOutput(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertOutput, self).__init__()
         self.dense = nn.Linear(config.intermediate_size, config.hidden_size)
         self.LayerNorm = BertLayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
 
     def forward(self, hidden_states, input_tensor):
+        """
+        Parameters ---------- hidden_states : np.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            input_tensor: (todo): write your description
+        """
         hidden_states = self.dense(hidden_states)
         hidden_states = self.dropout(hidden_states)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
@@ -335,6 +452,13 @@ class BertOutput(nn.Module):
 
 class BertLayer(nn.Module):
     def __init__(self, config):
+        """
+        Initialize self.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertLayer, self).__init__()
         self.attention = BertAttention(config)
         self.is_decoder = config.is_decoder
@@ -344,6 +468,17 @@ class BertLayer(nn.Module):
         self.output = BertOutput(config)
 
     def forward(self, hidden_states, attention_mask=None, head_mask=None, encoder_hidden_states=None, encoder_attention_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            encoder_hidden_states: (todo): write your description
+            encoder_attention_mask: (todo): write your description
+        """
         self_attention_outputs = self.attention(hidden_states, attention_mask, head_mask)
         attention_output = self_attention_outputs[0]
         outputs = self_attention_outputs[1:]  # add self attentions if we output attention weights
@@ -361,12 +496,30 @@ class BertLayer(nn.Module):
 
 class BertEncoder(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertEncoder, self).__init__()
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
         self.layer = nn.ModuleList([BertLayer(config) for _ in range(config.num_hidden_layers)])
 
     def forward(self, hidden_states, attention_mask=None, head_mask=None, encoder_hidden_states=None, encoder_attention_mask=None):
+        """
+        Perform forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            encoder_hidden_states: (todo): write your description
+            encoder_attention_mask: (todo): write your description
+        """
         all_hidden_states = ()
         all_attentions = ()
         for i, layer_module in enumerate(self.layer):
@@ -393,11 +546,25 @@ class BertEncoder(nn.Module):
 
 class BertPooler(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertPooler, self).__init__()
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
 
     def forward(self, hidden_states):
+        """
+        Returns the forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+        """
         # We "pool" the model by simply taking the hidden state corresponding
         # to the first token.
         first_token_tensor = hidden_states[:, 0]
@@ -408,6 +575,13 @@ class BertPooler(nn.Module):
 
 class BertPredictionHeadTransform(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertPredictionHeadTransform, self).__init__()
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         if isinstance(config.hidden_act, str) or (sys.version_info[0] == 2 and isinstance(config.hidden_act, unicode)):
@@ -417,6 +591,13 @@ class BertPredictionHeadTransform(nn.Module):
         self.LayerNorm = BertLayerNorm(config.hidden_size, eps=config.layer_norm_eps)
 
     def forward(self, hidden_states):
+        """
+        R forward forward computation_states.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+        """
         hidden_states = self.dense(hidden_states)
         hidden_states = self.transform_act_fn(hidden_states)
         hidden_states = self.LayerNorm(hidden_states)
@@ -425,6 +606,13 @@ class BertPredictionHeadTransform(nn.Module):
 
 class BertLMPredictionHead(nn.Module):
     def __init__(self, config):
+        """
+        Initialize vocabearization.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertLMPredictionHead, self).__init__()
         self.transform = BertPredictionHeadTransform(config)
 
@@ -437,6 +625,13 @@ class BertLMPredictionHead(nn.Module):
         self.bias = nn.Parameter(torch.zeros(config.vocab_size))
 
     def forward(self, hidden_states):
+        """
+        R forward computation of the hidden states.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+        """
         hidden_states = self.transform(hidden_states)
         hidden_states = self.decoder(hidden_states) + self.bias
         return hidden_states
@@ -444,31 +639,74 @@ class BertLMPredictionHead(nn.Module):
 
 class BertOnlyMLMHead(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the lMPrediction instance.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertOnlyMLMHead, self).__init__()
         self.predictions = BertLMPredictionHead(config)
 
     def forward(self, sequence_output):
+        """
+        Parameters ---------- sequence_output : list of dicts
+
+        Args:
+            self: (todo): write your description
+            sequence_output: (bool): write your description
+        """
         prediction_scores = self.predictions(sequence_output)
         return prediction_scores
 
 
 class BertOnlyNSPHead(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the superclasship.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertOnlyNSPHead, self).__init__()
         self.seq_relationship = nn.Linear(config.hidden_size, 2)
 
     def forward(self, pooled_output):
+        """
+        Forward the relationship of the current network.
+
+        Args:
+            self: (todo): write your description
+            pooled_output: (todo): write your description
+        """
         seq_relationship_score = self.seq_relationship(pooled_output)
         return seq_relationship_score
 
 
 class BertPreTrainingHeads(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertPreTrainingHeads, self).__init__()
         self.predictions = BertLMPredictionHead(config)
         self.seq_relationship = nn.Linear(config.hidden_size, 2)
 
     def forward(self, sequence_output, pooled_output):
+        """
+        Parameters ---------- sequence_output : sequence_output.
+
+        Args:
+            self: (todo): write your description
+            sequence_output: (bool): write your description
+            pooled_output: (todo): write your description
+        """
         prediction_scores = self.predictions(sequence_output)
         seq_relationship_score = self.seq_relationship(pooled_output)
         return prediction_scores, seq_relationship_score
@@ -603,6 +841,13 @@ class BertModel(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the bertools.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertModel, self).__init__(config)
         self.config = config
 
@@ -613,9 +858,22 @@ class BertModel(BertPreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings.word_embeddings
 
     def set_input_embeddings(self, value):
+        """
+        Set the embeddings.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self.embeddings.word_embeddings = value
 
     def _prune_heads(self, heads_to_prune):
@@ -766,6 +1024,13 @@ class BertForPreTraining(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the weights.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertForPreTraining, self).__init__(config)
 
         self.bert = BertModel(config)
@@ -774,10 +1039,30 @@ class BertForPreTraining(BertPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        Returns a list of predictions.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.cls.predictions.decoder
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 masked_lm_labels=None, next_sentence_label=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            masked_lm_labels: (todo): write your description
+            next_sentence_label: (todo): write your description
+        """
 
         outputs = self.bert(input_ids,
                             attention_mask=attention_mask,
@@ -842,6 +1127,13 @@ class BertForMaskedLM(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the bertools.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertForMaskedLM, self).__init__(config)
 
         self.bert = BertModel(config)
@@ -850,10 +1142,32 @@ class BertForMaskedLM(BertPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        Returns a list of predictions.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.cls.predictions.decoder
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 masked_lm_labels=None, encoder_hidden_states=None, encoder_attention_mask=None, lm_labels=None, ):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            masked_lm_labels: (todo): write your description
+            encoder_hidden_states: (todo): write your description
+            encoder_attention_mask: (todo): write your description
+            lm_labels: (todo): write your description
+        """
 
         outputs = self.bert(input_ids,
                             attention_mask=attention_mask,
@@ -925,6 +1239,13 @@ class BertForNextSentencePrediction(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the bert chain.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertForNextSentencePrediction, self).__init__(config)
 
         self.bert = BertModel(config)
@@ -934,6 +1255,19 @@ class BertForNextSentencePrediction(BertPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 next_sentence_label=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            next_sentence_label: (todo): write your description
+        """
 
         outputs = self.bert(input_ids,
                             attention_mask=attention_mask,
@@ -991,6 +1325,13 @@ class BertForSequenceClassification(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize bertools.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -1002,6 +1343,19 @@ class BertForSequenceClassification(BertPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
                 position_ids=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Perform forward.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
 
         outputs = self.bert(input_ids,
                             attention_mask=attention_mask,
@@ -1067,6 +1421,13 @@ class BertForMultipleChoice(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertForMultipleChoice, self).__init__(config)
 
         self.bert = BertModel(config)
@@ -1077,6 +1438,19 @@ class BertForMultipleChoice(BertPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
                 position_ids=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         num_choices = input_ids.shape[1]
 
         input_ids = input_ids.view(-1, input_ids.size(-1))
@@ -1141,6 +1515,13 @@ class BertForTokenClassification(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize bertools
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertForTokenClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -1152,6 +1533,19 @@ class BertForTokenClassification(BertPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
                 position_ids=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
 
         outputs = self.bert(input_ids,
                             attention_mask=attention_mask,
@@ -1227,6 +1621,13 @@ class BertForQuestionAnswering(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize bertools
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertForQuestionAnswering, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -1237,6 +1638,20 @@ class BertForQuestionAnswering(BertPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 start_positions=None, end_positions=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            start_positions: (todo): write your description
+            end_positions: (todo): write your description
+        """
 
         outputs = self.bert(input_ids,
                             attention_mask=attention_mask,

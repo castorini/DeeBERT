@@ -45,6 +45,16 @@ class InputFeatures(object):
     """A single set of features of data."""
 
     def __init__(self, input_ids, input_mask, segment_ids, label_ids):
+        """
+        Initialize the input segment.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            input_mask: (todo): write your description
+            segment_ids: (str): write your description
+            label_ids: (list): write your description
+        """
         self.input_ids = input_ids
         self.input_mask = input_mask
         self.segment_ids = segment_ids
@@ -52,6 +62,13 @@ class InputFeatures(object):
 
 
 def read_examples_from_file(data_dir, mode):
+    """
+    Reads examples from file.
+
+    Args:
+        data_dir: (str): write your description
+        mode: (str): write your description
+    """
     file_path = os.path.join(data_dir, "{}.txt".format(mode))
     guid_index = 1
     examples = []
@@ -202,6 +219,12 @@ def convert_examples_to_features(examples,
 
 
 def get_labels(path):
+    """
+    Get labels from a file.
+
+    Args:
+        path: (str): write your description
+    """
     if path:
         with open(path, "r") as f:
             labels = f.read().splitlines()

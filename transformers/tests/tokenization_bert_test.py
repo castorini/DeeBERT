@@ -32,6 +32,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = BertTokenizer
 
     def setUp(self):
+        """
+        Set vocab vocabulary.
+
+        Args:
+            self: (todo): write your description
+        """
         super(BertTokenizationTest, self).setUp()
 
         vocab_tokens = [
@@ -43,14 +49,32 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
     def get_tokenizer(self, **kwargs):
+        """
+        Return a tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         return BertTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"UNwant\u00E9d,running"
         output_text = u"unwanted, running"
         return input_text, output_text
 
     def test_full_tokenizer(self):
+        """
+        Reads a list of the corpus.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = self.tokenizer_class(self.vocab_file)
 
         tokens = tokenizer.tokenize(u"UNwant\u00E9d,running")
@@ -58,6 +82,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
         self.assertListEqual(tokenizer.convert_tokens_to_ids(tokens), [7, 4, 5, 10, 8, 9])
 
     def test_chinese(self):
+        """
+        Run the test tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = BasicTokenizer()
 
         self.assertListEqual(
@@ -65,6 +95,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
             [u"ah", u"\u535A", u"\u63A8", u"zz"])
 
     def test_basic_tokenizer_lower(self):
+        """
+        Tokenizes the tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = BasicTokenizer(do_lower_case=True)
 
         self.assertListEqual(
@@ -73,6 +109,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
         self.assertListEqual(tokenizer.tokenize(u"H\u00E9llo"), ["hello"])
 
     def test_basic_tokenizer_no_lower(self):
+        """
+        Tokenizes tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = BasicTokenizer(do_lower_case=False)
 
         self.assertListEqual(
@@ -80,6 +122,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
             ["HeLLo", "!", "how", "Are", "yoU", "?"])
 
     def test_wordpiece_tokenizer(self):
+        """
+        Returns a list of tokens.
+
+        Args:
+            self: (todo): write your description
+        """
         vocab_tokens = [
             "[UNK]", "[CLS]", "[SEP]", "want", "##want", "##ed", "wa", "un", "runn",
             "##ing"
@@ -100,6 +148,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
             tokenizer.tokenize("unwantedX running"), ["[UNK]", "runn", "##ing"])
 
     def test_is_whitespace(self):
+        """
+        Check if a valid whitespace.
+
+        Args:
+            self: (todo): write your description
+        """
         self.assertTrue(_is_whitespace(u" "))
         self.assertTrue(_is_whitespace(u"\t"))
         self.assertTrue(_is_whitespace(u"\r"))
@@ -110,6 +164,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
         self.assertFalse(_is_whitespace(u"-"))
 
     def test_is_control(self):
+        """
+        Set the control flag.
+
+        Args:
+            self: (todo): write your description
+        """
         self.assertTrue(_is_control(u"\u0005"))
 
         self.assertFalse(_is_control(u"A"))
@@ -118,6 +178,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
         self.assertFalse(_is_control(u"\r"))
 
     def test_is_punctuation(self):
+        """
+        Set the punctuation is punctuation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.assertTrue(_is_punctuation(u"-"))
         self.assertTrue(_is_punctuation(u"$"))
         self.assertTrue(_is_punctuation(u"`"))
@@ -128,6 +194,12 @@ class BertTokenizationTest(CommonTestCases.CommonTokenizerTester):
 
     @pytest.mark.slow
     def test_sequence_builders(self):
+        """
+        Test if the input tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = self.tokenizer_class.from_pretrained("bert-base-uncased")
 
         text = tokenizer.encode("sequence builders", add_special_tokens=False)

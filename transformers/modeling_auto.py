@@ -60,6 +60,12 @@ class AutoModel(object):
         This class cannot be instantiated using `__init__()` (throws an error).
     """
     def __init__(self):
+        """
+        Initialize the environment.
+
+        Args:
+            self: (todo): write your description
+        """
         raise EnvironmentError("AutoModel is designed to be instantiated "
             "using the `AutoModel.from_pretrained(pretrained_model_name_or_path)` method.")
 
@@ -184,6 +190,12 @@ class AutoModelWithLMHead(object):
         This class cannot be instantiated using `__init__()` (throws an error).
     """
     def __init__(self):
+        """
+        Initialize the environment.
+
+        Args:
+            self: (todo): write your description
+        """
         raise EnvironmentError("AutoModelWithLMHead is designed to be instantiated "
             "using the `AutoModelWithLMHead.from_pretrained(pretrained_model_name_or_path)` method.")
 
@@ -306,6 +318,12 @@ class AutoModelForSequenceClassification(object):
         This class cannot be instantiated using `__init__()` (throws an error).
     """
     def __init__(self):
+        """
+        Initialize the environment.
+
+        Args:
+            self: (todo): write your description
+        """
         raise EnvironmentError("AutoModelWithLMHead is designed to be instantiated "
             "using the `AutoModelWithLMHead.from_pretrained(pretrained_model_name_or_path)` method.")
 
@@ -416,6 +434,12 @@ class AutoModelForQuestionAnswering(object):
         This class cannot be instantiated using `__init__()` (throws an error).
     """
     def __init__(self):
+        """
+        Initialize the environment.
+
+        Args:
+            self: (todo): write your description
+        """
         raise EnvironmentError("AutoModelWithLMHead is designed to be instantiated "
             "using the `AutoModelWithLMHead.from_pretrained(pretrained_model_name_or_path)` method.")
 

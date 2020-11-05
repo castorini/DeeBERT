@@ -162,20 +162,51 @@ class XLMConfig(PretrainedConfig):
 
     @property
     def vocab_size(self):
+        """
+        The vocab size.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_words
 
     @vocab_size.setter
     def vocab_size(self, value):
+        """
+        Set the vocab size.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self.n_words = value
 
     @property
     def hidden_size(self):
+        """
+        Returns the size of the dimension.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.emb_dim
 
     @property
     def num_attention_heads(self):
+        """
+        Return the number of self attention.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_heads
 
     @property
     def num_hidden_layers(self):
+        """
+        Return the number of hidden hidden layers.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_layers

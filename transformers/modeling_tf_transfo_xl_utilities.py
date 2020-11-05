@@ -27,6 +27,18 @@ from .modeling_tf_utils import shape_list
 class TFAdaptiveSoftmaxMask(tf.keras.layers.Layer):
     def __init__(self, n_token, d_embed, d_proj, cutoffs, div_val=1,
                  keep_order=False, **kwargs):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            n_token: (int): write your description
+            d_embed: (int): write your description
+            d_proj: (str): write your description
+            cutoffs: (float): write your description
+            div_val: (todo): write your description
+            keep_order: (str): write your description
+        """
         super(TFAdaptiveSoftmaxMask, self).__init__(**kwargs)
 
         self.n_token = n_token
@@ -46,6 +58,13 @@ class TFAdaptiveSoftmaxMask(tf.keras.layers.Layer):
         self.out_projs = []
 
     def build(self, input_shape):
+        """
+        Parameters ---------- input_shape : np.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         if self.n_clusters > 0:
             self.cluster_weight = self.add_weight(shape=(self.n_clusters, self.d_embed),
                                                   initializer='zeros',
@@ -98,6 +117,15 @@ class TFAdaptiveSoftmaxMask(tf.keras.layers.Layer):
 
     @staticmethod
     def _logit(x, W, b, proj=None):
+        """
+        Computes the logarithm function.
+
+        Args:
+            x: (todo): write your description
+            W: (todo): write your description
+            b: (todo): write your description
+            proj: (todo): write your description
+        """
         y = x
         if proj is not None:
             y = tf.einsum('ibd,ed->ibe', y, proj)
@@ -105,12 +133,28 @@ class TFAdaptiveSoftmaxMask(tf.keras.layers.Layer):
 
     @staticmethod
     def _gather_logprob(logprob, target):
+        """
+        Gather the logprob of a tensor.
+
+        Args:
+            logprob: (todo): write your description
+            target: (todo): write your description
+        """
         lp_size = tf.shape(logprob)
         r = tf.range(lp_size[0])
         idx = tf.stack([r, target], 1)
         return tf.gather_nd(logprob, idx)
 
     def call(self, inputs, return_mean=True, training=False):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            return_mean: (bool): write your description
+            training: (bool): write your description
+        """
         hidden, target = inputs
         head_logprob = 0
         if self.n_clusters == 0:

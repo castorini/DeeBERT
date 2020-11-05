@@ -68,16 +68,33 @@ def sanity_checks(args):
     assert args.alpha_ce + args.alpha_mlm + args.alpha_clm + args.alpha_mse + args.alpha_cos > 0.
 
 def freeze_pos_embeddings(student, args):
+    """
+    Parameters ---------- studentdings.
+
+    Args:
+        student: (todo): write your description
+    """
     if args.student_type == 'roberta':
         student.roberta.embeddings.position_embeddings.weight.requires_grad = False
     elif args.student_type == 'gpt2':
         student.transformer.wpe.weight.requires_grad = False
 
 def freeze_token_type_embeddings(student, args):
+    """
+    Freeze token embeddings.
+
+    Args:
+        student: (todo): write your description
+    """
     if args.student_type == 'roberta':
         student.roberta.embeddings.token_type_embeddings.weight.requires_grad = False
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser(description="Training")
     parser.add_argument("--force", action='store_true',
                         help="Overwrite dump_path if it already exists.")

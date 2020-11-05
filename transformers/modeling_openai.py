@@ -115,10 +115,22 @@ def load_tf_weights_in_openai_gpt(model, config, openai_checkpoint_folder_path):
 
 
 def gelu(x):
+    """
+    Gelu ( x.
+
+    Args:
+        x: (todo): write your description
+    """
     return 0.5 * x * (1 + torch.tanh(math.sqrt(2 / math.pi) * (x + 0.044715 * torch.pow(x, 3))))
 
 
 def swish(x):
+    """
+    Swish ( x.
+
+    Args:
+        x: (int): write your description
+    """
     return x * torch.sigmoid(x)
 
 
@@ -127,6 +139,16 @@ ACT_FNS = {"relu": nn.ReLU, "swish": swish, "gelu": gelu}
 
 class Attention(nn.Module):
     def __init__(self, nx, n_ctx, config, scale=False):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            nx: (int): write your description
+            n_ctx: (int): write your description
+            config: (todo): write your description
+            scale: (float): write your description
+        """
         super(Attention, self).__init__()
         n_state = nx  # in Attention: n_state=768 (nx=n_embd)
         # [switch nx => n_state from Block to Attention to keep identical to TF implem]
@@ -145,6 +167,13 @@ class Attention(nn.Module):
         self.pruned_heads = set()
 
     def prune_heads(self, heads):
+        """
+        Prune the head and concatenation.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         if len(heads) == 0:
             return
         mask = torch.ones(self.n_head, self.split_size // self.n_head)
@@ -164,6 +193,17 @@ class Attention(nn.Module):
         self.pruned_heads = self.pruned_heads.union(heads)
 
     def _attn(self, q, k, v, attention_mask=None, head_mask=None):
+        """
+        Attn.
+
+        Args:
+            self: (todo): write your description
+            q: (int): write your description
+            k: (int): write your description
+            v: (todo): write your description
+            attention_mask: (int): write your description
+            head_mask: (bool): write your description
+        """
         w = torch.matmul(q, k)
         if self.scale:
             w = w / math.sqrt(v.size(-1))
@@ -189,11 +229,26 @@ class Attention(nn.Module):
         return outputs
 
     def merge_heads(self, x):
+        """
+        Merge a tuple of a dimension.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         x = x.permute(0, 2, 1, 3).contiguous()
         new_x_shape = x.size()[:-2] + (x.size(-2) * x.size(-1),)
         return x.view(*new_x_shape)  # in Tensorflow implem: fct merge_states
 
     def split_heads(self, x, k=False):
+        """
+        Split a tuple containing the first dimension.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            k: (todo): write your description
+        """
         new_x_shape = x.size()[:-1] + (self.n_head, x.size(-1) // self.n_head)
         x = x.view(*new_x_shape)  # in Tensorflow implem: fct split_states
         if k:
@@ -202,6 +257,15 @@ class Attention(nn.Module):
             return x.permute(0, 2, 1, 3)
 
     def forward(self, x, attention_mask=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (str): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+        """
         x = self.c_attn(x)
         query, key, value = x.split(self.split_size, dim=2)
         query = self.split_heads(query)
@@ -221,6 +285,14 @@ class Attention(nn.Module):
 
 class MLP(nn.Module):
     def __init__(self, n_state, config):  # in MLP: n_state=3072 (4 * n_embd)
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            n_state: (int): write your description
+            config: (todo): write your description
+        """
         super(MLP, self).__init__()
         nx = config.n_embd
         self.c_fc = Conv1D(n_state, nx)
@@ -229,6 +301,13 @@ class MLP(nn.Module):
         self.dropout = nn.Dropout(config.resid_pdrop)
 
     def forward(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         h = self.act(self.c_fc(x))
         h2 = self.c_proj(h)
         return self.dropout(h2)
@@ -236,6 +315,15 @@ class MLP(nn.Module):
 
 class Block(nn.Module):
     def __init__(self, n_ctx, config, scale=False):
+        """
+        Initialize the layer.
+
+        Args:
+            self: (todo): write your description
+            n_ctx: (int): write your description
+            config: (todo): write your description
+            scale: (float): write your description
+        """
         super(Block, self).__init__()
         nx = config.n_embd
         self.attn = Attention(nx, n_ctx, config, scale)
@@ -244,6 +332,15 @@ class Block(nn.Module):
         self.ln_2 = nn.LayerNorm(nx, eps=config.layer_norm_epsilon)
 
     def forward(self, x, attention_mask=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+        """
         attn_outputs = self.attn(x, attention_mask=attention_mask, head_mask=head_mask)
         a = attn_outputs[0]
 
@@ -353,6 +450,13 @@ class OpenAIGPTModel(OpenAIGPTPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(OpenAIGPTModel, self).__init__(config)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -365,9 +469,22 @@ class OpenAIGPTModel(OpenAIGPTPreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.tokens_embed
 
     def set_input_embeddings(self, new_embeddings):
+        """
+        Set the embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_embeddings: (todo): write your description
+        """
         self.tokens_embed = new_embeddings
 
     def _prune_heads(self, heads_to_prune):
@@ -378,6 +495,18 @@ class OpenAIGPTModel(OpenAIGPTPreTrainedModel):
             self.h[layer].attn.prune_heads(heads)
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None and inputs_embeds is not None:
             raise ValueError("You cannot specify both input_ids and inputs_embeds at the same time")
         elif input_ids is not None:
@@ -495,6 +624,13 @@ class OpenAIGPTLMHeadModel(OpenAIGPTPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the model parameters.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(OpenAIGPTLMHeadModel, self).__init__(config)
         self.transformer = OpenAIGPTModel(config)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
@@ -502,10 +638,29 @@ class OpenAIGPTLMHeadModel(OpenAIGPTPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        : returns : class : class :.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                token_type_ids=token_type_ids,
@@ -586,6 +741,13 @@ class OpenAIGPTDoubleHeadsModel(OpenAIGPTPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the openflow reader.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(OpenAIGPTDoubleHeadsModel, self).__init__(config)
 
         self.transformer = OpenAIGPTModel(config)
@@ -595,10 +757,31 @@ class OpenAIGPTDoubleHeadsModel(OpenAIGPTPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        : returns : class : class :.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head
 
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 mc_token_ids=None, lm_labels=None, mc_labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            mc_token_ids: (str): write your description
+            lm_labels: (todo): write your description
+            mc_labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                token_type_ids=token_type_ids,

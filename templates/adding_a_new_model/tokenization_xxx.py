@@ -118,6 +118,12 @@ class XxxTokenizer(PreTrainedTokenizer):
 
     @property
     def vocab_size(self):
+        """
+        Returns the size of the vocabulary.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.vocab)
 
     def _tokenize(self, text):

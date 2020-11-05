@@ -34,6 +34,12 @@ class TransfoXLTokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = TransfoXLTokenizer if is_torch_available() else None
 
     def setUp(self):
+        """
+        Set the vocab vocabulary.
+
+        Args:
+            self: (todo): write your description
+        """
         super(TransfoXLTokenizationTest, self).setUp()
 
         vocab_tokens = [
@@ -45,15 +51,33 @@ class TransfoXLTokenizationTest(CommonTestCases.CommonTokenizerTester):
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
     def get_tokenizer(self, **kwargs):
+        """
+        Returns a tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         kwargs['lower_case'] = True
         return TransfoXLTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"<unk> UNwanted , running"
         output_text = u"<unk> unwanted, running"
         return input_text, output_text
 
     def test_full_tokenizer(self):
+        """
+        Reads the vocabulary file.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = TransfoXLTokenizer(vocab_file=self.vocab_file, lower_case=True)
 
         tokens = tokenizer.tokenize(u"<unk> UNwanted , running")
@@ -63,6 +87,12 @@ class TransfoXLTokenizationTest(CommonTestCases.CommonTokenizerTester):
             tokenizer.convert_tokens_to_ids(tokens), [0, 4, 8, 7])
 
     def test_full_tokenizer_lower(self):
+        """
+        The tokenizer tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = TransfoXLTokenizer(lower_case=True)
 
         self.assertListEqual(
@@ -70,6 +100,12 @@ class TransfoXLTokenizationTest(CommonTestCases.CommonTokenizerTester):
             ["hello", "!", "how", "are", "you", "?"])
 
     def test_full_tokenizer_no_lower(self):
+        """
+        Tokenizes the tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = TransfoXLTokenizer(lower_case=False)
 
         self.assertListEqual(

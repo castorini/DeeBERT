@@ -67,6 +67,11 @@ MODEL_CLASSES = {
 }
 
 def set_seed(args):
+    """
+    Sets random seed.
+
+    Args:
+    """
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -74,6 +79,12 @@ def set_seed(args):
         torch.cuda.manual_seed_all(args.seed)
 
 def to_list(tensor):
+    """
+    Convert tensor to tensor.
+
+    Args:
+        tensor: (todo): write your description
+    """
     return tensor.detach().cpu().tolist()
 
 def train(args, train_dataset, model, tokenizer):
@@ -205,6 +216,14 @@ def train(args, train_dataset, model, tokenizer):
 
 
 def evaluate(args, model, tokenizer, prefix=""):
+    """
+    Evaluate the model on the given dataset.
+
+    Args:
+        model: (todo): write your description
+        tokenizer: (str): write your description
+        prefix: (str): write your description
+    """
     dataset, examples, features = load_and_cache_examples(args, tokenizer, evaluate=True, output_examples=True)
 
     if not os.path.exists(args.output_dir) and args.local_rank in [-1, 0]:
@@ -282,6 +301,14 @@ def evaluate(args, model, tokenizer, prefix=""):
 
 
 def load_and_cache_examples(args, tokenizer, evaluate=False, output_examples=False):
+    """
+    Load examples and examples.
+
+    Args:
+        tokenizer: (str): write your description
+        evaluate: (str): write your description
+        output_examples: (str): write your description
+    """
     if args.local_rank not in [-1, 0] and not evaluate:
         torch.distributed.barrier()  # Make sure only the first process in distributed training process the dataset, and the others will use the cache
 
@@ -335,6 +362,11 @@ def load_and_cache_examples(args, tokenizer, evaluate=False, output_examples=Fal
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
 
     ## Required parameters
