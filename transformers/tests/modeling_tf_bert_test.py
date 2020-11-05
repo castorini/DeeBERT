@@ -72,6 +72,34 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
                      num_choices=4,
                      scope=None,
                     ):
+            """
+            Initialize the model.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_input_mask: (bool): write your description
+                use_token_type_ids: (str): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                intermediate_size: (int): write your description
+                hidden_act: (todo): write your description
+                hidden_dropout_prob: (todo): write your description
+                attention_probs_dropout_prob: (todo): write your description
+                max_position_embeddings: (int): write your description
+                type_vocab_size: (int): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                num_choices: (int): write your description
+                scope: (str): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -96,6 +124,12 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
             self.scope = scope
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the model for training.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
 
             input_mask = None
@@ -130,6 +164,19 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
             return config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels
 
         def create_and_check_bert_model(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (str): write your description
+                sequence_labels: (str): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             model = TFBertModel(config=config)
             inputs = {'input_ids': input_ids,
                       'attention_mask': input_mask,
@@ -152,6 +199,19 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_bert_for_masked_lm(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the predictions and train train.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = TFBertForMaskedLM(config=config)
             inputs = {'input_ids': input_ids,
                       'attention_mask': input_mask,
@@ -166,6 +226,19 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_bert_for_next_sequence_prediction(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the predictions for the predictions.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = TFBertForNextSentencePrediction(config=config)
             inputs = {'input_ids': input_ids,
                       'attention_mask': input_mask,
@@ -180,6 +253,19 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_bert_for_pretraining(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of targets for training.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = TFBertForPreTraining(config=config)
             inputs = {'input_ids': input_ids,
                       'attention_mask': input_mask,
@@ -198,6 +284,19 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_bert_for_sequence_classification(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch_labels.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             config.num_labels = self.num_labels
             model = TFBertForSequenceClassification(config=config)
             inputs = {'input_ids': input_ids,
@@ -213,6 +312,19 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_bert_for_multiple_choice(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of - tf.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             config.num_choices = self.num_choices
             model = TFBertForMultipleChoice(config=config)
             multiple_choice_inputs_ids = tf.tile(tf.expand_dims(input_ids, 1), (1, self.num_choices, 1))
@@ -231,6 +343,19 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_bert_for_token_classification(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch_for_token_ids.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             config.num_labels = self.num_labels
             model = TFBertForTokenClassification(config=config)
             inputs = {'input_ids': input_ids,
@@ -246,6 +371,19 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_bert_for_question_answering(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of examples fortrering.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = TFBertForQuestionAnswering(config=config)
             inputs = {'input_ids': input_ids,
                       'attention_mask': input_mask,
@@ -264,6 +402,12 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids, token_type_ids, input_mask,
              sequence_labels, token_labels, choice_labels) = config_and_inputs
@@ -271,46 +415,112 @@ class TFBertModelTest(TFCommonTestCases.TFCommonModelTester):
             return config, inputs_dict
 
     def setUp(self):
+        """
+        Sets the model_tester
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = TFBertModelTest.TFBertModelTester(self)
         self.config_tester = ConfigTester(self, config_class=BertConfig, hidden_size=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_bert_model(self):
+        """
+        Test if the model was clicked
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_model(*config_and_inputs)
 
     def test_for_masked_lm(self):
+        """
+        Create masked masked masked inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_masked_lm(*config_and_inputs)
 
     def test_for_multiple_choice(self):
+        """
+        Create a choice choice choice
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_multiple_choice(*config_and_inputs)
 
     def test_for_next_sequence_prediction(self):
+        """
+        Create a model sequence for the given model.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_next_sequence_prediction(*config_and_inputs)
 
     def test_for_pretraining(self):
+        """
+        Test if the model inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_pretraining(*config_and_inputs)
 
     def test_for_question_answering(self):
+        """
+        Test for all question question for all possible
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_question_answering(*config_and_inputs)
 
     def test_for_sequence_classification(self):
+        """
+        Create a classification classification classification.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_sequence_classification(*config_and_inputs)
 
     def test_for_token_classification(self):
+        """
+        Test if the classification classification.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_bert_for_token_classification(*config_and_inputs)
 
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Create a pre - trained model.
+
+        Args:
+            self: (todo): write your description
+        """
         cache_dir = "/tmp/transformers_test/"
         # for model_name in list(TF_BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
         for model_name in ['bert-base-uncased']:

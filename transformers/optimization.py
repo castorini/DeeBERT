@@ -35,6 +35,12 @@ def get_constant_schedule_with_warmup(optimizer, num_warmup_steps, last_epoch=-1
     period during which the learning rate increases linearly between 0 and 1.
     """
     def lr_lambda(current_step):
+        """
+        Calculate the current step.
+
+        Args:
+            current_step: (str): write your description
+        """
         if current_step < num_warmup_steps:
             return float(current_step) / float(max(1.0, num_warmup_steps))
         return 1.
@@ -47,6 +53,12 @@ def get_linear_schedule_with_warmup(optimizer, num_warmup_steps, num_training_st
     linearly increasing during a warmup period.
     """
     def lr_lambda(current_step):
+        """
+        Calculate learning rate.
+
+        Args:
+            current_step: (str): write your description
+        """
         if current_step < num_warmup_steps:
             return float(current_step) / float(max(1, num_warmup_steps))
         return max(0.0, float(num_training_steps - current_step) / float(max(1, num_training_steps - num_warmup_steps)))
@@ -60,6 +72,12 @@ def get_cosine_schedule_with_warmup(optimizer, num_warmup_steps, num_training_st
     period during which it increases linearly between 0 and 1.
     """
     def lr_lambda(current_step):
+        """
+        Calculate the current step.
+
+        Args:
+            current_step: (str): write your description
+        """
         if current_step < num_warmup_steps:
             return float(current_step) / float(max(1, num_warmup_steps))
         progress = float(current_step - num_warmup_steps) / float(max(1, num_training_steps - num_warmup_steps))
@@ -74,6 +92,12 @@ def get_cosine_with_hard_restarts_schedule_with_warmup(optimizer, num_warmup_ste
     period during which it increases linearly between 0 and 1.
     """
     def lr_lambda(current_step):
+        """
+        Calculate step.
+
+        Args:
+            current_step: (str): write your description
+        """
         if current_step < num_warmup_steps:
             return float(current_step) / float(max(1, num_warmup_steps))
         progress = float(current_step - num_warmup_steps) / float(max(1, num_training_steps - num_warmup_steps))
@@ -95,6 +119,18 @@ class AdamW(Optimizer):
         correct_bias (bool): can be set to False to avoid correcting bias in Adam (e.g. like in Bert TF repository). Default True.
     """
     def __init__(self, params, lr=1e-3, betas=(0.9, 0.999), eps=1e-6, weight_decay=0.0, correct_bias=True):
+        """
+        Initialize the weights.
+
+        Args:
+            self: (todo): write your description
+            params: (dict): write your description
+            lr: (float): write your description
+            betas: (float): write your description
+            eps: (float): write your description
+            weight_decay: (float): write your description
+            correct_bias: (str): write your description
+        """
         if lr < 0.0:
             raise ValueError("Invalid learning rate: {} - should be >= 0.0".format(lr))
         if not 0.0 <= betas[0] < 1.0:

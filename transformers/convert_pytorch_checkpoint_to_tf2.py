@@ -89,6 +89,17 @@ MODEL_CLASSES = {
 }
 
 def convert_pt_checkpoint_to_tf(model_type, pytorch_checkpoint_path, config_file, tf_dump_path, compare_with_pt_model=False, use_cached_models=True):
+    """
+    Convert checkpoint_type to checkpoint.
+
+    Args:
+        model_type: (str): write your description
+        pytorch_checkpoint_path: (str): write your description
+        config_file: (str): write your description
+        tf_dump_path: (str): write your description
+        compare_with_pt_model: (bool): write your description
+        use_cached_models: (bool): write your description
+    """
     if model_type not in MODEL_CLASSES:
         raise ValueError("Unrecognized model type, should be one of {}.".format(list(MODEL_CLASSES.keys())))
 
@@ -135,6 +146,18 @@ def convert_pt_checkpoint_to_tf(model_type, pytorch_checkpoint_path, config_file
 
 def convert_all_pt_checkpoints_to_tf(args_model_type, tf_dump_path, model_shortcut_names_or_path=None, config_shortcut_names_or_path=None,
                                      compare_with_pt_model=False, use_cached_models=False, only_convert_finetuned_models=False):
+    """
+    Convert checkpoints to tf.
+
+    Args:
+        args_model_type: (todo): write your description
+        tf_dump_path: (str): write your description
+        model_shortcut_names_or_path: (str): write your description
+        config_shortcut_names_or_path: (str): write your description
+        compare_with_pt_model: (bool): write your description
+        use_cached_models: (bool): write your description
+        only_convert_finetuned_models: (todo): write your description
+    """
     assert os.path.isdir(args.tf_dump_path), "--tf_dump_path should be a directory"
 
     if args_model_type is None:

@@ -58,6 +58,13 @@ MODEL_CLASSES = {
 }
 
 def select_field(features, field):
+    """
+    Select a list of choices from a list of choices.
+
+    Args:
+        features: (todo): write your description
+        field: (todo): write your description
+    """
     return [
         [
             choice[field]
@@ -68,10 +75,22 @@ def select_field(features, field):
 
 
 def simple_accuracy(preds, labels):
+    """
+    Calculate accuracy.
+
+    Args:
+        preds: (array): write your description
+        labels: (array): write your description
+    """
     return (preds == labels).mean()
 
 
 def set_seed(args):
+    """
+    Sets random seed.
+
+    Args:
+    """
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -214,6 +233,15 @@ def train(args, train_dataset, model, tokenizer):
 
 
 def evaluate(args, model, tokenizer, prefix="", test=False):
+    """
+    Evaluate the model on the given dataset.
+
+    Args:
+        model: (todo): write your description
+        tokenizer: (str): write your description
+        prefix: (str): write your description
+        test: (bool): write your description
+    """
     eval_task_names = (args.task_name,)
     eval_outputs_dirs = (args.output_dir,)
 
@@ -285,6 +313,15 @@ def evaluate(args, model, tokenizer, prefix="", test=False):
 
 
 def load_and_cache_examples(args, task, tokenizer, evaluate=False, test=False):
+    """
+    Loads examples.
+
+    Args:
+        task: (str): write your description
+        tokenizer: (str): write your description
+        evaluate: (str): write your description
+        test: (bool): write your description
+    """
     if args.local_rank not in [-1, 0]:
         torch.distributed.barrier()  # Make sure only the first process in distributed training process the dataset, and the others will use the cache
 
@@ -341,6 +378,11 @@ def load_and_cache_examples(args, task, tokenizer, evaluate=False, test=False):
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
 
     ## Required parameters

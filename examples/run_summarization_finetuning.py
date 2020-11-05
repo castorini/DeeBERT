@@ -50,6 +50,11 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def set_seed(args):
+    """
+    Sets the random seed
+
+    Args:
+    """
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -61,6 +66,12 @@ def set_seed(args):
 
 
 def load_and_cache_examples(args, tokenizer):
+    """
+    Loads examples from disk.
+
+    Args:
+        tokenizer: (str): write your description
+    """
     dataset = CNNDailyMailDataset(tokenizer, data_dir=args.data_dir)
     return dataset
 
@@ -114,6 +125,18 @@ class BertSumOptimizer(object):
     """
 
     def __init__(self, model, lr, warmup_steps, beta_1=0.99, beta_2=0.999, eps=1e-8):
+        """
+        Initialize the optimizer.
+
+        Args:
+            self: (todo): write your description
+            model: (todo): write your description
+            lr: (float): write your description
+            warmup_steps: (int): write your description
+            beta_1: (str): write your description
+            beta_2: (str): write your description
+            eps: (float): write your description
+        """
         self.encoder = model.encoder
         self.decoder = model.decoder
         self.lr = lr
@@ -137,15 +160,34 @@ class BertSumOptimizer(object):
         self._step = 0
 
     def _update_rate(self, stack):
+        """
+        Update the current step
+
+        Args:
+            self: (todo): write your description
+            stack: (list): write your description
+        """
         return self.lr[stack] * min(
             self._step ** (-0.5), self._step * self.warmup_steps[stack] ** (-0.5)
         )
 
     def zero_grad(self):
+        """
+        Gradient operator.
+
+        Args:
+            self: (todo): write your description
+        """
         self.optimizer_decoder.zero_grad()
         self.optimizer_encoder.zero_grad()
 
     def step(self):
+        """
+        Perform a optimizer.
+
+        Args:
+            self: (todo): write your description
+        """
         self._step += 1
         for stack, optimizer in self.optimizers.items():
             new_rate = self._update_rate(stack)
@@ -266,6 +308,14 @@ def train(args, model, tokenizer):
 
 
 def evaluate(args, model, tokenizer, prefix=""):
+    """
+    Evaluate the model on the given dataset.
+
+    Args:
+        model: (todo): write your description
+        tokenizer: (str): write your description
+        prefix: (str): write your description
+    """
     set_seed(args)
 
     args.eval_batch_size = args.per_gpu_eval_batch_size * max(1, args.n_gpu)
@@ -329,6 +379,11 @@ def evaluate(args, model, tokenizer, prefix=""):
 
 
 def main():
+    """
+    Main entry point.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
 
     # Required parameters

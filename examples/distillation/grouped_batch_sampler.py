@@ -24,12 +24,26 @@ from torch.utils.data.sampler import BatchSampler, Sampler
 from utils import logger
 
 def _quantize(x, bins):
+    """
+    Quantize the quantile of the quantized quantized values.
+
+    Args:
+        x: (array): write your description
+        bins: (int): write your description
+    """
     bins = copy.deepcopy(bins)
     bins = sorted(bins)
     quantized = list(map(lambda y: bisect.bisect_right(bins, y), x))
     return quantized
 
 def create_lengths_groups(lengths, k=0):
+    """
+    Creates groups for each unique length.
+
+    Args:
+        lengths: (int): write your description
+        k: (str): write your description
+    """
     bins = np.arange(start=3, stop=k, step=4).tolist() if k > 0 else [10]
     groups = _quantize(lengths, bins)
     # count number of elements per group
@@ -54,6 +68,15 @@ class GroupedBatchSampler(BatchSampler):
         batch_size (int): Size of mini-batch.
     """
     def __init__(self, sampler, group_ids, batch_size):
+        """
+        Initialize a sampler.
+
+        Args:
+            self: (todo): write your description
+            sampler: (todo): write your description
+            group_ids: (str): write your description
+            batch_size: (int): write your description
+        """
         if not isinstance(sampler, Sampler):
             raise ValueError(
                 "sampler should be an instance of "
@@ -64,6 +87,12 @@ class GroupedBatchSampler(BatchSampler):
         self.batch_size = batch_size
 
     def __iter__(self):
+        """
+        Return an iterator over batches.
+
+        Args:
+            self: (todo): write your description
+        """
         buffer_per_group = defaultdict(list)
         samples_per_group = defaultdict(list)
 

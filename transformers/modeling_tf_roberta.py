@@ -43,6 +43,13 @@ class TFRobertaEmbeddings(TFBertEmbeddings):
     Same as BertEmbeddings with a tiny tweak for positional embeddings indexing.
     """
     def __init__(self, config, **kwargs):
+        """
+        Initialize the layer.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFRobertaEmbeddings, self).__init__(config, **kwargs)
         self.padding_idx = 1
 
@@ -66,10 +73,23 @@ class TFRobertaMainLayer(TFBertMainLayer):
     Same as TFBertMainLayer but uses TFRobertaEmbeddings.
     """
     def __init__(self, config, **kwargs):
+        """
+        Initialize the embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFRobertaMainLayer, self).__init__(config, **kwargs)
         self.embeddings = TFRobertaEmbeddings(config, name='embeddings')
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings
 
 
@@ -205,10 +225,25 @@ class TFRobertaModel(TFRobertaPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the robertta
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFRobertaModel, self).__init__(config, *inputs, **kwargs)
         self.roberta = TFRobertaMainLayer(config, name='roberta')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the function with inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.roberta(inputs, **kwargs)
         return outputs
 
@@ -216,6 +251,14 @@ class TFRobertaModel(TFRobertaPreTrainedModel):
 class TFRobertaLMHead(tf.keras.layers.Layer):
     """Roberta Head for masked language modeling."""
     def __init__(self, config, input_embeddings, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            input_embeddings: (todo): write your description
+        """
         super(TFRobertaLMHead, self).__init__(**kwargs)
         self.vocab_size = config.vocab_size
         self.dense = tf.keras.layers.Dense(config.hidden_size,
@@ -229,6 +272,13 @@ class TFRobertaLMHead(tf.keras.layers.Layer):
         self.decoder = input_embeddings
 
     def build(self, input_shape):
+        """
+        Builds the model.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         self.bias = self.add_weight(shape=(self.vocab_size,),
                                     initializer='zeros',
                                     trainable=True,
@@ -236,6 +286,13 @@ class TFRobertaLMHead(tf.keras.layers.Layer):
         super(TFRobertaLMHead, self).build(input_shape)
 
     def call(self, features):
+        """
+        Compute the network.
+
+        Args:
+            self: (todo): write your description
+            features: (todo): write your description
+        """
         x = self.dense(features)
         x = self.act(x)
         x = self.layer_norm(x)
@@ -282,15 +339,36 @@ class TFRobertaForMaskedLM(TFRobertaPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the robertta.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFRobertaForMaskedLM, self).__init__(config, *inputs, **kwargs)
 
         self.roberta = TFRobertaMainLayer(config, name="roberta")
         self.lm_head = TFRobertaLMHead(config, self.roberta.embeddings, name="lm_head")
 
     def get_output_embeddings(self):
+        """
+        Returns a list of lmdings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head.decoder
 
     def call(self, inputs, **kwargs):
+        """
+        Call the lm : param inputs : a sequence ).
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.roberta(inputs, **kwargs)
 
         sequence_output = outputs[0]
@@ -305,6 +383,13 @@ class TFRobertaClassificationHead(tf.keras.layers.Layer):
     """Head for sentence-level classification tasks."""
 
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFRobertaClassificationHead, self).__init__(config, **kwargs)
         self.dense = tf.keras.layers.Dense(config.hidden_size,
                                            kernel_initializer=get_initializer(config.initializer_range),
@@ -316,6 +401,14 @@ class TFRobertaClassificationHead(tf.keras.layers.Layer):
                                               name="out_proj")
 
     def call(self, features, training=False):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            features: (todo): write your description
+            training: (bool): write your description
+        """
         x = features[:, 0, :]  # take <s> token (equiv. to [CLS])
         x = self.dropout(x, training=training)
         x = self.dense(x)
@@ -354,6 +447,14 @@ class TFRobertaForSequenceClassification(TFRobertaPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the classifier
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFRobertaForSequenceClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -361,6 +462,13 @@ class TFRobertaForSequenceClassification(TFRobertaPreTrainedModel):
         self.classifier = TFRobertaClassificationHead(config, name="classifier")
     
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.roberta(inputs, **kwargs)
 
         sequence_output = outputs[0]
@@ -400,6 +508,14 @@ class TFRobertaForTokenClassification(TFRobertaPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFRobertaForTokenClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -410,6 +526,13 @@ class TFRobertaForTokenClassification(TFRobertaPreTrainedModel):
                                                 name='classifier')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.roberta(inputs, **kwargs)
 
         sequence_output = outputs[0]

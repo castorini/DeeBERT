@@ -47,9 +47,24 @@ if sys.version_info[0] == 2:
     class TemporaryDirectory(object):
         """Context manager for tempfile.mkdtemp() so it's usable with "with" statement."""
         def __enter__(self):
+            """
+            Return a temporary file.
+
+            Args:
+                self: (todo): write your description
+            """
             self.name = tempfile.mkdtemp()
             return self.name
         def __exit__(self, exc_type, exc_value, traceback):
+            """
+            Exit the given exception.
+
+            Args:
+                self: (todo): write your description
+                exc_type: (todo): write your description
+                exc_value: (todo): write your description
+                traceback: (todo): write your description
+            """
             shutil.rmtree(self.name)
 else:
     import pickle
@@ -57,6 +72,12 @@ else:
     unicode = str
 
 def _config_zero_init(config):
+    """
+    Initialize zero or zero or more configs.
+
+    Args:
+        config: (todo): write your description
+    """
     configs_no_init = copy.deepcopy(config)
     for key in configs_no_init.__dict__.keys():
         if '_range' in key or '_std' in key:
@@ -75,6 +96,12 @@ class CommonTestCases:
         test_head_masking = True
 
         def test_save_load(self):
+            """
+            Test the load of the model.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -98,6 +125,12 @@ class CommonTestCases:
                     self.assertLessEqual(max_diff, 1e-5)
 
         def test_initialization(self):
+            """
+            Test the initial setup.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             configs_no_init = _config_zero_init(config)
@@ -109,6 +142,12 @@ class CommonTestCases:
                         msg="Parameter {} of model {} seems not properly initialized".format(name, model_class))
 
         def test_determinism(self):
+            """
+            Equalismismism.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -119,6 +158,12 @@ class CommonTestCases:
 
 
         def test_attention_outputs(self):
+            """
+            Test for all inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -157,23 +202,49 @@ class CommonTestCases:
                     self.model_tester.key_len if hasattr(self.model_tester, 'key_len') else self.model_tester.seq_length])
 
         def test_torchscript(self):
+            """
+            Test if the given inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             self._create_and_check_torchscript(config, inputs_dict)
 
         def test_torchscript_output_attentions(self):
+            """
+            Test if the given inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             config.output_attentions = True
             self._create_and_check_torchscript(config, inputs_dict)
 
         def test_torchscript_output_hidden_state(self):
+            """
+            Test if all hidden hidden states are hidden
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             config.output_hidden_states = True
             self._create_and_check_torchscript(config, inputs_dict)
 
         def _create_and_check_torchscript(self, config, inputs_dict):
+            """
+            Create model and initializetorchscript.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                inputs_dict: (dict): write your description
+            """
             if not self.test_torchscript:
                 return
 
@@ -216,6 +287,12 @@ class CommonTestCases:
 
 
         def test_headmasking(self):
+            """
+            Perform the test.
+
+            Args:
+                self: (todo): write your description
+            """
             if not self.test_head_masking:
                 return
 
@@ -270,6 +347,12 @@ class CommonTestCases:
 
 
         def test_head_pruning(self):
+            """
+            Generate all the head of the head.
+
+            Args:
+                self: (todo): write your description
+            """
             if not self.test_pruning:
                 return
 
@@ -298,6 +381,12 @@ class CommonTestCases:
                     attentions[-1].shape[-3], self.model_tester.num_attention_heads - 1)
 
         def test_head_pruning_save_load_from_pretrained(self):
+            """
+            Test if a list of the head of all the given directory.
+
+            Args:
+                self: (todo): write your description
+            """
             if not self.test_pruning:
                 return
 
@@ -329,6 +418,12 @@ class CommonTestCases:
                 shutil.rmtree(directory)
 
         def test_head_pruning_save_load_from_config_init(self):
+            """
+            Initialize all of the polynomial states.
+
+            Args:
+                self: (todo): write your description
+            """
             if not self.test_pruning:
                 return
 
@@ -356,6 +451,12 @@ class CommonTestCases:
                 self.assertEqual(attentions[-1].shape[-3], self.model_tester.num_attention_heads - 1)
 
         def test_head_pruning_integration(self):
+            """
+            Generate all of the state of all the models.
+
+            Args:
+                self: (todo): write your description
+            """
             if not self.test_pruning:
                 return
 
@@ -413,6 +514,12 @@ class CommonTestCases:
 
 
         def test_hidden_states_output(self):
+            """
+            Test for hidden hidden states
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -430,6 +537,12 @@ class CommonTestCases:
                     [self.model_tester.seq_length, self.model_tester.hidden_size])
 
         def test_resize_tokens_embeddings(self):
+            """
+            Resizes embeddings.
+
+            Args:
+                self: (todo): write your description
+            """
             original_config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
             if not self.test_resize_embeddings:
                 return
@@ -464,6 +577,12 @@ class CommonTestCases:
                 self.assertTrue(models_equal)
 
         def test_model_common_attributes(self):
+            """
+            Test the embeddings.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -479,12 +598,25 @@ class CommonTestCases:
                 )
 
         def test_tie_model_weights(self):
+            """
+            Test the model weights of the model.
+
+            Args:
+                self: (todo): write your description
+            """
             if not self.test_torchscript:
                 return
 
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             def check_same_values(layer_1, layer_2):
+                """
+                Check if two layers are equal.
+
+                Args:
+                    layer_1: (todo): write your description
+                    layer_2: (todo): write your description
+                """
                 equal = True
                 for p1, p2 in zip(layer_1.weight, layer_2.weight):
                     if p1.data.ne(p2.data).sum() > 0:
@@ -532,6 +664,12 @@ class CommonTestCases:
                 # self.assertTrue(check_same_values(model.transformer.wte, model.lm_head))
 
         def test_inputs_embeds(self):
+            """
+            Parameters ---------- inputs_dict : list of inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
             input_ids = inputs_dict["input_ids"]
             del inputs_dict["input_ids"]
@@ -570,6 +708,33 @@ class CommonTestCases:
                         lm_head_model_class=None,
                         double_head_model_class=None,
                         ):
+            """
+            Initialize the model.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_position_ids: (str): write your description
+                use_token_type_ids: (str): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                n_positions: (int): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                n_choices: (todo): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                scope: (str): write your description
+                config_class: (todo): write your description
+                base_model_class: (str): write your description
+                lm_head_model_class: (todo): write your description
+                double_head_model_class: (todo): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -594,6 +759,12 @@ class CommonTestCases:
             self.all_model_classes = (base_model_class, lm_head_model_class, double_head_model_class)
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare input tensor for training.
+
+            Args:
+                self: (todo): write your description
+            """
             total_num_tokens = self.vocab_size
             input_ids = ids_tensor([self.batch_size, self.n_choices, self.seq_length], total_num_tokens)
 
@@ -627,6 +798,19 @@ class CommonTestCases:
 
         def create_and_check_base_model(self, config, input_ids, token_type_ids, position_ids,
                                 mc_labels, lm_labels, mc_token_ids):
+            """
+            Create a base model and saves the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                position_ids: (str): write your description
+                mc_labels: (todo): write your description
+                lm_labels: (str): write your description
+                mc_token_ids: (str): write your description
+            """
             model = self.base_model_class(config)
             model.eval()
 
@@ -642,6 +826,19 @@ class CommonTestCases:
 
         def create_and_check_lm_head(self, config, input_ids, token_type_ids, position_ids,
                                         mc_labels, lm_labels, mc_token_ids):
+            """
+            Create the model and lm and lm.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                position_ids: (str): write your description
+                mc_labels: (todo): write your description
+                lm_labels: (todo): write your description
+                mc_token_ids: (str): write your description
+            """
             model = self.lm_head_model_class(config)
             model.eval()
             outputs = model(input_ids, position_ids, token_type_ids, lm_labels)
@@ -657,6 +854,19 @@ class CommonTestCases:
 
         def create_and_check_presents(self, config, input_ids, token_type_ids, position_ids,
                                         mc_labels, lm_labels, mc_token_ids):
+            """
+            Create the encoder and encoder.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                position_ids: (int): write your description
+                mc_labels: (str): write your description
+                lm_labels: (int): write your description
+                mc_token_ids: (str): write your description
+            """
             for model_class in self.all_model_classes:
                 model = model_class(config)
                 model.eval()
@@ -670,6 +880,19 @@ class CommonTestCases:
 
         def create_and_check_double_heads(self, config, input_ids, token_type_ids, position_ids,
                                         mc_labels, lm_labels, mc_token_ids):
+            """
+            Create the model and check for the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                position_ids: (str): write your description
+                mc_labels: (str): write your description
+                lm_labels: (str): write your description
+                mc_token_ids: (str): write your description
+            """
             model = self.double_head_model_class(config)
             model.eval()
             outputs = model(input_ids, mc_token_ids, lm_labels=lm_labels, mc_labels=mc_labels,
@@ -689,6 +912,12 @@ class CommonTestCases:
                 [[], []])
 
         def create_and_check_model_from_pretrained(self):
+            """
+            Creates a pre - based model and cache.
+
+            Args:
+                self: (todo): write your description
+            """
             cache_dir = "/tmp/transformers_test/"
             for model_name in list(self.base_model_class.pretrained_model_archive_map.keys())[:1]:
                 model = self.base_model_class.from_pretrained(model_name, cache_dir=cache_dir)
@@ -696,6 +925,12 @@ class CommonTestCases:
                 self.parent.assertIsNotNone(model)
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare the input configurations.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids, token_type_ids, position_ids,
                 mc_labels, lm_labels, mc_token_ids) = config_and_inputs
@@ -703,6 +938,13 @@ class CommonTestCases:
             return config, inputs_dict
 
         def run_common_tests(self, test_presents=False):
+            """
+            Runs the common common to run.
+
+            Args:
+                self: (todo): write your description
+                test_presents: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             self.create_and_check_base_model(*config_and_inputs)
 
@@ -718,16 +960,36 @@ class CommonTestCases:
 
         @pytest.mark.slow
         def run_slow_tests(self):
+            """
+            Runs the superslow.
+
+            Args:
+                self: (todo): write your description
+            """
             self.create_and_check_model_from_pretrained()
 
 
 class ConfigTester(object):
     def __init__(self, parent, config_class=None, **kwargs):
+        """
+        Initialize the configuration.
+
+        Args:
+            self: (todo): write your description
+            parent: (todo): write your description
+            config_class: (todo): write your description
+        """
         self.parent = parent
         self.config_class = config_class
         self.inputs_dict = kwargs
 
     def create_and_test_config_common_properties(self):
+        """
+        Create a parent properties dict.
+
+        Args:
+            self: (todo): write your description
+        """
         config = self.config_class(**self.inputs_dict)
         self.parent.assertTrue(hasattr(config, 'vocab_size'))
         self.parent.assertTrue(hasattr(config, 'hidden_size'))
@@ -735,12 +997,24 @@ class ConfigTester(object):
         self.parent.assertTrue(hasattr(config, 'num_hidden_layers'))
 
     def create_and_test_config_to_json_string(self):
+        """
+        Create a json to_json_json_string.
+
+        Args:
+            self: (todo): write your description
+        """
         config = self.config_class(**self.inputs_dict)
         obj = json.loads(config.to_json_string())
         for key, value in self.inputs_dict.items():
             self.parent.assertEqual(obj[key], value)
 
     def create_and_test_config_to_json_file(self):
+        """
+        Create a config file to json config file.
+
+        Args:
+            self: (todo): write your description
+        """
         config_first = self.config_class(**self.inputs_dict)
         json_file_path = os.path.join(os.getcwd(), "config_" + str(uuid.uuid4()) + ".json")
         config_first.to_json_file(json_file_path)
@@ -749,6 +1023,12 @@ class ConfigTester(object):
         self.parent.assertEqual(config_second.to_dict(), config_first.to_dict())
 
     def run_common_tests(self):
+        """
+        Runs test test test suite.
+
+        Args:
+            self: (todo): write your description
+        """
         self.create_and_test_config_common_properties()
         self.create_and_test_config_to_json_string()
         self.create_and_test_config_to_json_file()
@@ -792,6 +1072,12 @@ def floats_tensor(shape, scale=1.0, rng=None, name=None):
 class ModelUtilsTest(unittest.TestCase):
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test for a cross - style model is_name.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         for model_name in list(BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             config = BertConfig.from_pretrained(model_name)

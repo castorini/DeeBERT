@@ -45,6 +45,14 @@ TF_XLM_PRETRAINED_MODEL_ARCHIVE_MAP = {
 
 
 def create_sinusoidal_embeddings(n_pos, dim, out):
+    """
+    Creates embeddings : n_posd ].
+
+    Args:
+        n_pos: (int): write your description
+        dim: (int): write your description
+        out: (array): write your description
+    """
     position_enc = np.array([
         [pos / np.power(10000, 2 * (j // 2) / dim) for j in range(dim)]
         for pos in range(n_pos)
@@ -99,6 +107,15 @@ class TFMultiHeadAttention(tf.keras.layers.Layer):
     NEW_ID = itertools.count()
 
     def __init__(self, n_heads, dim, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            n_heads: (int): write your description
+            dim: (int): write your description
+            config: (todo): write your description
+        """
         super(TFMultiHeadAttention, self).__init__(**kwargs)
         self.layer_id = next(TFMultiHeadAttention.NEW_ID)
         self.output_attentions = config.output_attentions
@@ -114,6 +131,13 @@ class TFMultiHeadAttention(tf.keras.layers.Layer):
         self.pruned_heads = set()
 
     def prune_heads(self, heads):
+        """
+        Prune a list of the specified bytestring.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         raise NotImplementedError
 
     def call(self, inputs, training=False):
@@ -185,6 +209,16 @@ class TFMultiHeadAttention(tf.keras.layers.Layer):
 class TFTransformerFFN(tf.keras.layers.Layer):
 
     def __init__(self, in_dim, dim_hidden, out_dim, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            in_dim: (int): write your description
+            dim_hidden: (int): write your description
+            out_dim: (int): write your description
+            config: (todo): write your description
+        """
         super(TFTransformerFFN, self).__init__(**kwargs)
         self.lin1 = tf.keras.layers.Dense(dim_hidden, kernel_initializer=get_initializer(config.init_std), name='lin1')
         self.lin2 = tf.keras.layers.Dense(out_dim, kernel_initializer=get_initializer(config.init_std), name='lin2')
@@ -192,6 +226,14 @@ class TFTransformerFFN(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(config.dropout)
 
     def call(self, input, training=False):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            input: (array): write your description
+            training: (bool): write your description
+        """
         x = self.lin1(input)
         x = self.act(x)
         x = self.lin2(x)
@@ -201,6 +243,13 @@ class TFTransformerFFN(tf.keras.layers.Layer):
 
 class TFXLMMainLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the graph.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFXLMMainLayer, self).__init__(**kwargs)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -278,9 +327,22 @@ class TFXLMMainLayer(tf.keras.layers.Layer):
 
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Resize token embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         raise NotImplementedError
 
     def _prune_heads(self, heads_to_prune):
@@ -293,6 +355,22 @@ class TFXLMMainLayer(tf.keras.layers.Layer):
     def call(self, inputs, attention_mask=None, langs=None, token_type_ids=None,
              position_ids=None, lengths=None, cache=None, head_mask=None, inputs_embeds=None,
              training=False):  # removed: src_enc=None, src_len=None
+        """
+        Perform the computation.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            attention_mask: (int): write your description
+            langs: (str): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            lengths: (int): write your description
+            cache: (bool): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             attention_mask = inputs[1] if len(inputs) > 1 else attention_mask
@@ -453,6 +531,12 @@ class TFXLMPreTrainedModel(TFPreTrainedModel):
 
     @property
     def dummy_inputs(self):
+        """
+        Dummy computation for the inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         # Sometimes XLM has language embeddings so don't forget to build them as well if needed
         inputs_list = tf.constant([[7, 6, 0, 0, 1], [1, 2, 3, 0, 0], [0, 0, 0, 4, 5]])
         attns_list = tf.constant([[1, 1, 0, 0, 1], [1, 1, 1, 0, 0], [1, 0, 0, 1, 1]])
@@ -582,10 +666,25 @@ class TFXLMModel(TFXLMPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the inputs.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXLMModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFXLMMainLayer(config, name='transformer')
 
     def call(self, inputs, **kwargs):
+        """
+        Execute the given inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
         return outputs
 
@@ -596,6 +695,14 @@ class TFXLMPredLayer(tf.keras.layers.Layer):
     Prediction layer (cross_entropy or adaptive_softmax).
     """
     def __init__(self, config, input_embeddings, **kwargs):
+        """
+        Initialize embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            input_embeddings: (todo): write your description
+        """
         super(TFXLMPredLayer, self).__init__(**kwargs)
         self.asm = config.asm
         self.n_words = config.n_words
@@ -613,6 +720,13 @@ class TFXLMPredLayer(tf.keras.layers.Layer):
             # )
 
     def build(self, input_shape):
+        """
+        Connects the graph.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         # The output weights are the same as the input embeddings, but there is an output-only bias for each token.
         self.bias = self.add_weight(shape=(self.n_words,),
                                     initializer='zeros',
@@ -621,6 +735,13 @@ class TFXLMPredLayer(tf.keras.layers.Layer):
         super(TFXLMPredLayer, self).build(input_shape)
 
     def call(self, hidden_states):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (int): write your description
+        """
         hidden_states = self.input_embeddings(hidden_states, mode="linear")
         hidden_states = hidden_states + self.bias
         return hidden_states
@@ -655,14 +776,35 @@ class TFXLMWithLMHeadModel(TFXLMPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXLMWithLMHeadModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFXLMMainLayer(config, name='transformer')
         self.pred_layer = TFXLMPredLayer(config, self.transformer.embeddings, name='pred_layer_._proj')
 
     def get_output_embeddings(self):
+        """
+        Gets the output layers.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.pred_layer.input_embeddings
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         transformer_outputs = self.transformer(inputs, **kwargs)
 
         output = transformer_outputs[0]
@@ -702,6 +844,14 @@ class TFXLMForSequenceClassification(TFXLMPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the summary.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXLMForSequenceClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -709,6 +859,13 @@ class TFXLMForSequenceClassification(TFXLMPreTrainedModel):
         self.sequence_summary = TFSequenceSummary(config, initializer_range=config.init_std, name='sequence_summary')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model. sequence of the inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         transformer_outputs = self.transformer(inputs, **kwargs)
         output = transformer_outputs[0]
 
@@ -749,6 +906,14 @@ class TFXLMForQuestionAnsweringSimple(TFXLMPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXLMForQuestionAnsweringSimple, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFXLMMainLayer(config, name='transformer')
         self.qa_outputs = tf.keras.layers.Dense(config.num_labels,
@@ -756,6 +921,13 @@ class TFXLMForQuestionAnsweringSimple(TFXLMPreTrainedModel):
                                                 name='qa_outputs')
 
     def call(self, inputs, **kwargs):
+        """
+        Compute the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         transformer_outputs = self.transformer(inputs, **kwargs)
 
         sequence_output = transformer_outputs[0]

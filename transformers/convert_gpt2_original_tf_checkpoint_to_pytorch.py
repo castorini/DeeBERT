@@ -31,6 +31,14 @@ logging.basicConfig(level=logging.INFO)
 
 
 def convert_gpt2_checkpoint_to_pytorch(gpt2_checkpoint_path, gpt2_config_file, pytorch_dump_folder_path):
+    """
+    Convert checkpoint to checkpoint.
+
+    Args:
+        gpt2_checkpoint_path: (str): write your description
+        gpt2_config_file: (str): write your description
+        pytorch_dump_folder_path: (str): write your description
+    """
     # Construct model
     if gpt2_config_file == "":
         config = GPT2Config()

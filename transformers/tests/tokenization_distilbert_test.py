@@ -29,10 +29,22 @@ class DistilBertTokenizationTest(BertTokenizationTest):
     tokenizer_class = DistilBertTokenizer
 
     def get_tokenizer(self, **kwargs):
+        """
+        Returns a tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         return DistilBertTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     @pytest.mark.slow
     def test_sequence_builders(self):
+        """
+        Test if the input tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 
         text = tokenizer.encode("sequence builders", add_special_tokens=False)

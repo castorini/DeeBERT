@@ -28,6 +28,12 @@ class OpenAIGPTTokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = OpenAIGPTTokenizer
 
     def setUp(self):
+        """
+        Set vocab for vocab.
+
+        Args:
+            self: (todo): write your description
+        """
         super(OpenAIGPTTokenizationTest, self).setUp()
 
         # Adapted from Sennrich et al. 2015 and https://github.com/rsennrich/subword-nmt
@@ -46,15 +52,33 @@ class OpenAIGPTTokenizationTest(CommonTestCases.CommonTokenizerTester):
             fp.write("\n".join(merges))
 
     def get_tokenizer(self, **kwargs):
+        """
+        Return the tokenizer object.
+
+        Args:
+            self: (todo): write your description
+        """
         return OpenAIGPTTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"lower newer"
         output_text = u"lower newer"
         return input_text, output_text
 
 
     def test_full_tokenizer(self):
+        """
+        Reads the list of sentences.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = OpenAIGPTTokenizer(self.vocab_file, self.merges_file)
 
         text = "lower"

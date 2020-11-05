@@ -175,6 +175,13 @@ class TransformerBeamSearch(nn.Module):
         return surviving_beams_rows
 
     def forward(self, encoder_input_ids, **kwargs):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            encoder_input_ids: (str): write your description
+        """
         # keyword arguments come in 3 flavors: encoder-specific (prefixed by
         # `encoder_`), decoder-specific (prefixed by `decoder_`) and those
         # that apply to the model as whole.
@@ -222,6 +229,14 @@ class TransformerBeamSearch(nn.Module):
         return self.results
 
     def remove_repeating_trigrams(self, log_probabilities, _B):
+        """
+        Removes a list of the beam.
+
+        Args:
+            self: (todo): write your description
+            log_probabilities: (todo): write your description
+            _B: (todo): write your description
+        """
         if(self._step + 1 > 3):
             for i in range(_B * self.beam_size):
                 tokens = [t for t in self.growing_beam[i]]
@@ -231,14 +246,32 @@ class TransformerBeamSearch(nn.Module):
                     log_probabilities[i] = -1e20
 
     def enforce_min_length(self):
+        """
+        Moves the length.
+
+        Args:
+            self: (todo): write your description
+        """
         if self._step < self.min_length:
             self.log_probabilities[self.end_token_id] = -1e20
 
     def enforce_max_length(self):
+        """
+        Enforce the maximum number of the maximum length.
+
+        Args:
+            self: (todo): write your description
+        """
         if self._step + 1 == self.max_length:
             self.is_finished.fill_(1)
 
     def length_penalty(self):
+        """
+        Returns the maximum length of the field.
+
+        Args:
+            self: (todo): write your description
+        """
         return ((5.0 + (self._step + 1)) / 6.0) ** self.alpha
 
 

@@ -29,6 +29,11 @@ except ImportError:
     # Just a dummy decorator to get the checks to run on python2
     # because honestly I don't want to support a byte-level unicode BPE tokenizer on python 2 right now.
     def lru_cache():
+        """
+        Decorator to cache a function cache.
+
+        Args:
+        """
         return lambda func: func
 
 from .tokenization_utils import PreTrainedTokenizer
@@ -118,6 +123,18 @@ class GPT2Tokenizer(PreTrainedTokenizer):
 
     def __init__(self, vocab_file, merges_file, errors='replace', unk_token="<|endoftext|>",
                  bos_token="<|endoftext|>", eos_token="<|endoftext|>", **kwargs):
+        """
+        Initialize a vocab from a file.
+
+        Args:
+            self: (todo): write your description
+            vocab_file: (str): write your description
+            merges_file: (str): write your description
+            errors: (str): write your description
+            unk_token: (str): write your description
+            bos_token: (str): write your description
+            eos_token: (str): write your description
+        """
         super(GPT2Tokenizer, self).__init__(bos_token=bos_token, eos_token=eos_token, unk_token=unk_token, **kwargs)
         self.max_len_single_sentence = self.max_len # no default special tokens - you can update this value if you add special tokens
         self.max_len_sentences_pair = self.max_len # no default special tokens - you can update this value if you add special tokens
@@ -137,9 +154,22 @@ class GPT2Tokenizer(PreTrainedTokenizer):
 
     @property
     def vocab_size(self):
+        """
+        The length : class : class.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.encoder)
 
     def bpe(self, token):
+        """
+        Returns a list of all words ).
+
+        Args:
+            self: (todo): write your description
+            token: (str): write your description
+        """
         if token in self.cache:
             return self.cache[token]
         word = tuple(token)

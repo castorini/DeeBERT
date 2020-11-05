@@ -27,6 +27,12 @@ class CTRLTokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = CTRLTokenizer
 
     def setUp(self):
+        """
+        Set vocab to vocab.
+
+        Args:
+            self: (todo): write your description
+        """
         super(CTRLTokenizationTest, self).setUp()
 
         # Adapted from Sennrich et al. 2015 and https://github.com/rsennrich/subword-nmt
@@ -43,15 +49,33 @@ class CTRLTokenizationTest(CommonTestCases.CommonTokenizerTester):
             fp.write("\n".join(merges))
 
     def get_tokenizer(self, **kwargs):
+        """
+        Return a token.
+
+        Args:
+            self: (todo): write your description
+        """
         kwargs.update(self.special_tokens_map)
         return CTRLTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"adapt react readapt apt"
         output_text = u"adapt react readapt apt"
         return input_text, output_text
 
     def test_full_tokenizer(self):
+        """
+        Reads a list of sentences.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = CTRLTokenizer(self.vocab_file, self.merges_file, **self.special_tokens_map)
         text = "adapt react readapt apt"
         bpe_tokens = 'adapt re@@ a@@ c@@ t re@@ adapt apt'.split()

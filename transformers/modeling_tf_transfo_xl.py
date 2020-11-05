@@ -42,11 +42,26 @@ TF_TRANSFO_XL_PRETRAINED_MODEL_ARCHIVE_MAP = {
 
 class TFPositionalEmbedding(tf.keras.layers.Layer):
     def __init__(self, demb, **kwargs):
+        """
+        Initialize the calibration.
+
+        Args:
+            self: (todo): write your description
+            demb: (todo): write your description
+        """
         super(TFPositionalEmbedding, self).__init__(**kwargs)
 
         self.inv_freq = 1 / (10000 ** (tf.range(0, demb, 2.0) / demb))
 
     def call(self, pos_seq, bsz=None):
+        """
+        Return the position of - > b.
+
+        Args:
+            self: (todo): write your description
+            pos_seq: (todo): write your description
+            bsz: (array): write your description
+        """
         sinusoid_inp = tf.einsum('i,j->ij', pos_seq, self.inv_freq)
         pos_emb = tf.concat([tf.sin(sinusoid_inp), tf.cos(sinusoid_inp)], -1)
 
@@ -58,6 +73,18 @@ class TFPositionalEmbedding(tf.keras.layers.Layer):
 
 class TFPositionwiseFF(tf.keras.layers.Layer):
     def __init__(self, d_model, d_inner, dropout, pre_lnorm=False, layer_norm_epsilon=1e-5, init_std=0.02, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            d_model: (str): write your description
+            d_inner: (int): write your description
+            dropout: (str): write your description
+            pre_lnorm: (todo): write your description
+            layer_norm_epsilon: (int): write your description
+            init_std: (str): write your description
+        """
         super(TFPositionwiseFF, self).__init__(**kwargs)
 
         self.d_model = d_model
@@ -79,6 +106,14 @@ class TFPositionwiseFF(tf.keras.layers.Layer):
         self.pre_lnorm = pre_lnorm
 
     def call(self, inp, training=False):
+        """
+        Implement self ( s ).
+
+        Args:
+            self: (todo): write your description
+            inp: (todo): write your description
+            training: (bool): write your description
+        """
         if self.pre_lnorm:
             ##### layer normalization + positionwise feed-forward
             core_out = self.layer_norm(inp)
@@ -107,6 +142,26 @@ class TFRelPartialLearnableMultiHeadAttn(tf.keras.layers.Layer):
                  tgt_len=None, ext_len=None, mem_len=None, pre_lnorm=False,
                  r_r_bias=None, r_w_bias=None, output_attentions=False, 
                  layer_norm_epsilon=1e-5, init_std=0.02, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            n_head: (int): write your description
+            d_model: (str): write your description
+            d_head: (todo): write your description
+            dropout: (str): write your description
+            dropatt: (str): write your description
+            tgt_len: (int): write your description
+            ext_len: (str): write your description
+            mem_len: (todo): write your description
+            pre_lnorm: (todo): write your description
+            r_r_bias: (float): write your description
+            r_w_bias: (todo): write your description
+            output_attentions: (todo): write your description
+            layer_norm_epsilon: (int): write your description
+            init_std: (str): write your description
+        """
         super(TFRelPartialLearnableMultiHeadAttn, self).__init__(**kwargs)
 
         self.output_attentions = output_attentions
@@ -146,6 +201,13 @@ class TFRelPartialLearnableMultiHeadAttn(tf.keras.layers.Layer):
                                            name='r_net')
 
     def build(self, input_shape):
+        """
+        Connects the module into the graph.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         if self.r_r_bias is None or self.r_w_bias is None: # Biases are not shared
             self.r_r_bias = self.add_weight(shape=(self.n_head, self.d_head),
                                             initializer='zeros',
@@ -158,6 +220,13 @@ class TFRelPartialLearnableMultiHeadAttn(tf.keras.layers.Layer):
         super(TFRelPartialLearnableMultiHeadAttn, self).build(input_shape)
 
     def _rel_shift(self, x):
+        """
+        Perform the image.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         x_size = shape_list(x)
 
         x = tf.pad(x, [[0, 0], [1, 0], [0, 0], [0, 0]])
@@ -168,6 +237,14 @@ class TFRelPartialLearnableMultiHeadAttn(tf.keras.layers.Layer):
         return x
 
     def call(self, inputs, training=False):
+        """
+        Call the network.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         w, r, attn_mask, mems, head_mask = inputs
         qlen, rlen, bsz = shape_list(w)[0], shape_list(r)[0], shape_list(w)[1]
 
@@ -258,6 +335,27 @@ class TFRelPartialLearnableDecoderLayer(tf.keras.layers.Layer):
                  layer_norm_epsilon=1e-5,
                  init_std=0.02,
                  **kwargs):
+        """
+        Initialize n_head layer.
+
+        Args:
+            self: (todo): write your description
+            n_head: (int): write your description
+            d_model: (str): write your description
+            d_head: (todo): write your description
+            d_inner: (int): write your description
+            dropout: (str): write your description
+            tgt_len: (int): write your description
+            ext_len: (str): write your description
+            mem_len: (todo): write your description
+            dropatt: (str): write your description
+            pre_lnorm: (todo): write your description
+            r_w_bias: (todo): write your description
+            r_r_bias: (float): write your description
+            output_attentions: (todo): write your description
+            layer_norm_epsilon: (int): write your description
+            init_std: (str): write your description
+        """
         super(TFRelPartialLearnableDecoderLayer, self).__init__(**kwargs)
 
         self.dec_attn = TFRelPartialLearnableMultiHeadAttn(n_head, d_model,
@@ -272,6 +370,14 @@ class TFRelPartialLearnableDecoderLayer(tf.keras.layers.Layer):
                                        name='pos_ff')
 
     def call(self, inputs, training=False):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         dec_inp, r, dec_attn_mask, mems, head_mask = inputs
         attn_outputs = self.dec_attn([dec_inp, r, dec_attn_mask,
                                       mems, head_mask], training=training)
@@ -285,6 +391,19 @@ class TFRelPartialLearnableDecoderLayer(tf.keras.layers.Layer):
 class TFAdaptiveEmbedding(tf.keras.layers.Layer):
     def __init__(self, n_token, d_embed, d_proj, cutoffs, div_val=1, init_std=0.02,
                  sample_softmax=False, **kwargs):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            n_token: (int): write your description
+            d_embed: (int): write your description
+            d_proj: (str): write your description
+            cutoffs: (float): write your description
+            div_val: (todo): write your description
+            init_std: (str): write your description
+            sample_softmax: (int): write your description
+        """
         super(TFAdaptiveEmbedding, self).__init__(**kwargs)
 
         self.n_token = n_token
@@ -313,6 +432,13 @@ class TFAdaptiveEmbedding(tf.keras.layers.Layer):
                                                                  name='emb_layers_._{}'.format(i)))
 
     def build(self, input_shape):
+        """
+        Parameters ---------- input_shape : int
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         for i in range(len(self.cutoffs)):
             d_emb_i = self.d_embed // (self.div_val ** i)
             self.emb_projs.append(self.add_weight(shape=(d_emb_i, self.d_proj),
@@ -322,6 +448,13 @@ class TFAdaptiveEmbedding(tf.keras.layers.Layer):
         super(TFAdaptiveEmbedding, self).build(input_shape)
 
     def call(self, inp):
+        """
+        Computes the embedd_proj.
+
+        Args:
+            self: (todo): write your description
+            inp: (todo): write your description
+        """
         if self.div_val == 1:
             raise NotImplementedError  # Removed these to avoid maintaining dead code - They are not used in our pretrained checkpoint
         else:
@@ -349,6 +482,13 @@ class TFAdaptiveEmbedding(tf.keras.layers.Layer):
 
 class TFTransfoXLMainLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFTransfoXLMainLayer, self).__init__(**kwargs)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -402,6 +542,13 @@ class TFTransfoXLMainLayer(tf.keras.layers.Layer):
             raise NotImplementedError  # Removed these to avoid maintaining dead code - They are not used in our pretrained checkpoint
 
     def build(self, input_shape):
+        """
+        Connects the graph.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         if not self.untie_r:
             self.r_w_bias = self.add_weight(shape=(self.n_head, self.d_head),
                                             initializer='zeros',
@@ -414,23 +561,65 @@ class TFTransfoXLMainLayer(tf.keras.layers.Layer):
         super(TFTransfoXLMainLayer, self).build(input_shape)
 
     def get_input_embeddings(self):
+        """
+        Returns a list of word embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.word_emb
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Parameters ---------- new_num_embed.
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         return self.word_emb
 
     def backward_compatible(self):
+        """
+        Backward backward backward
+
+        Args:
+            self: (todo): write your description
+        """
         self.sample_softmax = -1
 
     def reset_length(self, tgt_len, ext_len, mem_len):
+        """
+        Reset the length of the file.
+
+        Args:
+            self: (todo): write your description
+            tgt_len: (int): write your description
+            ext_len: (todo): write your description
+            mem_len: (todo): write your description
+        """
         self.tgt_len = tgt_len
         self.mem_len = mem_len
         self.ext_len = ext_len
 
     def _prune_heads(self, heads):
+        """
+        Prune a list of the given message.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         raise NotImplementedError
 
     def init_mems(self, bsz):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            bsz: (todo): write your description
+        """
         if self.mem_len > 0:
             mems = []
             for i in range(self.n_layer):
@@ -442,6 +631,16 @@ class TFTransfoXLMainLayer(tf.keras.layers.Layer):
             return None
 
     def _update_mems(self, hids, mems, qlen, mlen):
+        """
+        Perform a multidx.
+
+        Args:
+            self: (todo): write your description
+            hids: (list): write your description
+            mems: (str): write your description
+            qlen: (todo): write your description
+            mlen: (str): write your description
+        """
         # does not deal with None
         if mems is None: return None
 
@@ -465,6 +664,17 @@ class TFTransfoXLMainLayer(tf.keras.layers.Layer):
         return new_mems
 
     def call(self, inputs, mems=None, head_mask=None, inputs_embeds=None, training=False):
+        """
+        Perform the forward computation.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            mems: (todo): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             mems = inputs[1] if len(inputs) > 1 else mems
@@ -679,10 +889,25 @@ class TFTransfoXLModel(TFTransfoXLPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the transfo
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFTransfoXLModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFTransfoXLMainLayer(config, name='transformer')
 
     def call(self, inputs, **kwargs):
+        """
+        Execute the given inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
         return outputs
 
@@ -721,6 +946,13 @@ class TFTransfoXLLMHeadModel(TFTransfoXLPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFTransfoXLLMHeadModel, self).__init__(config)
         self.transformer = TFTransfoXLMainLayer(config, name='transformer')
         self.sample_softmax = config.sample_softmax
@@ -733,12 +965,40 @@ class TFTransfoXLLMHeadModel(TFTransfoXLPreTrainedModel):
                                               config.cutoffs, div_val=config.div_val, name='crit')
 
     def reset_length(self, tgt_len, ext_len, mem_len):
+        """
+        Reset the length of the stream.
+
+        Args:
+            self: (todo): write your description
+            tgt_len: (int): write your description
+            ext_len: (todo): write your description
+            mem_len: (todo): write your description
+        """
         self.transformer.reset_length(tgt_len, ext_len, mem_len)
 
     def init_mems(self, bsz):
+        """
+        Initialize a transformer.
+
+        Args:
+            self: (todo): write your description
+            bsz: (todo): write your description
+        """
         return self.transformer.init_mems(bsz)
 
     def call(self, inputs, mems=None, head_mask=None, inputs_embeds=None, labels=None, training=False):
+        """
+        Parameters ---------- inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            mems: (todo): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             mems = inputs[1] if len(inputs) > 1 else mems

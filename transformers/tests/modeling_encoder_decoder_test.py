@@ -29,6 +29,12 @@ else:
 class EncoderDecoderModelTest(unittest.TestCase):
     @pytest.mark.slow
     def test_model2model_from_pretrained(self):
+        """
+        Test if a model from a - trained model.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         for model_name in list(BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             model = Model2Model.from_pretrained(model_name)
@@ -38,6 +44,12 @@ class EncoderDecoderModelTest(unittest.TestCase):
             self.assertEqual(model.encoder.config.is_decoder, False)
 
     def test_model2model_from_pretrained_not_bert(self):
+        """
+        Test if a multi - in - in the model.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         with self.assertRaises(ValueError):
             _ = Model2Model.from_pretrained('roberta')

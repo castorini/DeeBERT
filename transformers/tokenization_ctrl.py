@@ -129,6 +129,15 @@ class CTRLTokenizer(PreTrainedTokenizer):
     control_codes = CONTROL_CODES
 
     def __init__(self, vocab_file, merges_file, unk_token="<unk>", **kwargs):
+        """
+        Initialize a vocabulary from a file.
+
+        Args:
+            self: (todo): write your description
+            vocab_file: (str): write your description
+            merges_file: (str): write your description
+            unk_token: (str): write your description
+        """
         super(CTRLTokenizer, self).__init__(unk_token=unk_token, **kwargs)
         self.max_len_single_sentence = self.max_len # no default special tokens - you can update this value if you add special tokens
         self.max_len_sentences_pair = self.max_len # no default special tokens - you can update this value if you add special tokens
@@ -142,9 +151,22 @@ class CTRLTokenizer(PreTrainedTokenizer):
 
     @property
     def vocab_size(self):
+        """
+        The length : class : class.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.encoder)
 
     def bpe(self, token):
+        """
+        Returns a list of tokens.
+
+        Args:
+            self: (todo): write your description
+            token: (str): write your description
+        """
         if token in self.cache:
             return self.cache[token]
         word = tuple(token)

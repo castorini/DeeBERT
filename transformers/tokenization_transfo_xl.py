@@ -74,6 +74,23 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
                  delimiter=None, vocab_file=None, pretrained_vocab_file=None,
                  never_split=None, unk_token="<unk>", eos_token="<eos>",
                  additional_special_tokens=["<formula>"], **kwargs):
+        """
+        Initialize vocab.
+
+        Args:
+            self: (todo): write your description
+            special: (str): write your description
+            min_freq: (int): write your description
+            max_size: (int): write your description
+            lower_case: (str): write your description
+            delimiter: (str): write your description
+            vocab_file: (str): write your description
+            pretrained_vocab_file: (str): write your description
+            never_split: (todo): write your description
+            unk_token: (str): write your description
+            eos_token: (str): write your description
+            additional_special_tokens: (todo): write your description
+        """
         super(TransfoXLTokenizer, self).__init__(unk_token=unk_token, eos_token=eos_token,
                                                  additional_special_tokens=additional_special_tokens,
                                                  **kwargs)
@@ -106,6 +123,15 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
             self.build_vocab()
 
     def count_file(self, path, verbose=False, add_eos=False):
+        """
+        Return a list of the symbols in the files.
+
+        Args:
+            self: (str): write your description
+            path: (str): write your description
+            verbose: (bool): write your description
+            add_eos: (str): write your description
+        """
         if verbose: logger.info('counting file {} ...'.format(path))
         assert os.path.exists(path)
 
@@ -131,6 +157,13 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
             self.counter.update(symbols)
 
     def _build_from_file(self, vocab_file):
+        """
+        Builds the vocab file. vocab file.
+
+        Args:
+            self: (todo): write your description
+            vocab_file: (str): write your description
+        """
         self.idx2sym = []
         self.sym2idx = OrderedDict()
 
@@ -153,6 +186,12 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
         return (vocab_file,)
 
     def build_vocab(self):
+        """
+        Build vocab file.
+
+        Args:
+            self: (todo): write your description
+        """
         if self.vocab_file:
             logger.info('building vocab from {}'.format(self.vocab_file))
             self._build_from_file(self.vocab_file)
@@ -175,6 +214,17 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
 
     def encode_file(self, path, ordered=False, verbose=False, add_eos=True,
             add_double_eos=False):
+        """
+        Encode a list of files.
+
+        Args:
+            self: (todo): write your description
+            path: (str): write your description
+            ordered: (str): write your description
+            verbose: (str): write your description
+            add_eos: (str): write your description
+            add_double_eos: (str): write your description
+        """
         if verbose: logger.info('encoding file {} ...'.format(path))
         assert os.path.exists(path)
         encoded = []
@@ -192,6 +242,15 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
         return encoded
 
     def encode_sents(self, sents, ordered=False, verbose=False):
+        """
+        Encode sents into a string.
+
+        Args:
+            self: (todo): write your description
+            sents: (str): write your description
+            ordered: (str): write your description
+            verbose: (bool): write your description
+        """
         if verbose: logger.info('encoding {} sents ...'.format(len(sents)))
         encoded = []
         for idx, symbols in enumerate(sents):
@@ -205,12 +264,26 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
         return encoded
 
     def add_special(self, sym):
+        """
+        Add the special special variables.
+
+        Args:
+            self: (todo): write your description
+            sym: (str): write your description
+        """
         if sym not in self.sym2idx:
             self.idx2sym.append(sym)
             self.sym2idx[sym] = len(self.idx2sym) - 1
             setattr(self, '{}_idx'.format(sym.strip('<>')), self.sym2idx[sym])
 
     def add_symbol(self, sym):
+        """
+        Add symbol to the symbol
+
+        Args:
+            self: (todo): write your description
+            sym: (todo): write your description
+        """
         if sym not in self.sym2idx:
             self.idx2sym.append(sym)
             self.sym2idx[sym] = len(self.idx2sym) - 1
@@ -243,13 +316,35 @@ class TransfoXLTokenizer(PreTrainedTokenizer):
         return out_string
 
     def convert_to_tensor(self, symbols):
+        """
+        Converts a list of tensors to a list of tokens.
+
+        Args:
+            self: (todo): write your description
+            symbols: (todo): write your description
+        """
         return torch.LongTensor(self.convert_tokens_to_ids(symbols))
 
     @property
     def vocab_size(self):
+        """
+        The size of the vocab.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.idx2sym)
 
     def _tokenize(self, line, add_eos=False, add_double_eos=False):
+        """
+        Tokenize a string.
+
+        Args:
+            self: (todo): write your description
+            line: (str): write your description
+            add_eos: (str): write your description
+            add_double_eos: (bool): write your description
+        """
         line = line.strip()
         # convert to lower case
         if self.lower_case:
@@ -293,6 +388,14 @@ class LMOrderedIterator(object):
         self.n_batch = (self.n_step + self.bptt - 1) // self.bptt
 
     def get_batch(self, i, bptt=None):
+        """
+        Return a batch.
+
+        Args:
+            self: (todo): write your description
+            i: (todo): write your description
+            bptt: (todo): write your description
+        """
         if bptt is None: bptt = self.bptt
         seq_len = min(bptt, self.data.size(0) - 1 - i)
 
@@ -308,10 +411,27 @@ class LMOrderedIterator(object):
         return data_out, target_out, seq_len
 
     def get_fixlen_iter(self, start=0):
+        """
+        Return an iterator over the first chunk.
+
+        Args:
+            self: (todo): write your description
+            start: (todo): write your description
+        """
         for i in range(start, self.data.size(0) - 1, self.bptt):
             yield self.get_batch(i)
 
     def get_varlen_iter(self, start=0, std=5, min_len=5, max_deviation=3):
+        """
+        Return an iterator over the varlt data.
+
+        Args:
+            self: (todo): write your description
+            start: (todo): write your description
+            std: (str): write your description
+            min_len: (int): write your description
+            max_deviation: (int): write your description
+        """
         max_len = self.bptt + max_deviation * std
         i = start
         while True:
@@ -324,6 +444,12 @@ class LMOrderedIterator(object):
                 break
 
     def __iter__(self):
+        """
+        Returns an iterator over the iterable.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.get_fixlen_iter()
 
 
@@ -342,6 +468,12 @@ class LMShuffledIterator(object):
         self.shuffle = shuffle
 
     def get_sent_stream(self):
+        """
+        Generate a generator.
+
+        Args:
+            self: (todo): write your description
+        """
         # index iterator
         epoch_indices = np.random.permutation(len(self.data)) if self.shuffle \
             else np.array(range(len(self.data)))
@@ -351,6 +483,13 @@ class LMShuffledIterator(object):
             yield self.data[idx]
 
     def stream_iterator(self, sent_stream):
+        """
+        Generate over the next batch_streams.
+
+        Args:
+            self: (todo): write your description
+            sent_stream: (str): write your description
+        """
         # streams for each data in the batch
         streams = [None] * self.bsz
 
@@ -400,6 +539,12 @@ class LMShuffledIterator(object):
             data.resize_(n_retain + self.bptt, data.size(1))
 
     def __iter__(self):
+        """
+        Iterate over the batch sentences.
+
+        Args:
+            self: (todo): write your description
+        """
         # sent_stream is an iterator
         sent_stream = self.get_sent_stream()
 
@@ -410,6 +555,19 @@ class LMShuffledIterator(object):
 class LMMultiFileIterator(LMShuffledIterator):
     def __init__(self, paths, vocab, bsz, bptt, device='cpu', ext_len=None,
         shuffle=False):
+        """
+        Initialize vocab. vocab.
+
+        Args:
+            self: (todo): write your description
+            paths: (str): write your description
+            vocab: (todo): write your description
+            bsz: (list): write your description
+            bptt: (int): write your description
+            device: (todo): write your description
+            ext_len: (str): write your description
+            shuffle: (bool): write your description
+        """
 
         self.paths = paths
         self.vocab = vocab
@@ -422,6 +580,13 @@ class LMMultiFileIterator(LMShuffledIterator):
         self.shuffle = shuffle
 
     def get_sent_stream(self, path):
+        """
+        Generate sentences from a file.
+
+        Args:
+            self: (todo): write your description
+            path: (str): write your description
+        """
         sents = self.vocab.encode_file(path, add_double_eos=True)
         if self.shuffle:
             np.random.shuffle(sents)
@@ -430,6 +595,12 @@ class LMMultiFileIterator(LMShuffledIterator):
         return sent_stream
 
     def __iter__(self):
+        """
+        Generate a batch of sentences.
+
+        Args:
+            self: (todo): write your description
+        """
         if self.shuffle:
             np.random.shuffle(self.paths)
 
@@ -485,6 +656,12 @@ class TransfoXLCorpus(object):
         return corpus
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the dataset.
+
+        Args:
+            self: (todo): write your description
+        """
         self.vocab = TransfoXLTokenizer(*args, **kwargs)
         self.dataset = None
         self.train = None
@@ -492,6 +669,14 @@ class TransfoXLCorpus(object):
         self.test = None
 
     def build_corpus(self, path, dataset):
+        """
+        Builds the corpus.
+
+        Args:
+            self: (todo): write your description
+            path: (str): write your description
+            dataset: (todo): write your description
+        """
         self.dataset = dataset
 
         if self.dataset in ['ptb', 'wt2', 'enwik8', 'text8']:
@@ -531,6 +716,13 @@ class TransfoXLCorpus(object):
                 os.path.join(path, 'test.txt'), ordered=False, add_double_eos=True)
 
     def get_iterator(self, split, *args, **kwargs):
+        """
+        Get iterator for iterator.
+
+        Args:
+            self: (todo): write your description
+            split: (todo): write your description
+        """
         if split == 'train':
             if self.dataset in ['ptb', 'wt2', 'wt103', 'enwik8', 'text8']:
                 data_iter = LMOrderedIterator(self.train, *args, **kwargs)
@@ -548,6 +740,13 @@ class TransfoXLCorpus(object):
 
 
 def get_lm_corpus(datadir, dataset):
+    """
+    Get a dataset.
+
+    Args:
+        datadir: (str): write your description
+        dataset: (todo): write your description
+    """
     fn = os.path.join(datadir, 'cache.pt')
     fn_pickle = os.path.join(datadir, 'cache.pkl')
     if os.path.exists(fn):

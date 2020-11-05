@@ -44,6 +44,15 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 def convert_xlnet_checkpoint_to_pytorch(tf_checkpoint_path, bert_config_file, pytorch_dump_folder_path, finetuning_task=None):
+    """
+    Convert a pytorch model.
+
+    Args:
+        tf_checkpoint_path: (str): write your description
+        bert_config_file: (str): write your description
+        pytorch_dump_folder_path: (str): write your description
+        finetuning_task: (str): write your description
+    """
     # Initialise PyTorch model
     config = XLNetConfig.from_json_file(bert_config_file)
 

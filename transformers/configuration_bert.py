@@ -90,6 +90,24 @@ class BertConfig(PretrainedConfig):
                  initializer_range=0.02,
                  layer_norm_eps=1e-12,
                  **kwargs):
+        """
+        Initialize self.
+
+        Args:
+            self: (todo): write your description
+            vocab_size_or_config_json_file: (str): write your description
+            hidden_size: (int): write your description
+            num_hidden_layers: (int): write your description
+            num_attention_heads: (int): write your description
+            intermediate_size: (int): write your description
+            hidden_act: (todo): write your description
+            hidden_dropout_prob: (todo): write your description
+            attention_probs_dropout_prob: (todo): write your description
+            max_position_embeddings: (int): write your description
+            type_vocab_size: (int): write your description
+            initializer_range: (todo): write your description
+            layer_norm_eps: (int): write your description
+        """
         super(BertConfig, self).__init__(**kwargs)
         if isinstance(vocab_size_or_config_json_file, str) or (sys.version_info[0] == 2
                         and isinstance(vocab_size_or_config_json_file, unicode)):

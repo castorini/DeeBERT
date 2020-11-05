@@ -44,9 +44,24 @@ if sys.version_info[0] == 2:
     class TemporaryDirectory(object):
         """Context manager for tempfile.mkdtemp() so it's usable with "with" statement."""
         def __enter__(self):
+            """
+            Return a temporary file.
+
+            Args:
+                self: (todo): write your description
+            """
             self.name = tempfile.mkdtemp()
             return self.name
         def __exit__(self, exc_type, exc_value, traceback):
+            """
+            Exit the given exception.
+
+            Args:
+                self: (todo): write your description
+                exc_type: (todo): write your description
+                exc_value: (todo): write your description
+                traceback: (todo): write your description
+            """
             shutil.rmtree(self.name)
 else:
     import pickle
@@ -54,6 +69,12 @@ else:
     unicode = str
 
 def _config_zero_init(config):
+    """
+    Initialize zero or zero or more configs.
+
+    Args:
+        config: (todo): write your description
+    """
     configs_no_init = copy.deepcopy(config)
     for key in configs_no_init.__dict__.keys():
         if '_range' in key or '_std' in key:
@@ -71,6 +92,12 @@ class TFCommonTestCases:
         test_resize_embeddings = True
 
         def test_initialization(self):
+            """
+            Test if the initial number of the test.
+
+            Args:
+                self: (todo): write your description
+            """
             pass
             # config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
@@ -83,6 +110,12 @@ class TFCommonTestCases:
             #             msg="Parameter {} of model {} seems not properly initialized".format(name, model_class))
 
         def test_save_load(self):
+            """
+            Test for all of the model.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -103,6 +136,12 @@ class TFCommonTestCases:
                     self.assertLessEqual(max_diff, 1e-5)
 
         def test_pt_tf_model_equivalence(self):
+            """
+            Loads the model provenance.
+
+            Args:
+                self: (todo): write your description
+            """
             if not is_torch_available():
                 return
 
@@ -154,6 +193,12 @@ class TFCommonTestCases:
                 self.assertLessEqual(max_diff, 2e-2)
 
         def test_compile_tf_model(self):
+            """
+            Compiles the keras model.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             input_ids = tf.keras.Input(batch_shape=(2, 2000), name='input_ids', dtype='int32')
@@ -182,6 +227,12 @@ class TFCommonTestCases:
                 extended_model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
 
         def test_keyword_and_dict_args(self):
+            """
+            Test the keyword arguments.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -198,6 +249,12 @@ class TFCommonTestCases:
                 self.assertLess(np.sum(np.abs(output_dict - output_keywords)), 1e-6)
 
         def test_attention_outputs(self):
+            """
+            Test if all inputs of the network.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -234,6 +291,12 @@ class TFCommonTestCases:
                     self.model_tester.key_len if hasattr(self.model_tester, 'key_len') else self.model_tester.seq_length])
 
         def test_headmasking(self):
+            """
+            Test if the headmasking is enabled test.
+
+            Args:
+                self: (todo): write your description
+            """
             pass
             # config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
@@ -281,6 +344,12 @@ class TFCommonTestCases:
 
 
         def test_head_pruning(self):
+            """
+            Return the head head of - pruning.
+
+            Args:
+                self: (todo): write your description
+            """
             pass
             # if not self.test_pruning:
             #     return
@@ -308,6 +377,12 @@ class TFCommonTestCases:
 
 
         def test_hidden_states_output(self):
+            """
+            Test for hidden hidden states
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -325,6 +400,12 @@ class TFCommonTestCases:
 
 
         def test_resize_tokens_embeddings(self):
+            """
+            Resize embeddings.
+
+            Args:
+                self: (todo): write your description
+            """
             pass
             # original_config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
             # if not self.test_resize_embeddings:
@@ -361,6 +442,12 @@ class TFCommonTestCases:
 
 
         def test_model_common_attributes(self):
+            """
+            Test for all embeddings.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -371,6 +458,12 @@ class TFCommonTestCases:
 
 
         def test_tie_model_weights(self):
+            """
+            Test if all the model weights.
+
+            Args:
+                self: (todo): write your description
+            """
             pass
             # config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
@@ -404,6 +497,12 @@ class TFCommonTestCases:
             #     self.assertEqual(len(params_tied_2), len(params_tied))
 
         def test_determinism(self):
+            """
+            Test the test test for_determines.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
 
             for model_class in self.all_model_classes:
@@ -412,6 +511,12 @@ class TFCommonTestCases:
                 self.assertTrue(tf.math.equal(first, second).numpy().all())
 
         def test_inputs_embeds(self):
+            """
+            Parameters ---------- inputs_dict : list of inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config, inputs_dict = self.model_tester.prepare_config_and_inputs_for_common()
             input_ids = inputs_dict["input_ids"]
             del inputs_dict["input_ids"]
@@ -456,6 +561,12 @@ def ids_tensor(shape, vocab_size, rng=None, name=None, dtype=None):
 class TFModelUtilsTest(unittest.TestCase):
     @pytest.mark.skipif('tensorflow' not in sys.modules, reason="requires TensorFlow")
     def test_model_from_pretrained(self):
+        """
+        Test if_from_model ().
+
+        Args:
+            self: (todo): write your description
+        """
         pass
         # logging.basicConfig(level=logging.INFO)
         # for model_name in list(BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:

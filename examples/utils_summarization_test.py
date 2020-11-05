@@ -28,6 +28,12 @@ from utils_summarization import (
 
 class SummarizationDataProcessingTest(unittest.TestCase):
     def setUp(self):
+        """
+        Sets the thread_size.
+
+        Args:
+            self: (todo): write your description
+        """
         self.block_size = 10
 
     def test_fit_to_block_sequence_too_small(self):
@@ -72,6 +78,12 @@ class SummarizationDataProcessingTest(unittest.TestCase):
         self.assertEqual(summary_lines, [])
 
     def test_process_story_with_missing_period(self):
+        """
+        Test for the story summary of the story summary.
+
+        Args:
+            self: (todo): write your description
+        """
         raw_story = (
             "It was the year of Our Lord one thousand seven hundred and "
             "seventy-five\n\nSpiritual revelations were conceded to England "
@@ -89,6 +101,12 @@ class SummarizationDataProcessingTest(unittest.TestCase):
         self.assertEqual(expected_summary_lines, summary_lines)
 
     def test_build_lm_labels_no_padding(self):
+        """
+        Builds the lm labels.
+
+        Args:
+            self: (todo): write your description
+        """
         sequence = torch.tensor([1, 2, 3, 4])
         expected = sequence
         np.testing.assert_array_equal(
@@ -96,6 +114,12 @@ class SummarizationDataProcessingTest(unittest.TestCase):
         )
 
     def test_build_lm_labels(self):
+        """
+        Test the lm labels.
+
+        Args:
+            self: (todo): write your description
+        """
         sequence = torch.tensor([1, 2, 3, 4, 0, 0, 0])
         expected = torch.tensor([1, 2, 3, 4, -1, -1, -1])
         np.testing.assert_array_equal(
@@ -103,11 +127,23 @@ class SummarizationDataProcessingTest(unittest.TestCase):
         )
 
     def test_build_mask_no_padding(self):
+        """
+        Test for the masked mask is a 2d tensor.
+
+        Args:
+            self: (todo): write your description
+        """
         sequence = torch.tensor([1, 2, 3, 4])
         expected = torch.tensor([1, 1, 1, 1])
         np.testing.assert_array_equal(build_mask(sequence, 0).numpy(), expected.numpy())
 
     def test_build_mask(self):
+        """
+        Test the masking.
+
+        Args:
+            self: (todo): write your description
+        """
         sequence = torch.tensor([1, 2, 3, 4, 23, 23, 23])
         expected = torch.tensor([1, 1, 1, 1, 0, 0, 0])
         np.testing.assert_array_equal(
@@ -115,11 +151,23 @@ class SummarizationDataProcessingTest(unittest.TestCase):
         )
 
     def test_build_mask_with_padding_equal_to_one(self):
+        """
+        Parameters ---------- _test_build_padding_with_padding
+
+        Args:
+            self: (todo): write your description
+        """
         sequence = torch.tensor([8, 2, 3, 4, 1, 1, 1])
         expected = torch.tensor([1, 1, 1, 1, 0, 0, 0])
         np.testing.assert_array_equal(build_mask(sequence, 1).numpy(), expected.numpy())
 
     def test_compute_token_type_ids(self):
+        """
+        Compute the token embedding for a token type.
+
+        Args:
+            self: (todo): write your description
+        """
         separator = 101
         batch = torch.tensor(
             [[1, 2, 3, 4, 5, 6], [1, 2, 3, 101, 5, 6], [1, 101, 3, 4, 101, 6]]

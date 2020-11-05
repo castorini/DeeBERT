@@ -75,6 +75,40 @@ class TFXLMModelTest(TFCommonTestCases.TFCommonModelTester):
                      use_proj=True,
                      scope=None,
                     ):
+            """
+            Initialize the model.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_input_lengths: (int): write your description
+                use_token_type_ids: (str): write your description
+                use_labels: (bool): write your description
+                gelu_activation: (str): write your description
+                sinusoidal_embeddings: (int): write your description
+                causal: (todo): write your description
+                asm: (str): write your description
+                n_langs: (todo): write your description
+                vocab_size: (int): write your description
+                n_special: (str): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                hidden_dropout_prob: (todo): write your description
+                attention_probs_dropout_prob: (todo): write your description
+                max_position_embeddings: (int): write your description
+                type_vocab_size: (int): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                num_choices: (int): write your description
+                summary_type: (str): write your description
+                use_proj: (bool): write your description
+                scope: (str): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -106,6 +140,12 @@ class TFXLMModelTest(TFCommonTestCases.TFCommonModelTester):
             self.scope = scope
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the input tensors.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
             input_mask = ids_tensor([self.batch_size, self.seq_length], 2, dtype=tf.float32)
 
@@ -146,6 +186,20 @@ class TFXLMModelTest(TFCommonTestCases.TFCommonModelTester):
             return config, input_ids, token_type_ids, input_lengths, sequence_labels, token_labels, is_impossible_labels, input_mask
 
         def create_and_check_xlm_model(self, config, input_ids, token_type_ids, input_lengths, sequence_labels, token_labels, is_impossible_labels, input_mask):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_lengths: (int): write your description
+                sequence_labels: (str): write your description
+                token_labels: (str): write your description
+                is_impossible_labels: (todo): write your description
+                input_mask: (todo): write your description
+            """
             model = TFXLMModel(config=config)
             inputs = {'input_ids': input_ids,
                       'lengths': input_lengths,
@@ -164,6 +218,20 @@ class TFXLMModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_xlm_lm_head(self, config, input_ids, token_type_ids, input_lengths, sequence_labels, token_labels, is_impossible_labels, input_mask):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_lengths: (int): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                is_impossible_labels: (bool): write your description
+                input_mask: (str): write your description
+            """
             model = TFXLMWithLMHeadModel(config)
 
             inputs = {'input_ids': input_ids,
@@ -183,6 +251,20 @@ class TFXLMModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_xlm_qa(self, config, input_ids, token_type_ids, input_lengths, sequence_labels, token_labels, is_impossible_labels, input_mask):
+            """
+            Create a batch of examples.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_lengths: (int): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                is_impossible_labels: (todo): write your description
+                input_mask: (todo): write your description
+            """
             model = TFXLMForQuestionAnsweringSimple(config)
 
             inputs = {'input_ids': input_ids,
@@ -205,6 +287,20 @@ class TFXLMModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def create_and_check_xlm_sequence_classif(self, config, input_ids, token_type_ids, input_lengths, sequence_labels, token_labels, is_impossible_labels, input_mask):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_lengths: (int): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                is_impossible_labels: (bool): write your description
+                input_mask: (todo): write your description
+            """
             model = TFXLMForSequenceClassification(config)
 
             inputs = {'input_ids': input_ids,
@@ -222,6 +318,12 @@ class TFXLMModelTest(TFCommonTestCases.TFCommonModelTester):
 
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids, token_type_ids, input_lengths,
              sequence_labels, token_labels, is_impossible_labels, input_mask) = config_and_inputs
@@ -229,30 +331,72 @@ class TFXLMModelTest(TFCommonTestCases.TFCommonModelTester):
             return config, inputs_dict
 
     def setUp(self):
+        """
+        Sets the model configuration
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = TFXLMModelTest.TFXLMModelTester(self)
         self.config_tester = ConfigTester(self, config_class=XLMConfig, emb_dim=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_xlm_model(self):
+        """
+        Test if xlm model.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xlm_model(*config_and_inputs)
 
     def test_xlm_lm_head(self):
+        """
+        Evaluate the lm model.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xlm_lm_head(*config_and_inputs)
 
     def test_xlm_qa(self):
+        """
+        Test if xlm model was clicked
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xlm_qa(*config_and_inputs)
 
     def test_xlm_sequence_classif(self):
+        """
+        Test for a model classifter.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xlm_sequence_classif(*config_and_inputs)
 
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test for a model from a pre - trained model.
+
+        Args:
+            self: (todo): write your description
+        """
         cache_dir = "/tmp/transformers_test/"
         for model_name in list(TF_XLM_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             model = XLMModel.from_pretrained(model_name, cache_dir=cache_dir)

@@ -83,6 +83,29 @@ class XxxConfig(PretrainedConfig):
                  summary_proj_to_labels=True,
                  summary_first_dropout=0.1,
                  **kwargs):
+        """
+        Initialize the configuration.
+
+        Args:
+            self: (todo): write your description
+            vocab_size_or_config_json_file: (str): write your description
+            n_positions: (int): write your description
+            n_ctx: (int): write your description
+            n_embd: (int): write your description
+            n_layer: (todo): write your description
+            n_head: (int): write your description
+            resid_pdrop: (todo): write your description
+            embd_pdrop: (todo): write your description
+            attn_pdrop: (int): write your description
+            layer_norm_epsilon: (int): write your description
+            initializer_range: (todo): write your description
+            num_labels: (int): write your description
+            summary_type: (str): write your description
+            summary_use_proj: (bool): write your description
+            summary_activation: (todo): write your description
+            summary_proj_to_labels: (str): write your description
+            summary_first_dropout: (str): write your description
+        """
         super(XxxConfig, self).__init__(**kwargs)
         self.vocab_size = vocab_size_or_config_json_file if isinstance(vocab_size_or_config_json_file, six.string_types) else -1
         self.n_ctx = n_ctx
@@ -115,16 +138,40 @@ class XxxConfig(PretrainedConfig):
 
     @property
     def max_position_embeddings(self):
+        """
+        The maximum positions of the maximum positions.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_positions
 
     @property
     def hidden_size(self):
+        """
+        The number of the hidden hidden size.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_embd
 
     @property
     def num_attention_heads(self):
+        """
+        The number of available attention.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_head
 
     @property
     def num_hidden_layers(self):
+        """
+        Return the number of hidden hidden layers.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_layer

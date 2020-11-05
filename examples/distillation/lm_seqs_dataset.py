@@ -35,6 +35,14 @@ class LmSeqsDataset(Dataset):
     def __init__(self,
                  params,
                  data):
+        """
+        Parameters ---------- params.
+
+        Args:
+            self: (todo): write your description
+            params: (dict): write your description
+            data: (todo): write your description
+        """
         self.params = params
 
         self.token_ids = np.array(data)
@@ -47,9 +55,22 @@ class LmSeqsDataset(Dataset):
         self.print_statistics()
 
     def __getitem__(self, index):
+        """
+        Returns the list of the given token.
+
+        Args:
+            self: (todo): write your description
+            index: (int): write your description
+        """
         return (self.token_ids[index], self.lengths[index])
 
     def __len__(self):
+        """
+        Returns the length of the queue.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.lengths)
 
     def check(self):
@@ -68,6 +89,13 @@ class LmSeqsDataset(Dataset):
         logger.info(f'Splitting {sum(indices)} too long sequences.')
 
         def divide_chunks(l, n):
+            """
+            Divide a list into n - sized chunks.
+
+            Args:
+                l: (todo): write your description
+                n: (todo): write your description
+            """
             return [l[i:i + n] for i in range(0, len(l), n)]
 
         new_tok_ids = []

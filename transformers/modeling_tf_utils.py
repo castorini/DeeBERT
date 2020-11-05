@@ -54,6 +54,14 @@ class TFPreTrainedModel(tf.keras.Model):
     dummy_inputs = tf.constant(DUMMY_INPUTS)  # dummy inputs to build the network
 
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the inputs.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFPreTrainedModel, self).__init__(*inputs, **kwargs)
         if not isinstance(config, PretrainedConfig):
             raise ValueError(
@@ -303,6 +311,13 @@ class TFConv1D(tf.keras.layers.Layer):
         self.initializer_range = initializer_range
 
     def build(self, input_shape):
+        """
+        Connects the graph to the graph.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         self.weight = self.add_weight(
             "weight",
             shape=[self.nx, self.nf],
@@ -313,6 +328,13 @@ class TFConv1D(tf.keras.layers.Layer):
             initializer=tf.zeros_initializer())
 
     def call(self, x):
+        """
+        Implement self ( x ).
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         bz, sl = shape_list(x)[:2]
 
         x = tf.reshape(x, [-1, self.nx])
@@ -327,6 +349,15 @@ class TFSharedEmbeddings(tf.keras.layers.Layer):
     """Construct shared token embeddings.
     """
     def __init__(self, vocab_size, hidden_size, initializer_range=None, **kwargs):
+        """
+        Initialize the chord.
+
+        Args:
+            self: (todo): write your description
+            vocab_size: (int): write your description
+            hidden_size: (int): write your description
+            initializer_range: (todo): write your description
+        """
         super(TFSharedEmbeddings, self).__init__(**kwargs)
         self.vocab_size = vocab_size
         self.hidden_size = hidden_size
@@ -400,6 +431,14 @@ class TFSequenceSummary(tf.keras.layers.Layer):
             summary_last_dropout: Add a dropout after the projection and activation
     """
     def __init__(self, config, initializer_range=0.02, **kwargs):
+        """
+        Initialize the proxy.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            initializer_range: (todo): write your description
+        """
         super(TFSequenceSummary, self).__init__(**kwargs)
 
         self.summary_type = config.summary_type if hasattr(config, 'summary_use_proj') else 'last'

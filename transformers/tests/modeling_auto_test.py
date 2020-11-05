@@ -40,6 +40,12 @@ else:
 class AutoModelTest(unittest.TestCase):
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test if the model from a pre - in - trained.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         for model_name in list(BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             config = AutoConfig.from_pretrained(model_name)
@@ -55,6 +61,12 @@ class AutoModelTest(unittest.TestCase):
 
     @pytest.mark.slow
     def test_lmhead_model_from_pretrained(self):
+        """
+        Test if the lmhead model from a lmhead model.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         for model_name in list(BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             config = AutoConfig.from_pretrained(model_name)
@@ -68,6 +80,12 @@ class AutoModelTest(unittest.TestCase):
 
     @pytest.mark.slow
     def test_sequence_classification_model_from_pretrained(self):
+        """
+        Test for a model classification.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         for model_name in list(BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             config = AutoConfig.from_pretrained(model_name)
@@ -81,6 +99,12 @@ class AutoModelTest(unittest.TestCase):
 
     @pytest.mark.slow
     def test_question_answering_model_from_pretrained(self):
+        """
+        Test if there isquestion model from - trained model.
+
+        Args:
+            self: (todo): write your description
+        """
         logging.basicConfig(level=logging.INFO)
         for model_name in list(BERT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             config = AutoConfig.from_pretrained(model_name)

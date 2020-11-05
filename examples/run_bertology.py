@@ -211,6 +211,11 @@ def prune_heads(args, model, eval_dataloader, head_mask):
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
     ## Required parameters
     parser.add_argument("--data_dir", default=None, type=str, required=True,

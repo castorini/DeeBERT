@@ -168,9 +168,22 @@ class BertTokenizer(PreTrainedTokenizer):
 
     @property
     def vocab_size(self):
+        """
+        Returns the size of the vocabulary.
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.vocab)
 
     def _tokenize(self, text):
+        """
+        Tokenize a string.
+
+        Args:
+            self: (todo): write your description
+            text: (str): write your description
+        """
         split_tokens = []
         if self.do_basic_tokenize:
             for token in self.basic_tokenizer.tokenize(text, never_split=self.all_special_tokens):
@@ -406,6 +419,15 @@ class WordpieceTokenizer(object):
     """Runs WordPiece tokenization."""
 
     def __init__(self, vocab, unk_token, max_input_chars_per_word=100):
+        """
+        Initialize word embedding.
+
+        Args:
+            self: (todo): write your description
+            vocab: (todo): write your description
+            unk_token: (str): write your description
+            max_input_chars_per_word: (int): write your description
+        """
         self.vocab = vocab
         self.unk_token = unk_token
         self.max_input_chars_per_word = max_input_chars_per_word

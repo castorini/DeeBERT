@@ -28,6 +28,12 @@ class XLMTokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = XLMTokenizer
 
     def setUp(self):
+        """
+        Set vocab for vocab.
+
+        Args:
+            self: (todo): write your description
+        """
         super(XLMTokenizationTest, self).setUp()
 
         # Adapted from Sennrich et al. 2015 and https://github.com/rsennrich/subword-nmt
@@ -46,9 +52,21 @@ class XLMTokenizationTest(CommonTestCases.CommonTokenizerTester):
             fp.write("\n".join(merges))
 
     def get_tokenizer(self, **kwargs):
+        """
+        See : meth : ~simple
+
+        Args:
+            self: (todo): write your description
+        """
         return XLMTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"lower newer"
         output_text = u"lower newer"
         return input_text, output_text
@@ -69,6 +87,12 @@ class XLMTokenizationTest(CommonTestCases.CommonTokenizerTester):
 
     @pytest.mark.slow
     def test_sequence_builders(self):
+        """
+        Test if the input sequence.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = XLMTokenizer.from_pretrained("xlm-mlm-en-2048")
 
         text = tokenizer.encode("sequence builders", add_special_tokens=False)

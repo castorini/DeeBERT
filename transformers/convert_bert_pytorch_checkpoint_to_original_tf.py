@@ -65,11 +65,29 @@ def convert_pytorch_checkpoint_to_tf(model:BertModel, ckpt_dir:str, model_name:s
     state_dict = model.state_dict()
 
     def to_tf_var_name(name:str):
+        """
+        Convert a variable name to a variable name.
+
+        Args:
+            name: (str): write your description
+        """
         for patt, repl in iter(var_map):
             name = name.replace(patt, repl)
         return 'bert/{}'.format(name)
 
     def create_tf_var(tensor:np.ndarray, name:str, session:tf.Session):
+        """
+        Creates a tensor.
+
+        Args:
+            tensor: (todo): write your description
+            np: (todo): write your description
+            ndarray: (array): write your description
+            name: (str): write your description
+            session: (todo): write your description
+            tf: (todo): write your description
+            Session: (todo): write your description
+        """
         tf_dtype = tf.dtypes.as_dtype(tensor.dtype)
         tf_var = tf.get_variable(dtype=tf_dtype, shape=tensor.shape, name=name, initializer=tf.zeros_initializer())
         session.run(tf.variables_initializer([tf_var]))
@@ -93,6 +111,12 @@ def convert_pytorch_checkpoint_to_tf(model:BertModel, ckpt_dir:str, model_name:s
 
 
 def main(raw_args=None):
+    """
+    The main function.
+
+    Args:
+        raw_args: (dict): write your description
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_name",
                         type=str,

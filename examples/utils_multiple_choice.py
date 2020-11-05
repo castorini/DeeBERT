@@ -61,6 +61,15 @@ class InputFeatures(object):
                  label
 
     ):
+        """
+        Initialize a segment.
+
+        Args:
+            self: (todo): write your description
+            example_id: (str): write your description
+            choices_features: (todo): write your description
+            label: (str): write your description
+        """
         self.example_id = example_id
         self.choices_features = [
             {
@@ -128,6 +137,13 @@ class RaceProcessor(DataProcessor):
         return ["0", "1", "2", "3"]
 
     def _read_txt(self, input_dir):
+        """
+        Read a list of tq files *. tq file.
+
+        Args:
+            self: (todo): write your description
+            input_dir: (str): write your description
+        """
         lines = []
         files = glob.glob(input_dir + "/*txt")
         for file in tqdm.tqdm(files, desc="read files"):
@@ -184,6 +200,13 @@ class SwagProcessor(DataProcessor):
         return ["0", "1", "2", "3"]
 
     def _read_csv(self, input_file):
+        """
+        Read csv file and parser.
+
+        Args:
+            self: (todo): write your description
+            input_file: (str): write your description
+        """
         with open(input_file, 'r', encoding='utf-8') as f:
             reader = csv.reader(f)
             lines = []
@@ -230,6 +253,13 @@ class ArcProcessor(DataProcessor):
         return self._create_examples(self._read_json(os.path.join(data_dir, "dev.jsonl")), "dev")
 
     def get_test_examples(self, data_dir):
+        """
+        Gets examples. json file.
+
+        Args:
+            self: (todo): write your description
+            data_dir: (str): write your description
+        """
         logger.info("LOOKING AT {} test".format(data_dir))
         return self._create_examples(self._read_json(os.path.join(data_dir, "test.jsonl")), "test")
 
@@ -238,6 +268,13 @@ class ArcProcessor(DataProcessor):
         return ["0", "1", "2", "3"]
 
     def _read_json(self, input_file):
+        """
+        Read json file.
+
+        Args:
+            self: (todo): write your description
+            input_file: (str): write your description
+        """
         with open(input_file, 'r', encoding='utf-8') as fin:
             lines = fin.readlines()
             return lines
@@ -248,6 +285,12 @@ class ArcProcessor(DataProcessor):
 
         #There are two types of labels. They should be normalized
         def normalize(truth):
+            """
+            Normalize a string.
+
+            Args:
+                truth: (todo): write your description
+            """
             if truth in "ABCD":
                 return ord(truth) - ord("A")
             elif truth in "1234":

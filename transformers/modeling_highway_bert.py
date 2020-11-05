@@ -6,6 +6,12 @@ from .modeling_bert import BertLayer, BertLayerNorm, BertPreTrainedModel
 
 
 def entropy(x):
+    """
+    Calculate the entropy of x.
+
+    Args:
+        x: (todo): write your description
+    """
     # x: torch.Tensor, logits BEFORE softmax
     exp_x = torch.exp(x)
     A = torch.sum(exp_x, dim=1)    # sum of exp(x_i)
@@ -17,6 +23,13 @@ class BertEmbeddings(nn.Module):
     """Construct the embeddings from word, position and token_type embeddings.
     """
     def __init__(self, config):
+        """
+        Initialize embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertEmbeddings, self).__init__()
         self.word_embeddings = nn.Embedding(config.vocab_size, config.hidden_size, padding_idx=0)
         self.position_embeddings = nn.Embedding(config.max_position_embeddings, config.hidden_size)
@@ -28,6 +41,16 @@ class BertEmbeddings(nn.Module):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
 
     def forward(self, input_ids=None, token_type_ids=None, position_ids=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None:
             input_shape = input_ids.size()
         else:
@@ -54,6 +77,13 @@ class BertEmbeddings(nn.Module):
 
 class BertEncoder(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertEncoder, self).__init__()
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -63,6 +93,13 @@ class BertEncoder(nn.Module):
         self.early_exit_entropy = [-1 for _ in range(config.num_hidden_layers)]
 
     def set_early_exit_entropy(self, x):
+        """
+        Sets the new entropy.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         print(x)
         if (type(x) is float) or (type(x) is int):
             for i in range(len(self.early_exit_entropy)):
@@ -71,12 +108,30 @@ class BertEncoder(nn.Module):
             self.early_exit_entropy = x
 
     def init_highway_pooler(self, pooler):
+        """
+        Initialize the pooler pool.
+
+        Args:
+            self: (todo): write your description
+            pooler: (todo): write your description
+        """
         loaded_model = pooler.state_dict()
         for highway in self.highway:
             for name, param in highway.pooler.state_dict().items():
                 param.copy_(loaded_model[name])
 
     def forward(self, hidden_states, attention_mask=None, head_mask=None, encoder_hidden_states=None, encoder_attention_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            encoder_hidden_states: (todo): write your description
+            encoder_attention_mask: (todo): write your description
+        """
         all_hidden_states = ()
         all_attentions = ()
         all_highway_exits = ()
@@ -133,6 +188,13 @@ class BertEncoder(nn.Module):
 
 class BertPooler(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertPooler, self).__init__()
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
@@ -140,6 +202,13 @@ class BertPooler(nn.Module):
         # Pooler weights also needs to be loaded, especially in Highway!
 
     def forward(self, hidden_states):
+        """
+        Returns the forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+        """
         # We "pool" the model by simply taking the hidden state corresponding
         # to the first token.
         first_token_tensor = hidden_states[:, 0]
@@ -178,6 +247,13 @@ class BertModel(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the bertools.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertModel, self).__init__(config)
         self.config = config
 
@@ -188,12 +264,31 @@ class BertModel(BertPreTrainedModel):
         self.init_weights()
 
     def init_highway_pooler(self):
+        """
+        Initialize the connection pooler.
+
+        Args:
+            self: (todo): write your description
+        """
         self.encoder.init_highway_pooler(self.pooler)
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings.word_embeddings
 
     def set_input_embeddings(self, value):
+        """
+        Set the embeddings.
+
+        Args:
+            self: (todo): write your description
+            value: (todo): write your description
+        """
         self.embeddings.word_embeddings = value
 
     def _prune_heads(self, heads_to_prune):
@@ -304,6 +399,14 @@ class BertModel(BertPreTrainedModel):
 
 class HighwayException(Exception):
     def __init__(self, message, exit_layer):
+        """
+        Initialize the message.
+
+        Args:
+            self: (todo): write your description
+            message: (str): write your description
+            exit_layer: (todo): write your description
+        """
         self.message = message
         self.exit_layer = exit_layer  # start from 1!
 
@@ -316,12 +419,26 @@ class BertHighway(nn.Module):
     cross-entropy computation in BertForSequenceClassification
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertHighway, self).__init__()
         self.pooler = BertPooler(config)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.classifier = nn.Linear(config.hidden_size, config.num_labels)
 
     def forward(self, encoder_outputs):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            encoder_outputs: (str): write your description
+        """
         # Pooler
         pooler_input = encoder_outputs[0]
         pooler_output = self.pooler(pooler_input)
@@ -372,6 +489,13 @@ class BertForSequenceClassification(BertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(BertForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.num_layers = config.num_hidden_layers
@@ -385,6 +509,21 @@ class BertForSequenceClassification(BertPreTrainedModel):
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
                 position_ids=None, head_mask=None, inputs_embeds=None, labels=None,
                 output_layer=-1, train_highway=False):
+        """
+        Perform forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+            output_layer: (todo): write your description
+            train_highway: (todo): write your description
+        """
 
         exit_layer = self.num_layers
         try:

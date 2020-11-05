@@ -37,6 +37,14 @@ class PreTrainedEncoderDecoder(nn.Module):
     """
 
     def __init__(self, encoder, decoder):
+        """
+        Initialize the encoder.
+
+        Args:
+            self: (todo): write your description
+            encoder: (todo): write your description
+            decoder: (list): write your description
+        """
         super(PreTrainedEncoderDecoder, self).__init__()
         self.encoder = encoder
         self.decoder = decoder
@@ -251,6 +259,12 @@ class Model2Model(PreTrainedEncoderDecoder):
     """
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize weights.
+
+        Args:
+            self: (todo): write your description
+        """
         super(Model2Model, self).__init__(*args, **kwargs)
         self.tie_weights()
 
@@ -274,6 +288,13 @@ class Model2Model(PreTrainedEncoderDecoder):
 
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path, *args, **kwargs):
+        """
+        Create a model from a trained model.
+
+        Args:
+            cls: (todo): write your description
+            pretrained_model_name_or_path: (str): write your description
+        """
 
         if (
             "bert" not in pretrained_model_name_or_path
@@ -295,6 +316,12 @@ class Model2Model(PreTrainedEncoderDecoder):
 class Model2LSTM(PreTrainedEncoderDecoder):
     @classmethod
     def from_pretrained(cls, *args, **kwargs):
+        """
+        Initialize a lstm model from a pre - trained model.
+
+        Args:
+            cls: (todo): write your description
+        """
         if kwargs.get("decoder_model", None) is None:
             # We will create a randomly initilized LSTM model as decoder
             if "decoder_config" not in kwargs:

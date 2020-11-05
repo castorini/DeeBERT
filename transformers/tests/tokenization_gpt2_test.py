@@ -28,6 +28,12 @@ class GPT2TokenizationTest(CommonTestCases.CommonTokenizerTester):
     tokenizer_class = GPT2Tokenizer
 
     def setUp(self):
+        """
+        Set the vocabulary file.
+
+        Args:
+            self: (todo): write your description
+        """
         super(GPT2TokenizationTest, self).setUp()
 
         # Adapted from Sennrich et al. 2015 and https://github.com/rsennrich/subword-nmt
@@ -47,15 +53,33 @@ class GPT2TokenizationTest(CommonTestCases.CommonTokenizerTester):
             fp.write("\n".join(merges))
 
     def get_tokenizer(self, **kwargs):
+        """
+        Returns a tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         kwargs.update(self.special_tokens_map)
         return GPT2Tokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
+        """
+        Returns a list of outputs_text output_text can be used to generate_inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         input_text = u"lower newer"
         output_text = u"lower newer"
         return input_text, output_text
 
     def test_full_tokenizer(self):
+        """
+        Reads the list of the input tokenizer.
+
+        Args:
+            self: (todo): write your description
+        """
         tokenizer = GPT2Tokenizer(self.vocab_file, self.merges_file, **self.special_tokens_map)
         text = "lower newer"
         bpe_tokens = ["\u0120low", "er", "\u0120", "n", "e", "w", "er"]

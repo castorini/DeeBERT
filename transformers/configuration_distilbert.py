@@ -50,6 +50,26 @@ class DistilBertConfig(PretrainedConfig):
                  qa_dropout=0.1,
                  seq_classif_dropout=0.2,
                  **kwargs):
+        """
+        Initialize embeddings.
+
+        Args:
+            self: (todo): write your description
+            vocab_size_or_config_json_file: (str): write your description
+            max_position_embeddings: (int): write your description
+            sinusoidal_pos_embds: (int): write your description
+            n_layers: (list): write your description
+            n_heads: (int): write your description
+            dim: (int): write your description
+            hidden_dim: (int): write your description
+            dropout: (str): write your description
+            attention_dropout: (todo): write your description
+            activation: (str): write your description
+            initializer_range: (todo): write your description
+            tie_weights_: (str): write your description
+            qa_dropout: (todo): write your description
+            seq_classif_dropout: (todo): write your description
+        """
         super(DistilBertConfig, self).__init__(**kwargs)
 
         if isinstance(vocab_size_or_config_json_file, str) or (sys.version_info[0] == 2
@@ -78,12 +98,30 @@ class DistilBertConfig(PretrainedConfig):
                              " or the path to a pretrained model config file (str)")
     @property
     def hidden_size(self):
+        """
+        Returns the size of this dimension.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.dim
 
     @property
     def num_attention_heads(self):
+        """
+        Return the number of self attention.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_heads
 
     @property
     def num_hidden_layers(self):
+        """
+        Return the number of hidden hidden layers.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.n_layers

@@ -45,6 +45,19 @@ class SquadExample(object):
                  start_position=None,
                  end_position=None,
                  is_impossible=None):
+        """
+        Stub
+
+        Args:
+            self: (todo): write your description
+            qas_id: (str): write your description
+            question_text: (str): write your description
+            doc_tokens: (str): write your description
+            orig_answer_text: (str): write your description
+            start_position: (int): write your description
+            end_position: (int): write your description
+            is_impossible: (bool): write your description
+        """
         self.qas_id = qas_id
         self.question_text = question_text
         self.doc_tokens = doc_tokens
@@ -54,9 +67,21 @@ class SquadExample(object):
         self.is_impossible = is_impossible
 
     def __str__(self):
+        """
+        Return a string representation of this object.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.__repr__()
 
     def __repr__(self):
+        """
+        Return a repr string representation.
+
+        Args:
+            self: (todo): write your description
+        """
         s = ""
         s += "qas_id: %s" % (self.qas_id)
         s += ", question_text: %s" % (
@@ -90,6 +115,27 @@ class InputFeatures(object):
                  start_position=None,
                  end_position=None,
                  is_impossible=None):
+        """
+        Initialize a tokenizer.
+
+        Args:
+            self: (todo): write your description
+            unique_id: (str): write your description
+            example_index: (int): write your description
+            doc_span_index: (int): write your description
+            tokens: (int): write your description
+            token_to_orig_map: (str): write your description
+            token_is_max_context: (int): write your description
+            input_ids: (str): write your description
+            input_mask: (todo): write your description
+            segment_ids: (str): write your description
+            cls_index: (int): write your description
+            p_mask: (array): write your description
+            paragraph_len: (todo): write your description
+            start_position: (int): write your description
+            end_position: (int): write your description
+            is_impossible: (bool): write your description
+        """
         self.unique_id = unique_id
         self.example_index = example_index
         self.doc_span_index = doc_span_index
@@ -113,6 +159,12 @@ def read_squad_examples(input_file, is_training, version_2_with_negative):
         input_data = json.load(reader)["data"]
 
     def is_whitespace(c):
+        """
+        Return true if a character is a whitespace.
+
+        Args:
+            c: (todo): write your description
+        """
         if c == " " or c == "\t" or c == "\r" or c == "\n" or ord(c) == 0x202F:
             return True
         return False
@@ -893,6 +945,12 @@ def get_final_text(pred_text, orig_text, do_lower_case, verbose_logging=False):
     # can fail in certain cases in which case we just return `orig_text`.
 
     def _strip_spaces(text):
+        """
+        Strips spaces from a string.
+
+        Args:
+            text: (str): write your description
+        """
         ns_chars = []
         ns_to_s_map = collections.OrderedDict()
         for (i, c) in enumerate(text):

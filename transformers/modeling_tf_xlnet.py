@@ -51,6 +51,12 @@ def gelu(x):
 
 
 def swish(x):
+    """
+    Swish function.
+
+    Args:
+        x: (int): write your description
+    """
     return x * tf.sigmoid(x)
 
 
@@ -61,6 +67,13 @@ ACT2FN = {"gelu": tf.keras.layers.Activation(gelu),
 
 class TFXLNetRelativeAttention(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFXLNetRelativeAttention, self).__init__(**kwargs)
         self.output_attentions = config.output_attentions
 
@@ -79,6 +92,13 @@ class TFXLNetRelativeAttention(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(config.dropout)
 
     def build(self, input_shape):
+        """
+        Connects the graph.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         initializer = get_initializer(self.initializer_range)
         self.q = self.add_weight(shape=(self.d_model, self.n_head, self.d_head),
                                  initializer=initializer,
@@ -110,6 +130,13 @@ class TFXLNetRelativeAttention(tf.keras.layers.Layer):
         super(TFXLNetRelativeAttention, self).build(input_shape)
 
     def prune_heads(self, heads):
+        """
+        Prune a list of the specified bytestring.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         raise NotImplementedError
 
     @staticmethod
@@ -186,6 +213,14 @@ class TFXLNetRelativeAttention(tf.keras.layers.Layer):
         return output
 
     def call(self, inputs, training=False):
+        """
+        Implement self ( k ).
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         (h, g, attn_mask_h, attn_mask_g,
          r, seg_mat, mems, target_mapping, head_mask) = inputs
 
@@ -284,6 +319,13 @@ class TFXLNetRelativeAttention(tf.keras.layers.Layer):
 
 class TFXLNetFeedForward(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFXLNetFeedForward, self).__init__(**kwargs)
         self.layer_norm = tf.keras.layers.LayerNormalization(epsilon=config.layer_norm_eps, name='layer_norm')
         self.layer_1 = tf.keras.layers.Dense(config.d_inner,
@@ -300,6 +342,14 @@ class TFXLNetFeedForward(tf.keras.layers.Layer):
             self.activation_function = config.ff_activation
 
     def call(self, inp, training=False):
+        """
+        Call the network.
+
+        Args:
+            self: (todo): write your description
+            inp: (todo): write your description
+            training: (bool): write your description
+        """
         output = inp
         output = self.layer_1(output)
         output = self.activation_function(output)
@@ -311,12 +361,27 @@ class TFXLNetFeedForward(tf.keras.layers.Layer):
 
 class TFXLNetLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the kwargs.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFXLNetLayer, self).__init__(**kwargs)
         self.rel_attn = TFXLNetRelativeAttention(config, name='rel_attn')
         self.ff = TFXLNetFeedForward(config, name='ff')
         self.dropout = tf.keras.layers.Dropout(config.dropout)
 
     def call(self, inputs, training=False):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         outputs = self.rel_attn(inputs, training=training)
         output_h, output_g = outputs[:2]
 
@@ -330,6 +395,14 @@ class TFXLNetLayer(tf.keras.layers.Layer):
 
 class TFXLNetLMHead(tf.keras.layers.Layer):
     def __init__(self, config, input_embeddings, **kwargs):
+        """
+        Initialize embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            input_embeddings: (todo): write your description
+        """
         super(TFXLNetLMHead, self).__init__(**kwargs)
         self.vocab_size = config.vocab_size
         # The output weights are the same as the input embeddings, but there is
@@ -337,6 +410,13 @@ class TFXLNetLMHead(tf.keras.layers.Layer):
         self.input_embeddings = input_embeddings
 
     def build(self, input_shape):
+        """
+        Connects the model.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         self.bias = self.add_weight(shape=(self.vocab_size,),
                                     initializer='zeros',
                                     trainable=True,
@@ -344,6 +424,13 @@ class TFXLNetLMHead(tf.keras.layers.Layer):
         super(TFXLNetLMHead, self).build(input_shape)
 
     def call(self, hidden_states):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (int): write your description
+        """
         hidden_states = self.input_embeddings(hidden_states, mode="linear")
         hidden_states = hidden_states + self.bias
         return hidden_states
@@ -351,6 +438,13 @@ class TFXLNetLMHead(tf.keras.layers.Layer):
 
 class TFXLNetMainLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFXLNetMainLayer, self).__init__(**kwargs)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -372,18 +466,45 @@ class TFXLNetMainLayer(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(config.dropout)
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.word_embedding
 
     def build(self, input_shape):
+        """
+        Connects the graph.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         initializer = get_initializer(self.initializer_range)
         self.mask_emb = self.add_weight(shape=(1, 1, self.d_model),
                                  initializer=initializer,
                                  trainable=True, name='mask_emb')
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Resize token embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         raise NotImplementedError
 
     def _prune_heads(self, heads_to_prune):
+        """
+        Prune a list of the dispatches.
+
+        Args:
+            self: (todo): write your description
+            heads_to_prune: (list): write your description
+        """
         raise NotImplementedError
 
     def create_mask(self, qlen, mlen, dtype=tf.float32):
@@ -429,6 +550,14 @@ class TFXLNetMainLayer(tf.keras.layers.Layer):
 
     @staticmethod
     def positional_embedding(pos_seq, inv_freq, bsz=None):
+        """
+        Parameters ---------- pos_seq : np.
+
+        Args:
+            pos_seq: (todo): write your description
+            inv_freq: (float): write your description
+            bsz: (todo): write your description
+        """
         sinusoid_inp = tf.einsum('i,d->id', pos_seq, inv_freq)
         pos_emb = tf.concat([tf.sin(sinusoid_inp), tf.cos(sinusoid_inp)], axis=-1)
         pos_emb = pos_emb[:, None, :]
@@ -488,6 +617,22 @@ class TFXLNetMainLayer(tf.keras.layers.Layer):
 
     def call(self, inputs, attention_mask=None, mems=None, perm_mask=None, target_mapping=None,
             token_type_ids=None, input_mask=None, head_mask=None, inputs_embeds=None, training=False):
+        """
+        Compute the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            attention_mask: (int): write your description
+            mems: (todo): write your description
+            perm_mask: (int): write your description
+            target_mapping: (todo): write your description
+            token_type_ids: (str): write your description
+            input_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             attention_mask = inputs[1] if len(inputs) > 1 else attention_mask
@@ -818,10 +963,25 @@ class TFXLNetModel(TFXLNetPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize an input configuration.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXLNetModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFXLNetMainLayer(config, name='transformer')
 
     def call(self, inputs, **kwargs):
+        """
+        Execute the given inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
         return outputs
 
@@ -867,14 +1027,35 @@ class TFXLNetLMHeadModel(TFXLNetPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the lm module.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXLNetLMHeadModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFXLNetMainLayer(config, name='transformer')
         self.lm_loss = TFXLNetLMHead(config, self.transformer.word_embedding, name='lm_loss')
 
     def get_output_embeddings(self):
+        """
+        Gets the lm : returns : lm output.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_loss.input_embeddings
 
     def call(self, inputs, **kwargs):
+        """
+        Perform the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         transformer_outputs = self.transformer(inputs, **kwargs)
         hidden_state = transformer_outputs[0]
         logits = self.lm_loss(hidden_state)
@@ -918,6 +1099,14 @@ class TFXLNetForSequenceClassification(TFXLNetPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the graph.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXLNetForSequenceClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -928,6 +1117,13 @@ class TFXLNetForSequenceClassification(TFXLNetPreTrainedModel):
                                                  name='logits_proj')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         transformer_outputs = self.transformer(inputs, **kwargs)
         output = transformer_outputs[0]
 
@@ -976,6 +1172,14 @@ class TFXLNetForQuestionAnsweringSimple(TFXLNetPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFXLNetForQuestionAnsweringSimple, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFXLNetMainLayer(config, name='transformer')
         self.qa_outputs = tf.keras.layers.Dense(config.num_labels,
@@ -983,6 +1187,13 @@ class TFXLNetForQuestionAnsweringSimple(TFXLNetPreTrainedModel):
                                                 name='qa_outputs')
 
     def call(self, inputs, **kwargs):
+        """
+        Compute the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         transformer_outputs = self.transformer(inputs, **kwargs)
 
         sequence_output = transformer_outputs[0]

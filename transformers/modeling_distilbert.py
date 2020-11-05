@@ -48,9 +48,23 @@ DISTILBERT_PRETRAINED_MODEL_ARCHIVE_MAP = {
 
 ### UTILS AND BUILDING BLOCKS OF THE ARCHITECTURE ###
 def gelu(x):
+    """
+    Gelu ( x ).
+
+    Args:
+        x: (todo): write your description
+    """
     return 0.5 * x * (1.0 + torch.erf(x / math.sqrt(2.0)))
 
 def create_sinusoidal_embeddings(n_pos, dim, out):
+    """
+    Parameters ---------- n_pos : np.
+
+    Args:
+        n_pos: (int): write your description
+        dim: (int): write your description
+        out: (todo): write your description
+    """
     position_enc = np.array([
         [pos / np.power(10000, 2 * (j // 2) / dim) for j in range(dim)]
         for pos in range(n_pos)
@@ -63,6 +77,13 @@ def create_sinusoidal_embeddings(n_pos, dim, out):
 class Embeddings(nn.Module):
     def __init__(self,
                  config):
+        """
+        Initialize embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(Embeddings, self).__init__()
         self.word_embeddings = nn.Embedding(config.vocab_size, config.dim, padding_idx=0)
         self.position_embeddings = nn.Embedding(config.max_position_embeddings, config.dim)
@@ -100,6 +121,13 @@ class Embeddings(nn.Module):
 
 class MultiHeadSelfAttention(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(MultiHeadSelfAttention, self).__init__()
 
         self.n_heads = config.n_heads
@@ -117,6 +145,13 @@ class MultiHeadSelfAttention(nn.Module):
         self.pruned_heads = set()
 
     def prune_heads(self, heads):
+        """
+        Prune attention.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         attention_head_size = self.dim // self.n_heads
         if len(heads) == 0:
             return
@@ -197,6 +232,13 @@ class MultiHeadSelfAttention(nn.Module):
 
 class FFN(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(FFN, self).__init__()
         self.dropout = nn.Dropout(p=config.dropout)
         self.lin1 = nn.Linear(in_features=config.dim, out_features=config.hidden_dim)
@@ -205,6 +247,13 @@ class FFN(nn.Module):
         self.activation = gelu if config.activation == 'gelu' else nn.ReLU()
 
     def forward(self, input):
+        """
+        Returns the next layer.
+
+        Args:
+            self: (todo): write your description
+            input: (todo): write your description
+        """
         x = self.lin1(input)
         x = self.activation(x)
         x = self.lin2(x)
@@ -213,6 +262,13 @@ class FFN(nn.Module):
 
 class TransformerBlock(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TransformerBlock, self).__init__()
 
         self.n_heads = config.n_heads
@@ -265,6 +321,13 @@ class TransformerBlock(nn.Module):
 
 class Transformer(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(Transformer, self).__init__()
         self.n_layers = config.n_layers
         self.output_attentions = config.output_attentions
@@ -419,6 +482,13 @@ class DistilBertModel(DistilBertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(DistilBertModel, self).__init__(config)
 
         self.embeddings = Embeddings(config)   # Embeddings
@@ -427,9 +497,22 @@ class DistilBertModel(DistilBertPreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings.word_embeddings
 
     def set_input_embeddings(self, new_embeddings):
+        """
+        Parameters ---------- new_embeddings : np. array )
+
+        Args:
+            self: (todo): write your description
+            new_embeddings: (todo): write your description
+        """
         self.embeddings.word_embeddings = new_embeddings
 
     def _prune_heads(self, heads_to_prune):
@@ -442,6 +525,16 @@ class DistilBertModel(DistilBertPreTrainedModel):
 
     def forward(self,
                 input_ids=None, attention_mask=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None and inputs_embeds is not None:
             raise ValueError("You cannot specify both input_ids and inputs_embeds at the same time")
         elif input_ids is not None:
@@ -515,6 +608,13 @@ class DistilBertForMaskedLM(DistilBertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(DistilBertForMaskedLM, self).__init__(config)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -529,9 +629,26 @@ class DistilBertForMaskedLM(DistilBertPreTrainedModel):
         self.mlm_loss_fct = nn.CrossEntropyLoss(ignore_index=-1)
 
     def get_output_embeddings(self):
+        """
+        Get vocab of vocabings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.vocab_projector
 
     def forward(self, input_ids=None, attention_mask=None, head_mask=None, inputs_embeds=None, masked_lm_labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            masked_lm_labels: (todo): write your description
+        """
         dlbrt_output = self.distilbert(input_ids=input_ids,
                                        attention_mask=attention_mask,
                                        head_mask=head_mask,
@@ -586,6 +703,13 @@ class DistilBertForSequenceClassification(DistilBertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the classifier.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(DistilBertForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -597,6 +721,17 @@ class DistilBertForSequenceClassification(DistilBertPreTrainedModel):
         self.init_weights()
 
     def forward(self, input_ids=None, attention_mask=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Perform forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         distilbert_output = self.distilbert(input_ids=input_ids,
                                             attention_mask=attention_mask,
                                             head_mask=head_mask,
@@ -662,6 +797,13 @@ class DistilBertForQuestionAnswering(DistilBertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the hyperilio.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(DistilBertForQuestionAnswering, self).__init__(config)
 
         self.distilbert = DistilBertModel(config)
@@ -672,6 +814,18 @@ class DistilBertForQuestionAnswering(DistilBertPreTrainedModel):
         self.init_weights()
         
     def forward(self, input_ids=None, attention_mask=None, head_mask=None, inputs_embeds=None, start_positions=None, end_positions=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            start_positions: (todo): write your description
+            end_positions: (todo): write your description
+        """
         distilbert_output = self.distilbert(input_ids=input_ids,
                                             attention_mask=attention_mask,
                                             head_mask=head_mask,
@@ -739,6 +893,13 @@ class DistilBertForTokenClassification(DistilBertPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the classifier
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(DistilBertForTokenClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -750,6 +911,17 @@ class DistilBertForTokenClassification(DistilBertPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, head_mask=None,
                 inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
 
         outputs = self.distilbert(input_ids,
                             attention_mask=attention_mask,

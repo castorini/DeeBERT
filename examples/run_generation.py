@@ -70,6 +70,11 @@ with people, even a bishop, begging for his blessing. <eod> </s> <eos>"""
 
 
 def set_seed(args):
+    """
+    Sets random seed.
+
+    Args:
+    """
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     if args.n_gpu > 0:
@@ -109,6 +114,24 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 
 def sample_sequence(model, length, context, num_samples=1, temperature=1, top_k=0, top_p=0.0, repetition_penalty=1.0,
                     is_xlnet=False, is_xlm_mlm=False, xlm_mask_token=None, xlm_lang=None, device='cpu'):
+    """
+    Sample a random sequence.
+
+    Args:
+        model: (todo): write your description
+        length: (int): write your description
+        context: (todo): write your description
+        num_samples: (int): write your description
+        temperature: (todo): write your description
+        top_k: (str): write your description
+        top_p: (str): write your description
+        repetition_penalty: (todo): write your description
+        is_xlnet: (bool): write your description
+        is_xlm_mlm: (bool): write your description
+        xlm_mask_token: (str): write your description
+        xlm_lang: (str): write your description
+        device: (todo): write your description
+    """
     context = torch.tensor(context, dtype=torch.long, device=device)
     context = context.unsqueeze(0).repeat(num_samples, 1)
     generated = context
@@ -153,6 +176,11 @@ def sample_sequence(model, length, context, num_samples=1, temperature=1, top_k=
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_type", default=None, type=str, required=True,
                         help="Model type selected in the list: " + ", ".join(MODEL_CLASSES.keys()))

@@ -44,9 +44,22 @@ except ImportError:
         r"""A placeholder identity operator that is argument-insensitive.
         """
         def __init__(self, *args, **kwargs):
+            """
+            Initialize the identity.
+
+            Args:
+                self: (todo): write your description
+            """
             super(Identity, self).__init__()
 
         def forward(self, input):
+            """
+            Parse the given input.
+
+            Args:
+                self: (todo): write your description
+                input: (todo): write your description
+            """
             return input
 
 class PreTrainedModel(nn.Module):
@@ -72,6 +85,14 @@ class PreTrainedModel(nn.Module):
     base_model_prefix = ""
 
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize input configuration.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(PreTrainedModel, self).__init__()
         if not isinstance(config, PretrainedConfig):
             raise ValueError(
@@ -85,6 +106,12 @@ class PreTrainedModel(nn.Module):
 
     @property
     def base_model(self):
+        """
+        Return the base model for this model.
+
+        Args:
+            self: (todo): write your description
+        """
         return getattr(self, self.base_model_prefix, self)
 
     def get_input_embeddings(self):
@@ -166,6 +193,13 @@ class PreTrainedModel(nn.Module):
         return model_embeds
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Parameters ---------- new_num_tokensens : class : py : class :
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         old_embeddings = self.get_input_embeddings()
         new_embeddings = self._get_resized_embeddings(old_embeddings, new_num_tokens)
         self.set_input_embeddings(new_embeddings)
@@ -432,6 +466,13 @@ class PreTrainedModel(nn.Module):
             # PyTorch's `_load_from_state_dict` does not copy parameters in a module's descendants
             # so we need to apply the function recursively.
             def load(module, prefix=''):
+                """
+                Loads all the specified in the given module.
+
+                Args:
+                    module: (todo): write your description
+                    prefix: (str): write your description
+                """
                 local_metadata = {} if metadata is None else metadata.get(prefix[:-1], {})
                 module._load_from_state_dict(
                     state_dict, prefix, local_metadata, True, missing_keys, unexpected_keys, error_msgs)
@@ -484,6 +525,13 @@ class Conv1D(nn.Module):
         self.bias = nn.Parameter(torch.zeros(nf))
 
     def forward(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         size_out = x.size()[:-1] + (self.nf,)
         x = torch.addmm(self.bias, x.view(-1, x.size(-1)), self.weight)
         x = x.view(*size_out)
@@ -493,6 +541,13 @@ class Conv1D(nn.Module):
 class PoolerStartLogits(nn.Module):
     """ Compute SQuAD start_logits from sequence hidden states. """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(PoolerStartLogits, self).__init__()
         self.dense = nn.Linear(config.hidden_size, 1)
 
@@ -517,6 +572,13 @@ class PoolerEndLogits(nn.Module):
     """ Compute SQuAD end_logits from sequence hidden states and start token hidden state.
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(PoolerEndLogits, self).__init__()
         self.dense_0 = nn.Linear(config.hidden_size * 2, config.hidden_size)
         self.activation = nn.Tanh()
@@ -560,6 +622,13 @@ class PoolerEndLogits(nn.Module):
 class PoolerAnswerClass(nn.Module):
     """ Compute SQuAD 2.0 answer class from classification and start tokens hidden states. """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(PoolerAnswerClass, self).__init__()
         self.dense_0 = nn.Linear(config.hidden_size * 2, config.hidden_size)
         self.activation = nn.Tanh()
@@ -642,6 +711,13 @@ class SQuADHead(nn.Module):
             Log probabilities for the ``is_impossible`` label of the answers.
     """
     def __init__(self, config):
+        """
+        Initialize the logger.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(SQuADHead, self).__init__()
         self.start_n_top = config.start_n_top
         self.end_n_top = config.end_n_top
@@ -652,6 +728,18 @@ class SQuADHead(nn.Module):
 
     def forward(self, hidden_states, start_positions=None, end_positions=None,
                 cls_index=None, is_impossible=None, p_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (todo): write your description
+            start_positions: (todo): write your description
+            end_positions: (todo): write your description
+            cls_index: (todo): write your description
+            is_impossible: (todo): write your description
+            p_mask: (todo): write your description
+        """
         outputs = ()
 
         start_logits = self.start_logits(hidden_states, p_mask=p_mask)
@@ -726,6 +814,13 @@ class SequenceSummary(nn.Module):
             summary_last_dropout: Add a dropout after the projection and activation
     """
     def __init__(self, config):
+        """
+        Initialize the summary.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(SequenceSummary, self).__init__()
 
         self.summary_type = config.summary_type if hasattr(config, 'summary_use_proj') else 'last'

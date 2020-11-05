@@ -69,6 +69,34 @@ class TFDistilBertModelTest(TFCommonTestCases.TFCommonModelTester):
                      num_choices=4,
                      scope=None,
                     ):
+            """
+            Initialize the model.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_input_mask: (bool): write your description
+                use_token_type_ids: (str): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                intermediate_size: (int): write your description
+                hidden_act: (todo): write your description
+                hidden_dropout_prob: (todo): write your description
+                attention_probs_dropout_prob: (todo): write your description
+                max_position_embeddings: (int): write your description
+                type_vocab_size: (int): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                num_choices: (int): write your description
+                scope: (str): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -93,6 +121,12 @@ class TFDistilBertModelTest(TFCommonTestCases.TFCommonModelTester):
             self.scope = scope
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the embeddings.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
 
             input_mask = None
@@ -122,6 +156,18 @@ class TFDistilBertModelTest(TFCommonTestCases.TFCommonModelTester):
             return config, input_ids, input_mask, sequence_labels, token_labels, choice_labels
 
         def create_and_check_distilbert_model(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (str): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             model = TFDistilBertModel(config=config)
             inputs = {'input_ids': input_ids,
                       'attention_mask': input_mask}
@@ -141,6 +187,18 @@ class TFDistilBertModelTest(TFCommonTestCases.TFCommonModelTester):
                 [self.batch_size, self.seq_length, self.hidden_size])
 
         def create_and_check_distilbert_for_masked_lm(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the model and embedding.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = TFDistilBertForMaskedLM(config=config)
             inputs = {'input_ids': input_ids,
                       'attention_mask': input_mask}
@@ -153,6 +211,18 @@ class TFDistilBertModelTest(TFCommonTestCases.TFCommonModelTester):
                 [self.batch_size, self.seq_length, self.vocab_size])
 
         def create_and_check_distilbert_for_question_answering(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of examples for a batch.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = TFDistilBertForQuestionAnswering(config=config)
             inputs = {'input_ids': input_ids,
                       'attention_mask': input_mask}
@@ -169,6 +239,18 @@ class TFDistilBertModelTest(TFCommonTestCases.TFCommonModelTester):
                 [self.batch_size, self.seq_length])
 
         def create_and_check_distilbert_for_sequence_classification(self, config, input_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the classifier for the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             config.num_labels = self.num_labels
             model = TFDistilBertForSequenceClassification(config)
             inputs = {'input_ids': input_ids,
@@ -182,31 +264,73 @@ class TFDistilBertModelTest(TFCommonTestCases.TFCommonModelTester):
                 [self.batch_size, self.num_labels])
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids, input_mask, sequence_labels, token_labels, choice_labels) = config_and_inputs
             inputs_dict = {'input_ids': input_ids, 'attention_mask': input_mask}
             return config, inputs_dict
 
     def setUp(self):
+        """
+        Sets the tester
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = TFDistilBertModelTest.TFDistilBertModelTester(self)
         self.config_tester = ConfigTester(self, config_class=DistilBertConfig, dim=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_distilbert_model(self):
+        """
+        Perform a model setup
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_model(*config_and_inputs)
 
     def test_for_masked_lm(self):
+        """
+        Vel factory function inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_for_masked_lm(*config_and_inputs)
 
     def test_for_question_answering(self):
+        """
+        Test for all question question question
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_for_question_answering(*config_and_inputs)
 
     def test_for_sequence_classification(self):
+        """
+        Deter sequence classification.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_distilbert_for_sequence_classification(*config_and_inputs)
 

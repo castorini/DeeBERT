@@ -19,6 +19,19 @@ class EVAL_OPTS():
   def __init__(self, data_file, pred_file, out_file="",
                na_prob_file="na_prob.json", na_prob_thresh=1.0,
                out_image_dir=None, verbose=False):
+      """
+      Initialize data and bp.
+
+      Args:
+          self: (todo): write your description
+          data_file: (todo): write your description
+          pred_file: (str): write your description
+          out_file: (str): write your description
+          na_prob_file: (str): write your description
+          na_prob_thresh: (float): write your description
+          out_image_dir: (str): write your description
+          verbose: (bool): write your description
+      """
     self.data_file = data_file
     self.pred_file = pred_file
     self.out_file = out_file
@@ -30,6 +43,11 @@ class EVAL_OPTS():
 OPTS = None
 
 def parse_args():
+    """
+    Parse command line arguments.
+
+    Args:
+    """
   parser = argparse.ArgumentParser('Official evaluation script for SQuAD version 2.0.')
   parser.add_argument('data_file', metavar='data.json', help='Input data JSON file.')
   parser.add_argument('pred_file', metavar='pred.json', help='Model predictions.')
@@ -48,6 +66,12 @@ def parse_args():
   return parser.parse_args()
 
 def make_qid_to_has_ans(dataset):
+    """
+    Returns a list of qid_to_to_has
+
+    Args:
+        dataset: (todo): write your description
+    """
   qid_to_has_ans = {}
   for article in dataset:
     for p in article['paragraphs']:
@@ -58,25 +82,69 @@ def make_qid_to_has_ans(dataset):
 def normalize_answer(s):
   """Lower text and remove punctuation, articles and extra whitespace."""
   def remove_articles(text):
+      """
+      Removes the articles from text.
+
+      Args:
+          text: (str): write your description
+      """
     regex = re.compile(r'\b(a|an|the)\b', re.UNICODE)
     return re.sub(regex, ' ', text)
   def white_space_fix(text):
+      """
+      Removes whitespace and remove leading whitespace.
+
+      Args:
+          text: (str): write your description
+      """
     return ' '.join(text.split())
   def remove_punc(text):
+      """
+      Remove punctuation from string.
+
+      Args:
+          text: (str): write your description
+      """
     exclude = set(string.punctuation)
     return ''.join(ch for ch in text if ch not in exclude)
   def lower(text):
+      """
+      Convert text to lowercase
+
+      Args:
+          text: (str): write your description
+      """
     return text.lower()
   return white_space_fix(remove_articles(remove_punc(lower(s))))
 
 def get_tokens(s):
+    """
+    Get a list of tokens.
+
+    Args:
+        s: (todo): write your description
+    """
   if not s: return []
   return normalize_answer(s).split()
 
 def compute_exact(a_gold, a_pred):
+    """
+    Compute the answer of a_pred.
+
+    Args:
+        a_gold: (todo): write your description
+        a_pred: (todo): write your description
+    """
   return int(normalize_answer(a_gold) == normalize_answer(a_pred))
 
 def compute_f1(a_gold, a_pred):
+    """
+    Compute the f1 score.
+
+    Args:
+        a_gold: (todo): write your description
+        a_pred: (array): write your description
+    """
   gold_toks = get_tokens(a_gold)
   pred_toks = get_tokens(a_pred)
   common = collections.Counter(gold_toks) & collections.Counter(pred_toks)
@@ -92,6 +160,13 @@ def compute_f1(a_gold, a_pred):
   return f1
 
 def get_raw_scores(dataset, preds):
+    """
+    Compute the raw scores.
+
+    Args:
+        dataset: (todo): write your description
+        preds: (str): write your description
+    """
   exact_scores = {}
   f1_scores = {}
   for article in dataset:
@@ -113,6 +188,15 @@ def get_raw_scores(dataset, preds):
   return exact_scores, f1_scores
 
 def apply_no_ans_threshold(scores, na_probs, qid_to_has_ans, na_prob_thresh):
+    """
+    Apply the scores in the scores to a list of scores.
+
+    Args:
+        scores: (dict): write your description
+        na_probs: (todo): write your description
+        qid_to_has_ans: (todo): write your description
+        na_prob_thresh: (float): write your description
+    """
   new_scores = {}
   for qid, s in scores.items():
     pred_na = na_probs[qid] > na_prob_thresh
@@ -123,6 +207,14 @@ def apply_no_ans_threshold(scores, na_probs, qid_to_has_ans, na_prob_thresh):
   return new_scores
 
 def make_eval_dict(exact_scores, f1_scores, qid_list=None):
+    """
+    Make a dict of dictionaries.
+
+    Args:
+        exact_scores: (todo): write your description
+        f1_scores: (todo): write your description
+        qid_list: (list): write your description
+    """
   if not qid_list:
     total = len(exact_scores)
     return collections.OrderedDict([
@@ -139,10 +231,27 @@ def make_eval_dict(exact_scores, f1_scores, qid_list=None):
     ])
 
 def merge_eval(main_eval, new_eval, prefix):
+    """
+    Merge the main_eval.
+
+    Args:
+        main_eval: (int): write your description
+        new_eval: (todo): write your description
+        prefix: (str): write your description
+    """
   for k in new_eval:
     main_eval['%s_%s' % (prefix, k)] = new_eval[k]
 
 def plot_pr_curve(precisions, recalls, out_image, title):
+    """
+    Plot a pr curve.
+
+    Args:
+        precisions: (int): write your description
+        recalls: (bool): write your description
+        out_image: (todo): write your description
+        title: (str): write your description
+    """
   plt.step(recalls, precisions, color='b', alpha=0.2, where='post')
   plt.fill_between(recalls, precisions, step='post', alpha=0.2, color='b')
   plt.xlabel('Recall')
@@ -155,6 +264,17 @@ def plot_pr_curve(precisions, recalls, out_image, title):
 
 def make_precision_recall_eval(scores, na_probs, num_true_pos, qid_to_has_ans,
                                out_image=None, title=None):
+    """
+    Computes precision - recall.
+
+    Args:
+        scores: (todo): write your description
+        na_probs: (todo): write your description
+        num_true_pos: (int): write your description
+        qid_to_has_ans: (int): write your description
+        out_image: (todo): write your description
+        title: (str): write your description
+    """
   qid_list = sorted(na_probs, key=lambda k: na_probs[k])
   true_pos = 0.0
   cur_p = 1.0
@@ -178,6 +298,17 @@ def make_precision_recall_eval(scores, na_probs, num_true_pos, qid_to_has_ans,
 
 def run_precision_recall_analysis(main_eval, exact_raw, f1_raw, na_probs, 
                                   qid_to_has_ans, out_image_dir):
+    """
+    Run precision - recall.
+
+    Args:
+        main_eval: (int): write your description
+        exact_raw: (array): write your description
+        f1_raw: (todo): write your description
+        na_probs: (todo): write your description
+        qid_to_has_ans: (dict): write your description
+        out_image_dir: (str): write your description
+    """
   if out_image_dir and not os.path.exists(out_image_dir):
     os.makedirs(out_image_dir)
   num_true_pos = sum(1 for v in qid_to_has_ans.values() if v)
@@ -201,6 +332,15 @@ def run_precision_recall_analysis(main_eval, exact_raw, f1_raw, na_probs,
   merge_eval(main_eval, pr_oracle, 'pr_oracle')
 
 def histogram_na_prob(na_probs, qid_list, image_dir, name):
+    """
+    Plot histogram of probability distribution.
+
+    Args:
+        na_probs: (todo): write your description
+        qid_list: (list): write your description
+        image_dir: (str): write your description
+        name: (str): write your description
+    """
   if not qid_list:
     return
   x = [na_probs[k] for k in qid_list]
@@ -213,6 +353,15 @@ def histogram_na_prob(na_probs, qid_list, image_dir, name):
   plt.clf()
 
 def find_best_thresh(preds, scores, na_probs, qid_to_has_ans):
+    """
+    Finds the index of the scores.
+
+    Args:
+        preds: (todo): write your description
+        scores: (todo): write your description
+        na_probs: (todo): write your description
+        qid_to_has_ans: (int): write your description
+    """
   num_no_ans = sum(1 for k in qid_to_has_ans if not qid_to_has_ans[k])
   cur_score = num_no_ans
   best_score = cur_score
@@ -234,6 +383,15 @@ def find_best_thresh(preds, scores, na_probs, qid_to_has_ans):
   return 100.0 * best_score / len(scores), best_thresh
 
 def find_best_thresh_v2(preds, scores, na_probs, qid_to_has_ans):
+    """
+    Find the best scores between scores.
+
+    Args:
+        preds: (todo): write your description
+        scores: (todo): write your description
+        na_probs: (todo): write your description
+        qid_to_has_ans: (int): write your description
+    """
   num_no_ans = sum(1 for k in qid_to_has_ans if not qid_to_has_ans[k])
   cur_score = num_no_ans
   best_score = cur_score
@@ -264,6 +422,17 @@ def find_best_thresh_v2(preds, scores, na_probs, qid_to_has_ans):
   return 100.0 * best_score / len(scores), best_thresh, 1.0 * has_ans_score / has_ans_cnt
 
 def find_all_best_thresh(main_eval, preds, exact_raw, f1_raw, na_probs, qid_to_has_ans):
+    """
+    Find all best scores for each prediction in - plane.
+
+    Args:
+        main_eval: (int): write your description
+        preds: (todo): write your description
+        exact_raw: (todo): write your description
+        f1_raw: (todo): write your description
+        na_probs: (todo): write your description
+        qid_to_has_ans: (int): write your description
+    """
   best_exact, exact_thresh = find_best_thresh(preds, exact_raw, na_probs, qid_to_has_ans)
   best_f1, f1_thresh = find_best_thresh(preds, f1_raw, na_probs, qid_to_has_ans)
   main_eval['best_exact'] = best_exact
@@ -272,6 +441,17 @@ def find_all_best_thresh(main_eval, preds, exact_raw, f1_raw, na_probs, qid_to_h
   main_eval['best_f1_thresh'] = f1_thresh
 
 def find_all_best_thresh_v2(main_eval, preds, exact_raw, f1_raw, na_probs, qid_to_has_ans):
+    """
+    Finds the best predictions.
+
+    Args:
+        main_eval: (int): write your description
+        preds: (todo): write your description
+        exact_raw: (todo): write your description
+        f1_raw: (todo): write your description
+        na_probs: (todo): write your description
+        qid_to_has_ans: (todo): write your description
+    """
   best_exact, exact_thresh, has_ans_exact = find_best_thresh_v2(preds, exact_raw, na_probs, qid_to_has_ans)
   best_f1, f1_thresh, has_ans_f1 = find_best_thresh_v2(preds, f1_raw, na_probs, qid_to_has_ans)
   main_eval['best_exact'] = best_exact
@@ -282,6 +462,12 @@ def find_all_best_thresh_v2(main_eval, preds, exact_raw, f1_raw, na_probs, qid_t
   main_eval['has_ans_f1'] = has_ans_f1
 
 def main(OPTS):
+    """
+    Main function.
+
+    Args:
+        OPTS: (todo): write your description
+    """
   with open(OPTS.data_file) as f:
     dataset_json = json.load(f)
     dataset = dataset_json['data']

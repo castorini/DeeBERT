@@ -61,6 +61,33 @@ class OpenAIGPTModelTest(CommonTestCases.CommonModelTester):
                      num_choices=4,
                      scope=None,
                      ):
+            """
+            Initialize embeddings.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_token_type_ids: (str): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                intermediate_size: (int): write your description
+                hidden_act: (todo): write your description
+                hidden_dropout_prob: (todo): write your description
+                attention_probs_dropout_prob: (todo): write your description
+                max_position_embeddings: (int): write your description
+                type_vocab_size: (int): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                num_choices: (int): write your description
+                scope: (str): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -84,6 +111,12 @@ class OpenAIGPTModelTest(CommonTestCases.CommonModelTester):
             self.scope = scope
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the embeddings for training.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
 
             token_type_ids = None
@@ -118,11 +151,28 @@ class OpenAIGPTModelTest(CommonTestCases.CommonModelTester):
             return config, input_ids, head_mask, token_type_ids, sequence_labels, token_labels, choice_labels
 
         def check_loss_output(self, result):
+            """
+            Check that the output.
+
+            Args:
+                self: (todo): write your description
+                result: (todo): write your description
+            """
             self.parent.assertListEqual(
                 list(result["loss"].size()),
                 [])
 
         def create_and_check_openai_gpt_model(self, config, input_ids, head_mask, token_type_ids, *args):
+            """
+            Create a gpt_mask.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                head_mask: (todo): write your description
+                token_type_ids: (str): write your description
+            """
             model = OpenAIGPTModel(config=config)
             model.eval()
 
@@ -138,6 +188,16 @@ class OpenAIGPTModelTest(CommonTestCases.CommonModelTester):
                 [self.batch_size, self.seq_length, self.hidden_size])
 
         def create_and_check_lm_head_model(self, config, input_ids, head_mask, token_type_ids, *args):
+            """
+            Create the model and logits_head_ids.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                head_mask: (str): write your description
+                token_type_ids: (str): write your description
+            """
             model = OpenAIGPTLMHeadModel(config)
             model.eval()
 
@@ -156,6 +216,16 @@ class OpenAIGPTModelTest(CommonTestCases.CommonModelTester):
                 [self.batch_size, self.seq_length, self.vocab_size])
 
         def create_and_check_double_lm_head_model(self, config, input_ids, head_mask, token_type_ids, *args):
+            """
+            Create the model_and_headation.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                head_mask: (todo): write your description
+                token_type_ids: (str): write your description
+            """
             model = OpenAIGPTDoubleHeadsModel(config)
             model.eval()
 
@@ -174,6 +244,12 @@ class OpenAIGPTModelTest(CommonTestCases.CommonModelTester):
                 [self.batch_size, self.seq_length, self.vocab_size])
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids, head_mask, token_type_ids, sequence_labels, token_labels, choice_labels) = config_and_inputs
             inputs_dict = {
@@ -185,26 +261,62 @@ class OpenAIGPTModelTest(CommonTestCases.CommonModelTester):
             return config, inputs_dict
 
     def setUp(self):
+        """
+        Set the model_embd
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = OpenAIGPTModelTest.OpenAIGPTModelTester(self)
         self.config_tester = ConfigTester(self, config_class=OpenAIGPTConfig, n_embd=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_openai_gpt_model(self):
+        """
+        Test for gptter model
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_openai_gpt_model(*config_and_inputs)
 
     def test_openai_gpt_lm_head_model(self):
+        """
+        Vel factory function
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_lm_head_model(*config_and_inputs)
 
     def test_openai_gpt_double_lm_head_model(self):
+        """
+        Vel factory function
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_double_lm_head_model(*config_and_inputs)
 
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test if a pre - trained model is loaded.
+
+        Args:
+            self: (todo): write your description
+        """
         cache_dir = "/tmp/transformers_test/"
         for model_name in list(OPENAI_GPT_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             model = OpenAIGPTModel.from_pretrained(model_name, cache_dir=cache_dir)

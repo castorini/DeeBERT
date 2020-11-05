@@ -257,6 +257,23 @@ def create_setup_and_compute(model_names: List[str],
                              fp16: bool = False,
                              save_to_csv: bool = False,
                              csv_filename: str = f"results_{round(time())}.csv"):
+    """
+    Creates a model_andcompute_and_compute.
+
+    Args:
+        model_names: (str): write your description
+        gpu: (todo): write your description
+        tensorflow: (todo): write your description
+        average_over: (bool): write your description
+        torchscript: (todo): write your description
+        xla: (str): write your description
+        amp: (str): write your description
+        fp16: (todo): write your description
+        save_to_csv: (str): write your description
+        csv_filename: (str): write your description
+        round: (str): write your description
+        time: (str): write your description
+    """
     if xla:
         tf.config.optimizer.set_jit(True)
     if amp:
@@ -307,6 +324,17 @@ def create_setup_and_compute(model_names: List[str],
 
 
 def _compute_pytorch(model_names, dictionary, average_over, device, torchscript, fp16):
+    """
+    Compute the pytorch model.
+
+    Args:
+        model_names: (str): write your description
+        dictionary: (dict): write your description
+        average_over: (bool): write your description
+        device: (todo): write your description
+        torchscript: (str): write your description
+        fp16: (todo): write your description
+    """
     for c, model_name in enumerate(model_names):
         print(f"{c + 1} / {len(model_names)}")
         config = AutoConfig.from_pretrained(model_name, torchscript=torchscript)
@@ -353,6 +381,15 @@ def _compute_pytorch(model_names, dictionary, average_over, device, torchscript,
 
 
 def _compute_tensorflow(model_names, dictionary, average_over, amp):
+    """
+    Computes the model on a tensor.
+
+    Args:
+        model_names: (str): write your description
+        dictionary: (dict): write your description
+        average_over: (bool): write your description
+        amp: (todo): write your description
+    """
     for c, model_name in enumerate(model_names):
         print(f"{c + 1} / {len(model_names)}")
         config = AutoConfig.from_pretrained(model_name)
@@ -372,6 +409,12 @@ def _compute_tensorflow(model_names, dictionary, average_over, amp):
 
         @tf.function
         def inference(inputs):
+            """
+            Return the inputs
+
+            Args:
+                inputs: (list): write your description
+            """
             return model(inputs)
 
         for batch_size in batch_sizes:
@@ -397,6 +440,11 @@ def _compute_tensorflow(model_names, dictionary, average_over, amp):
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--models", required=False, type=str, default='all', help="Model checkpoints to be provided "

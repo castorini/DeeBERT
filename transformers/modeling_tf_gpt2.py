@@ -57,6 +57,16 @@ def gelu(x):
 
 class TFAttention(tf.keras.layers.Layer):
     def __init__(self, nx, n_ctx, config, scale=False, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            nx: (int): write your description
+            n_ctx: (int): write your description
+            config: (todo): write your description
+            scale: (float): write your description
+        """
         super(TFAttention, self).__init__(**kwargs)
         self.output_attentions = config.output_attentions
 
@@ -75,6 +85,13 @@ class TFAttention(tf.keras.layers.Layer):
         self.pruned_heads = set()
 
     def prune_heads(self, heads):
+        """
+        Prunes ]
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         pass
 
     @staticmethod
@@ -88,6 +105,14 @@ class TFAttention(tf.keras.layers.Layer):
         return tf.cast(m, dtype)
 
     def _attn(self, inputs, training=False):
+        """
+        Attn.
+
+        Args:
+            self: (todo): write your description
+            inputs: (array): write your description
+            training: (todo): write your description
+        """
         q, k, v, attention_mask, head_mask = inputs
         # q, k, v have shape [batch, heads, sequence, features]
         w = tf.matmul(q, k, transpose_b=True)
@@ -118,18 +143,40 @@ class TFAttention(tf.keras.layers.Layer):
         return outputs
 
     def merge_heads(self, x):
+        """
+        Merge two dimension.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         x = tf.transpose(x, [0, 2, 1, 3])
         x_shape = shape_list(x)
         new_x_shape = x_shape[:-2] + [x_shape[-2] * x_shape[-1]]
         return tf.reshape(x, new_x_shape)
 
     def split_heads(self, x):
+        """
+        Split the tensor.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         x_shape = shape_list(x)
         new_x_shape = x_shape[:-1] + [self.n_head, x_shape[-1] // self.n_head]
         x = tf.reshape(x, new_x_shape)
         return tf.transpose(x, (0, 2, 1, 3))  # (batch, head, seq_length, head_features)
 
     def call(self, inputs, training=False):
+        """
+        Perform the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         x, layer_past, attention_mask, head_mask = inputs
 
         x = self.c_attn(x)
@@ -156,6 +203,14 @@ class TFAttention(tf.keras.layers.Layer):
 
 class TFMLP(tf.keras.layers.Layer):
     def __init__(self, n_state, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            n_state: (int): write your description
+            config: (todo): write your description
+        """
         super(TFMLP, self).__init__(**kwargs)
         nx = config.n_embd
         self.c_fc = TFConv1D(n_state, nx, initializer_range=config.initializer_range, name='c_fc')
@@ -164,6 +219,14 @@ class TFMLP(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(config.resid_pdrop)
 
     def call(self, x, training=False):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+            training: (bool): write your description
+        """
         h = self.act(self.c_fc(x))
         h2 = self.c_proj(h)
         h2 = self.dropout(h2, training=training)
@@ -172,6 +235,15 @@ class TFMLP(tf.keras.layers.Layer):
 
 class TFBlock(tf.keras.layers.Layer):
     def __init__(self, n_ctx, config, scale=False, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            n_ctx: (int): write your description
+            config: (todo): write your description
+            scale: (float): write your description
+        """
         super(TFBlock, self).__init__(**kwargs)
         nx = config.n_embd
         self.ln_1 = tf.keras.layers.LayerNormalization(epsilon=config.layer_norm_epsilon, name='ln_1')
@@ -180,6 +252,14 @@ class TFBlock(tf.keras.layers.Layer):
         self.mlp = TFMLP(4 * nx, config, name='mlp')
 
     def call(self, inputs, training=False):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         x, layer_past, attention_mask, head_mask = inputs
 
         a = self.ln_1(x)
@@ -197,6 +277,14 @@ class TFBlock(tf.keras.layers.Layer):
 
 class TFGPT2MainLayer(tf.keras.layers.Layer):
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFGPT2MainLayer, self).__init__(config, *inputs, **kwargs)
         self.output_hidden_states = config.output_hidden_states
         self.output_attentions = config.output_attentions
@@ -220,9 +308,22 @@ class TFGPT2MainLayer(tf.keras.layers.Layer):
         self.ln_f = tf.keras.layers.LayerNormalization(epsilon=config.layer_norm_epsilon, name='ln_f')
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.wte
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Resize token embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         raise NotImplementedError
 
     def _prune_heads(self, heads_to_prune):
@@ -232,6 +333,20 @@ class TFGPT2MainLayer(tf.keras.layers.Layer):
         raise NotImplementedError
 
     def call(self, inputs, past=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None, training=False):
+        """
+        Perform the encoder.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            past: (todo): write your description
+            attention_mask: (int): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             past = inputs[1] if len(inputs) > 1 else past
@@ -460,10 +575,25 @@ class TFGPT2Model(TFGPT2PreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the superclass
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFGPT2Model, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFGPT2MainLayer(config, name='transformer')
 
     def call(self, inputs, **kwargs):
+        """
+        Execute the given inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.transformer(inputs, **kwargs)
         return outputs
 
@@ -501,13 +631,34 @@ class TFGPT2LMHeadModel(TFGPT2PreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the superclass method.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFGPT2LMHeadModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFGPT2MainLayer(config, name='transformer')
 
     def get_output_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.transformer.wte
 
     def call(self, inputs, **kwargs):
+        """
+        See :
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         transformer_outputs = self.transformer(inputs, **kwargs)
         hidden_states = transformer_outputs[0]
 
@@ -573,14 +724,43 @@ class TFGPT2DoubleHeadsModel(TFGPT2PreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the inputs.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFGPT2DoubleHeadsModel, self).__init__(config, *inputs, **kwargs)
         self.transformer = TFGPT2MainLayer(config, name='transformer')
         self.multiple_choice_head = TFSequenceSummary(config, initializer_range=config.initializer_range, name='multiple_choice_head')
 
     def get_output_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.transformer.wte
 
     def call(self, inputs, past=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None, mc_token_ids=None, training=False):
+        """
+        Perform on - attention.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            past: (todo): write your description
+            attention_mask: (int): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            mc_token_ids: (str): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             past = inputs[1] if len(inputs) > 1 else past

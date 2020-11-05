@@ -74,6 +74,11 @@ MODEL_CLASSES = {
 
 
 def set_seed(args):
+    """
+    Sets random seed.
+
+    Args:
+    """
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -82,6 +87,12 @@ def set_seed(args):
 
 
 def get_wanted_result(result):
+    """
+    Get the result of a result.
+
+    Args:
+        result: (str): write your description
+    """
     if "spearmanr" in result:
         print_result = result["spearmanr"]
     elif "f1" in result:
@@ -236,6 +247,16 @@ def train(args, train_dataset, model, tokenizer, train_highway=False):
 
 
 def evaluate(args, model, tokenizer, prefix="", output_layer=-1, eval_highway=False):
+    """
+    Evaluate the model on the given dataset.
+
+    Args:
+        model: (todo): write your description
+        tokenizer: (str): write your description
+        prefix: (str): write your description
+        output_layer: (todo): write your description
+        eval_highway: (todo): write your description
+    """
     # Loop to handle MNLI double evaluation (matched, mis-matched)
     eval_task_names = ("mnli", "mnli-mm") if args.task_name == "mnli" else (args.task_name,)
     eval_outputs_dirs = (args.output_dir, args.output_dir + '-MM') if args.task_name == "mnli" else (args.output_dir,)
@@ -331,6 +352,14 @@ def evaluate(args, model, tokenizer, prefix="", output_layer=-1, eval_highway=Fa
 
 
 def load_and_cache_examples(args, task, tokenizer, evaluate=False):
+    """
+    Loads examples from the examples.
+
+    Args:
+        task: (str): write your description
+        tokenizer: (todo): write your description
+        evaluate: (str): write your description
+    """
     if args.local_rank not in [-1, 0] and not evaluate:
         torch.distributed.barrier()  # Make sure only the first process in distributed training process the dataset, and the others will use the cache
 
@@ -382,6 +411,11 @@ def load_and_cache_examples(args, task, tokenizer, evaluate=False):
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
 
     ## Required parameters

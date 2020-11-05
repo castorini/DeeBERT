@@ -48,6 +48,23 @@ class Distiller:
                  token_probs: torch.tensor,
                  student: nn.Module,
                  teacher: nn.Module):
+        """
+        Initialize dataset.
+
+        Args:
+            self: (todo): write your description
+            params: (dict): write your description
+            dataset: (todo): write your description
+            token_probs: (str): write your description
+            torch: (todo): write your description
+            tensor: (str): write your description
+            student: (todo): write your description
+            nn: (todo): write your description
+            Module: (str): write your description
+            teacher: (todo): write your description
+            nn: (todo): write your description
+            Module: (str): write your description
+        """
         logger.info('Initializing Distiller')
         self.params = params
         self.dump_path = params.dump_path

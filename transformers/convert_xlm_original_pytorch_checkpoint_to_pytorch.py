@@ -30,6 +30,13 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 def convert_xlm_checkpoint_to_pytorch(xlm_checkpoint_path, pytorch_dump_folder_path):
+    """
+    Convert pytorch_weights.
+
+    Args:
+        xlm_checkpoint_path: (str): write your description
+        pytorch_dump_folder_path: (str): write your description
+    """
     # Load checkpoint
     chkpt = torch.load(xlm_checkpoint_path, map_location='cpu')
 

@@ -67,6 +67,34 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
                      num_choices=4,
                      scope=None,
                     ):
+            """
+            Initialize the model.
+
+            Args:
+                self: (todo): write your description
+                parent: (todo): write your description
+                batch_size: (int): write your description
+                seq_length: (int): write your description
+                is_training: (bool): write your description
+                use_input_mask: (bool): write your description
+                use_token_type_ids: (str): write your description
+                use_labels: (bool): write your description
+                vocab_size: (int): write your description
+                hidden_size: (int): write your description
+                num_hidden_layers: (int): write your description
+                num_attention_heads: (int): write your description
+                intermediate_size: (int): write your description
+                hidden_act: (todo): write your description
+                hidden_dropout_prob: (todo): write your description
+                attention_probs_dropout_prob: (todo): write your description
+                max_position_embeddings: (int): write your description
+                type_vocab_size: (int): write your description
+                type_sequence_label_size: (int): write your description
+                initializer_range: (todo): write your description
+                num_labels: (int): write your description
+                num_choices: (int): write your description
+                scope: (str): write your description
+            """
             self.parent = parent
             self.batch_size = batch_size
             self.seq_length = seq_length
@@ -91,6 +119,12 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
             self.scope = scope
 
         def prepare_config_and_inputs(self):
+            """
+            Prepare the model for training.
+
+            Args:
+                self: (todo): write your description
+            """
             input_ids = ids_tensor([self.batch_size, self.seq_length], self.vocab_size)
 
             input_mask = None
@@ -125,11 +159,31 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
             return config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels
 
         def check_loss_output(self, result):
+            """
+            Check that the output.
+
+            Args:
+                self: (todo): write your description
+                result: (todo): write your description
+            """
             self.parent.assertListEqual(
                 list(result["loss"].size()),
                 [])
 
         def create_and_check_xxx_model(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the model.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             model = XxxModel(config=config)
             model.eval()
             sequence_output, pooled_output = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids)
@@ -147,6 +201,19 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
 
 
         def create_and_check_xxx_for_masked_lm(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of targets.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = XxxForMaskedLM(config=config)
             model.eval()
             loss, prediction_scores = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids, masked_lm_labels=token_labels)
@@ -161,6 +228,19 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
 
 
         def create_and_check_xxx_for_question_answering(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create a batch of examples for a batch.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             model = XxxForQuestionAnswering(config=config)
             model.eval()
             loss, start_logits, end_logits = model(input_ids, attention_mask=input_mask, token_type_ids=token_type_ids,
@@ -180,6 +260,19 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
 
 
         def create_and_check_xxx_for_sequence_classification(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the classification classification.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (todo): write your description
+            """
             config.num_labels = self.num_labels
             model = XxxForSequenceClassification(config)
             model.eval()
@@ -195,6 +288,19 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
 
 
         def create_and_check_xxx_for_token_classification(self, config, input_ids, token_type_ids, input_mask, sequence_labels, token_labels, choice_labels):
+            """
+            Create the classification for the given token.
+
+            Args:
+                self: (todo): write your description
+                config: (todo): write your description
+                input_ids: (str): write your description
+                token_type_ids: (str): write your description
+                input_mask: (todo): write your description
+                sequence_labels: (todo): write your description
+                token_labels: (str): write your description
+                choice_labels: (str): write your description
+            """
             config.num_labels = self.num_labels
             model = XxxForTokenClassification(config=config)
             model.eval()
@@ -210,6 +316,12 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
 
 
         def prepare_config_and_inputs_for_common(self):
+            """
+            Prepare inputs for inputs.
+
+            Args:
+                self: (todo): write your description
+            """
             config_and_inputs = self.prepare_config_and_inputs()
             (config, input_ids, token_type_ids, input_mask,
              sequence_labels, token_labels, choice_labels) = config_and_inputs
@@ -217,34 +329,82 @@ class XxxModelTest(CommonTestCases.CommonModelTester):
             return config, inputs_dict
 
     def setUp(self):
+        """
+        Sets the model_tester.
+
+        Args:
+            self: (todo): write your description
+        """
         self.model_tester = XxxModelTest.XxxModelTester(self)
         self.config_tester = ConfigTester(self, config_class=XxxConfig, hidden_size=37)
 
     def test_config(self):
+        """
+        Test if test test configuration.
+
+        Args:
+            self: (todo): write your description
+        """
         self.config_tester.run_common_tests()
 
     def test_xxx_model(self):
+        """
+        Test if the model was clicked.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xxx_model(*config_and_inputs)
 
     def test_for_masked_lm(self):
+        """
+        Test for lm masked inputs.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xxx_for_masked_lm(*config_and_inputs)
 
     def test_for_question_answering(self):
+        """
+        Test for question question question
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xxx_for_question_answering(*config_and_inputs)
 
     def test_for_sequence_classification(self):
+        """
+        Create a classification sequence classification.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xxx_for_sequence_classification(*config_and_inputs)
 
     def test_for_token_classification(self):
+        """
+        Test for all possible.
+
+        Args:
+            self: (todo): write your description
+        """
         config_and_inputs = self.model_tester.prepare_config_and_inputs()
         self.model_tester.create_and_check_xxx_for_token_classification(*config_and_inputs)
 
     @pytest.mark.slow
     def test_model_from_pretrained(self):
+        """
+        Test if the model from a pre - trained.
+
+        Args:
+            self: (todo): write your description
+        """
         cache_dir = "/tmp/transformers_test/"
         for model_name in list(XXX_PRETRAINED_MODEL_ARCHIVE_MAP.keys())[:1]:
             model = XxxModel.from_pretrained(model_name, cache_dir=cache_dir)

@@ -182,6 +182,12 @@ def gelu(x):
 
 
 def swish(x):
+    """
+    Swish ( x.
+
+    Args:
+        x: (int): write your description
+    """
     return x * torch.sigmoid(x)
 
 
@@ -193,6 +199,13 @@ XLNetLayerNorm = nn.LayerNorm
 
 class XLNetRelativeAttention(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetRelativeAttention, self).__init__()
         self.output_attentions = config.output_attentions
 
@@ -221,6 +234,13 @@ class XLNetRelativeAttention(nn.Module):
         self.dropout = nn.Dropout(config.dropout)
 
     def prune_heads(self, heads):
+        """
+        Prune a list of the specified bytestring.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         raise NotImplementedError
 
     @staticmethod
@@ -238,6 +258,13 @@ class XLNetRelativeAttention(nn.Module):
 
     @staticmethod
     def rel_shift_bnij(x, klen=-1):
+        """
+        Relative shift of x.
+
+        Args:
+            x: (array): write your description
+            klen: (todo): write your description
+        """
         x_size = x.shape
 
         x = x.reshape(x_size[0], x_size[1], x_size[3], x_size[2])
@@ -309,6 +336,21 @@ class XLNetRelativeAttention(nn.Module):
                       attn_mask_h, attn_mask_g,
                       r, seg_mat,
                       mems=None, target_mapping=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            h: (todo): write your description
+            g: (todo): write your description
+            attn_mask_h: (todo): write your description
+            attn_mask_g: (todo): write your description
+            r: (todo): write your description
+            seg_mat: (todo): write your description
+            mems: (todo): write your description
+            target_mapping: (todo): write your description
+            head_mask: (todo): write your description
+        """
         if g is not None:
             ###### Two-stream attention with relative positional encoding.
             # content based attention score
@@ -400,6 +442,13 @@ class XLNetRelativeAttention(nn.Module):
 
 class XLNetFeedForward(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetFeedForward, self).__init__()
         self.layer_norm = XLNetLayerNorm(config.d_model, eps=config.layer_norm_eps)
         self.layer_1 = nn.Linear(config.d_model, config.d_inner)
@@ -412,6 +461,13 @@ class XLNetFeedForward(nn.Module):
             self.activation_function = config.ff_activation
 
     def forward(self, inp):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            inp: (todo): write your description
+        """
         output = inp
         output = self.layer_1(output)
         output = self.activation_function(output)
@@ -423,6 +479,13 @@ class XLNetFeedForward(nn.Module):
 
 class XLNetLayer(nn.Module):
     def __init__(self, config):
+        """
+        Initialize the module.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetLayer, self).__init__()
         self.rel_attn = XLNetRelativeAttention(config)
         self.ff = XLNetFeedForward(config)
@@ -431,6 +494,21 @@ class XLNetLayer(nn.Module):
     def forward(self, output_h, output_g,
                 attn_mask_h, attn_mask_g,
                 r, seg_mat, mems=None, target_mapping=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            output_h: (todo): write your description
+            output_g: (todo): write your description
+            attn_mask_h: (todo): write your description
+            attn_mask_g: (todo): write your description
+            r: (todo): write your description
+            seg_mat: (todo): write your description
+            mems: (todo): write your description
+            target_mapping: (todo): write your description
+            head_mask: (todo): write your description
+        """
         outputs = self.rel_attn(output_h, output_g, attn_mask_h, attn_mask_g,
                                 r, seg_mat, mems=mems, target_mapping=target_mapping,
                                 head_mask=head_mask)
@@ -594,6 +672,13 @@ class XLNetModel(XLNetPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetModel, self).__init__(config)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -616,12 +701,32 @@ class XLNetModel(XLNetPreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.word_embedding
 
     def set_input_embeddings(self, new_embeddings):
+        """
+        Parameters ---------- word embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_embeddings: (todo): write your description
+        """
         self.word_embedding = new_embeddings
 
     def _prune_heads(self, heads_to_prune):
+        """
+        Prune a list of the dispatches.
+
+        Args:
+            self: (todo): write your description
+            heads_to_prune: (list): write your description
+        """
         raise NotImplementedError
 
     def create_mask(self, qlen, mlen):
@@ -668,6 +773,14 @@ class XLNetModel(XLNetPreTrainedModel):
 
     @staticmethod
     def positional_embedding(pos_seq, inv_freq, bsz=None):
+        """
+        Parameters ---------- pos_seq : np.
+
+        Args:
+            pos_seq: (todo): write your description
+            inv_freq: (float): write your description
+            bsz: (todo): write your description
+        """
         sinusoid_inp = torch.einsum('i,d->id', pos_seq, inv_freq)
         pos_emb = torch.cat([torch.sin(sinusoid_inp), torch.cos(sinusoid_inp)], dim=-1)
         pos_emb = pos_emb[:, None, :]
@@ -718,6 +831,21 @@ class XLNetModel(XLNetPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, mems=None, perm_mask=None, target_mapping=None,
                 token_type_ids=None, input_mask=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            mems: (todo): write your description
+            perm_mask: (todo): write your description
+            target_mapping: (todo): write your description
+            token_type_ids: (str): write your description
+            input_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         # the original code for XLNet uses shapes [len, bsz] with the batch dimension at the end
         # but we want a unified interface in the library with the batch size on the first dimension
         # so we move here the first dimension (batch) to the end
@@ -929,6 +1057,13 @@ class XLNetLMHeadModel(XLNetPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the weights.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetLMHeadModel, self).__init__(config)
         self.attn_type = config.attn_type
         self.same_length = config.same_length
@@ -939,10 +1074,32 @@ class XLNetLMHeadModel(XLNetPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        Returns a list of lmdings
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_loss
 
     def forward(self, input_ids=None, attention_mask=None, mems=None, perm_mask=None, target_mapping=None,
                 token_type_ids=None, input_mask=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            mems: (todo): write your description
+            perm_mask: (todo): write your description
+            target_mapping: (todo): write your description
+            token_type_ids: (str): write your description
+            input_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                mems=mems,
@@ -1007,6 +1164,13 @@ class XLNetForSequenceClassification(XLNetPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the hypervisor.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -1018,6 +1182,22 @@ class XLNetForSequenceClassification(XLNetPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, mems=None, perm_mask=None, target_mapping=None,
                 token_type_ids=None, input_mask=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            mems: (todo): write your description
+            perm_mask: (todo): write your description
+            target_mapping: (todo): write your description
+            token_type_ids: (str): write your description
+            input_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                mems=mems,
@@ -1108,6 +1288,13 @@ class XLNetForMultipleChoice(XLNetPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetForMultipleChoice, self).__init__(config)
 
         self.transformer = XLNetModel(config)
@@ -1119,6 +1306,22 @@ class XLNetForMultipleChoice(XLNetPreTrainedModel):
     def forward(self, input_ids=None, token_type_ids=None, input_mask=None, attention_mask=None,
                 mems=None, perm_mask=None, target_mapping=None,
                 labels=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            token_type_ids: (str): write your description
+            input_mask: (todo): write your description
+            attention_mask: (todo): write your description
+            mems: (todo): write your description
+            perm_mask: (todo): write your description
+            target_mapping: (todo): write your description
+            labels: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         num_choices = input_ids.shape[1]
 
         flat_input_ids = input_ids.view(-1, input_ids.size(-1))
@@ -1193,6 +1396,13 @@ class XLNetForQuestionAnsweringSimple(XLNetPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the superclassifier
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetForQuestionAnsweringSimple, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -1204,6 +1414,23 @@ class XLNetForQuestionAnsweringSimple(XLNetPreTrainedModel):
     def forward(self, input_ids=None, attention_mask=None, mems=None, perm_mask=None, target_mapping=None,
                 token_type_ids=None, input_mask=None, head_mask=None, inputs_embeds=None,
                 start_positions=None, end_positions=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            mems: (todo): write your description
+            perm_mask: (todo): write your description
+            target_mapping: (todo): write your description
+            token_type_ids: (str): write your description
+            input_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            start_positions: (todo): write your description
+            end_positions: (todo): write your description
+        """
 
         outputs = self.transformer(input_ids,
                                     attention_mask=attention_mask,
@@ -1307,6 +1534,13 @@ class XLNetForQuestionAnswering(XLNetPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLNetForQuestionAnswering, self).__init__(config)
         self.start_n_top = config.start_n_top
         self.end_n_top = config.end_n_top
@@ -1321,6 +1555,26 @@ class XLNetForQuestionAnswering(XLNetPreTrainedModel):
     def forward(self, input_ids=None, attention_mask=None, mems=None, perm_mask=None, target_mapping=None,
                 token_type_ids=None, input_mask=None, head_mask=None, inputs_embeds=None,
                 start_positions=None, end_positions=None, is_impossible=None, cls_index=None, p_mask=None,):
+        """
+        Perform forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            mems: (todo): write your description
+            perm_mask: (todo): write your description
+            target_mapping: (todo): write your description
+            token_type_ids: (str): write your description
+            input_mask: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            start_positions: (todo): write your description
+            end_positions: (todo): write your description
+            is_impossible: (todo): write your description
+            cls_index: (todo): write your description
+            p_mask: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                mems=mems,

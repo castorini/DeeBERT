@@ -33,12 +33,28 @@ class InputExample(object):
         specified for train and dev examples, but not for test examples.
     """
     def __init__(self, guid, text_a, text_b=None, label=None):
+        """
+        Initialize a guid
+
+        Args:
+            self: (todo): write your description
+            guid: (todo): write your description
+            text_a: (str): write your description
+            text_b: (str): write your description
+            label: (str): write your description
+        """
         self.guid = guid
         self.text_a = text_a
         self.text_b = text_b
         self.label = label
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this object.
+
+        Args:
+            self: (todo): write your description
+        """
         return str(self.to_json_string())
 
     def to_dict(self):
@@ -65,12 +81,28 @@ class InputFeatures(object):
     """
 
     def __init__(self, input_ids, attention_mask, token_type_ids, label):
+        """
+        Initialize self.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            label: (str): write your description
+        """
         self.input_ids = input_ids
         self.attention_mask = attention_mask
         self.token_type_ids = token_type_ids
         self.label = label
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this object.
+
+        Args:
+            self: (todo): write your description
+        """
         return str(self.to_json_string())
 
     def to_dict(self):

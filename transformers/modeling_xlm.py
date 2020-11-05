@@ -48,6 +48,14 @@ XLM_PRETRAINED_MODEL_ARCHIVE_MAP = {
 
 
 def create_sinusoidal_embeddings(n_pos, dim, out):
+    """
+    Parameters ---------- n_pos : np.
+
+    Args:
+        n_pos: (int): write your description
+        dim: (int): write your description
+        out: (todo): write your description
+    """
     position_enc = np.array([
         [pos / np.power(10000, 2 * (j // 2) / dim) for j in range(dim)]
         for pos in range(n_pos)
@@ -99,6 +107,15 @@ class MultiHeadAttention(nn.Module):
     NEW_ID = itertools.count()
 
     def __init__(self, n_heads, dim, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            n_heads: (int): write your description
+            dim: (int): write your description
+            config: (todo): write your description
+        """
         super(MultiHeadAttention, self).__init__()
         self.layer_id = next(MultiHeadAttention.NEW_ID)
         self.output_attentions = config.output_attentions
@@ -114,6 +131,13 @@ class MultiHeadAttention(nn.Module):
         self.pruned_heads = set()
 
     def prune_heads(self, heads):
+        """
+        Prune attention.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         attention_head_size = self.dim // self.n_heads
         if len(heads) == 0:
             return
@@ -201,6 +225,16 @@ class MultiHeadAttention(nn.Module):
 class TransformerFFN(nn.Module):
 
     def __init__(self, in_dim, dim_hidden, out_dim, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            in_dim: (int): write your description
+            dim_hidden: (int): write your description
+            out_dim: (int): write your description
+            config: (todo): write your description
+        """
         super(TransformerFFN, self).__init__()
         self.dropout = config.dropout
         self.lin1 = nn.Linear(in_dim, dim_hidden)
@@ -208,6 +242,13 @@ class TransformerFFN(nn.Module):
         self.act = gelu if config.gelu_activation else F.relu
 
     def forward(self, input):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input: (todo): write your description
+        """
         x = self.lin1(input)
         x = self.act(x)
         x = self.lin2(x)
@@ -225,6 +266,13 @@ class XLMPreTrainedModel(PreTrainedModel):
     base_model_prefix = "transformer"
 
     def __init__(self, *inputs, **kwargs):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (list): write your description
+        """
         super(XLMPreTrainedModel, self).__init__(*inputs, **kwargs)
 
     def _init_weights(self, module):
@@ -342,6 +390,13 @@ class XLMModel(XLMPreTrainedModel):
 
     """
     def __init__(self, config):  #, dico, is_encoder, with_output):
+        """
+        Initialize the embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLMModel, self).__init__(config)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
@@ -412,9 +467,22 @@ class XLMModel(XLMPreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings
 
     def set_input_embeddings(self, new_embeddings):
+        """
+        Parameters ---------- new embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_embeddings: (todo): write your description
+        """
         self.embeddings = new_embeddings
 
     def _prune_heads(self, heads_to_prune):
@@ -427,6 +495,21 @@ class XLMModel(XLMPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, langs=None, token_type_ids=None, position_ids=None,
                 lengths=None, cache=None, head_mask=None, inputs_embeds=None):  # removed: src_enc=None, src_len=None
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            langs: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            lengths: (todo): write your description
+            cache: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None:
             bs, slen = input_ids.size()
         else:
@@ -558,6 +641,13 @@ class XLMPredLayer(nn.Module):
     Prediction layer (cross_entropy or adaptive_softmax).
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLMPredLayer, self).__init__()
         self.asm = config.asm
         self.n_words = config.n_words
@@ -630,6 +720,13 @@ class XLMWithLMHeadModel(XLMPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLMWithLMHeadModel, self).__init__(config)
         self.transformer = XLMModel(config)
         self.pred_layer = XLMPredLayer(config)
@@ -637,10 +734,32 @@ class XLMWithLMHeadModel(XLMPreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        Gets the output layers.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.pred_layer.proj
 
     def forward(self, input_ids=None, attention_mask=None, langs=None, token_type_ids=None, position_ids=None,
                 lengths=None, cache=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            langs: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            lengths: (todo): write your description
+            cache: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                langs=langs,
@@ -693,6 +812,13 @@ class XLMForSequenceClassification(XLMPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the hyperparameter sequence.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLMForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
 
@@ -703,6 +829,22 @@ class XLMForSequenceClassification(XLMPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, langs=None, token_type_ids=None, position_ids=None,
                 lengths=None, cache=None, head_mask=None, inputs_embeds=None, labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            langs: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            lengths: (todo): write your description
+            cache: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                langs=langs,
@@ -778,6 +920,13 @@ class XLMForQuestionAnsweringSimple(XLMPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLMForQuestionAnsweringSimple, self).__init__(config)
 
         self.transformer = XLMModel(config)
@@ -787,6 +936,23 @@ class XLMForQuestionAnsweringSimple(XLMPreTrainedModel):
 
     def forward(self, input_ids=None, attention_mask=None, langs=None, token_type_ids=None, position_ids=None,
                 lengths=None, cache=None, head_mask=None, inputs_embeds=None, start_positions=None, end_positions=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            langs: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            lengths: (todo): write your description
+            cache: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            start_positions: (todo): write your description
+            end_positions: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                langs=langs,
@@ -874,6 +1040,13 @@ class XLMForQuestionAnswering(XLMPreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the weights.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(XLMForQuestionAnswering, self).__init__(config)
 
         self.transformer = XLMModel(config)
@@ -884,6 +1057,26 @@ class XLMForQuestionAnswering(XLMPreTrainedModel):
     def forward(self, input_ids=None, attention_mask=None, langs=None, token_type_ids=None, position_ids=None,
                 lengths=None, cache=None, head_mask=None, inputs_embeds=None, start_positions=None, end_positions=None,
                 is_impossible=None, cls_index=None, p_mask=None):
+        """
+        Parameters ---------- inputs.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            attention_mask: (todo): write your description
+            langs: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            lengths: (todo): write your description
+            cache: (todo): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            start_positions: (todo): write your description
+            end_positions: (todo): write your description
+            is_impossible: (todo): write your description
+            cls_index: (todo): write your description
+            p_mask: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                attention_mask=attention_mask,
                                                langs=langs,

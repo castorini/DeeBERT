@@ -97,11 +97,27 @@ def load_tf_weights_in_gpt2(model, config, gpt2_checkpoint_path):
 
 
 def gelu(x):
+    """
+    Gelu ( x.
+
+    Args:
+        x: (todo): write your description
+    """
     return 0.5 * x * (1 + torch.tanh(math.sqrt(2 / math.pi) * (x + 0.044715 * torch.pow(x, 3))))
 
 
 class Attention(nn.Module):
     def __init__(self, nx, n_ctx, config, scale=False):
+        """
+        Initialize the robot.
+
+        Args:
+            self: (todo): write your description
+            nx: (int): write your description
+            n_ctx: (int): write your description
+            config: (todo): write your description
+            scale: (float): write your description
+        """
         super(Attention, self).__init__()
         self.output_attentions = config.output_attentions
 
@@ -120,6 +136,13 @@ class Attention(nn.Module):
         self.pruned_heads = set()
 
     def prune_heads(self, heads):
+        """
+        Prune the head and concatenation.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         if len(heads) == 0:
             return
         mask = torch.ones(self.n_head, self.split_size // self.n_head)
@@ -142,6 +165,17 @@ class Attention(nn.Module):
         self.pruned_heads = self.pruned_heads.union(heads)
 
     def _attn(self, q, k, v, attention_mask=None, head_mask=None):
+        """
+        Attn.
+
+        Args:
+            self: (todo): write your description
+            q: (int): write your description
+            k: (int): write your description
+            v: (todo): write your description
+            attention_mask: (int): write your description
+            head_mask: (bool): write your description
+        """
         w = torch.matmul(q, k)
         if self.scale:
             w = w / math.sqrt(v.size(-1))
@@ -166,11 +200,26 @@ class Attention(nn.Module):
         return outputs
 
     def merge_heads(self, x):
+        """
+        Merge a tuple of a dimension.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         x = x.permute(0, 2, 1, 3).contiguous()
         new_x_shape = x.size()[:-2] + (x.size(-2) * x.size(-1),)
         return x.view(*new_x_shape)  # in Tensorflow implem: fct merge_states
 
     def split_heads(self, x, k=False):
+        """
+        Split a tuple containing the first dimension.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            k: (todo): write your description
+        """
         new_x_shape = x.size()[:-1] + (self.n_head, x.size(-1) // self.n_head)
         x = x.view(*new_x_shape)  # in Tensorflow implem: fct split_states
         if k:
@@ -179,6 +228,16 @@ class Attention(nn.Module):
             return x.permute(0, 2, 1, 3)  # (batch, head, seq_length, head_features)
 
     def forward(self, x, layer_past=None, attention_mask=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (str): write your description
+            layer_past: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+        """
         x = self.c_attn(x)
         query, key, value = x.split(self.split_size, dim=2)
         query = self.split_heads(query)
@@ -203,6 +262,14 @@ class Attention(nn.Module):
 
 class MLP(nn.Module):
     def __init__(self, n_state, config):  # in MLP: n_state=3072 (4 * n_embd)
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            n_state: (int): write your description
+            config: (todo): write your description
+        """
         super(MLP, self).__init__()
         nx = config.n_embd
         self.c_fc = Conv1D(n_state, nx)
@@ -211,6 +278,13 @@ class MLP(nn.Module):
         self.dropout = nn.Dropout(config.resid_pdrop)
 
     def forward(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         h = self.act(self.c_fc(x))
         h2 = self.c_proj(h)
         return self.dropout(h2)
@@ -218,6 +292,15 @@ class MLP(nn.Module):
 
 class Block(nn.Module):
     def __init__(self, n_ctx, config, scale=False):
+        """
+        Initialize the layer.
+
+        Args:
+            self: (todo): write your description
+            n_ctx: (int): write your description
+            config: (todo): write your description
+            scale: (float): write your description
+        """
         super(Block, self).__init__()
         nx = config.n_embd
         self.ln_1 = nn.LayerNorm(nx, eps=config.layer_norm_epsilon)
@@ -226,6 +309,16 @@ class Block(nn.Module):
         self.mlp = MLP(4 * nx, config)
 
     def forward(self, x, layer_past=None, attention_mask=None, head_mask=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            layer_past: (todo): write your description
+            attention_mask: (todo): write your description
+            head_mask: (todo): write your description
+        """
         output_attn = self.attn(self.ln_1(x),
                                 layer_past=layer_past,
                                 attention_mask=attention_mask,
@@ -250,6 +343,13 @@ class GPT2PreTrainedModel(PreTrainedModel):
     base_model_prefix = "transformer"
 
     def __init__(self, *inputs, **kwargs):
+        """
+        Initialize the graph.
+
+        Args:
+            self: (todo): write your description
+            inputs: (list): write your description
+        """
         super(GPT2PreTrainedModel, self).__init__(*inputs, **kwargs)
 
     def _init_weights(self, module):
@@ -351,6 +451,13 @@ class GPT2Model(GPT2PreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(GPT2Model, self).__init__(config)
         self.output_hidden_states = config.output_hidden_states
         self.output_attentions = config.output_attentions
@@ -365,9 +472,22 @@ class GPT2Model(GPT2PreTrainedModel):
         self.init_weights()
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.wte
 
     def set_input_embeddings(self, new_embeddings):
+        """
+        Set the embeddings for this embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_embeddings: (todo): write your description
+        """
         self.wte = new_embeddings
 
     def _prune_heads(self, heads_to_prune):
@@ -378,6 +498,19 @@ class GPT2Model(GPT2PreTrainedModel):
             self.h[layer].attn.prune_heads(heads)
 
     def forward(self, input_ids=None, past=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            past: (todo): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+        """
         if input_ids is not None and inputs_embeds is not None:
             raise ValueError("You cannot specify both input_ids and inputs_embeds at the same time")
         elif input_ids is not None:
@@ -529,6 +662,13 @@ class GPT2LMHeadModel(GPT2PreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(GPT2LMHeadModel, self).__init__(config)
         self.transformer = GPT2Model(config)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
@@ -536,10 +676,30 @@ class GPT2LMHeadModel(GPT2PreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        : returns : class : class :.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head
 
     def forward(self, input_ids=None, past=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            past: (todo): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                past=past,
                                                attention_mask=attention_mask,
@@ -633,6 +793,13 @@ class GPT2DoubleHeadsModel(GPT2PreTrainedModel):
 
     """
     def __init__(self, config):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(GPT2DoubleHeadsModel, self).__init__(config)
         self.transformer = GPT2Model(config)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
@@ -641,10 +808,32 @@ class GPT2DoubleHeadsModel(GPT2PreTrainedModel):
         self.init_weights()
 
     def get_output_embeddings(self):
+        """
+        : returns : class : class :.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.lm_head
 
     def forward(self, input_ids=None, past=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None,
                 mc_token_ids=None, lm_labels=None, mc_labels=None):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            input_ids: (str): write your description
+            past: (todo): write your description
+            attention_mask: (todo): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (todo): write your description
+            inputs_embeds: (todo): write your description
+            mc_token_ids: (str): write your description
+            lm_labels: (todo): write your description
+            mc_labels: (todo): write your description
+        """
         transformer_outputs = self.transformer(input_ids,
                                                past=past,
                                                attention_mask=attention_mask,

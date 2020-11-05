@@ -54,6 +54,11 @@ MODEL_CLASSES = {
 
 
 def set_seed(args):
+    """
+    Sets random seed.
+
+    Args:
+    """
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -189,6 +194,17 @@ def train(args, train_dataset, model, tokenizer, labels, pad_token_label_id):
 
 
 def evaluate(args, model, tokenizer, labels, pad_token_label_id, mode, prefix=""):
+    """
+    Evaluate the model on the given dataset.
+
+    Args:
+        model: (todo): write your description
+        tokenizer: (str): write your description
+        labels: (list): write your description
+        pad_token_label_id: (str): write your description
+        mode: (str): write your description
+        prefix: (str): write your description
+    """
     eval_dataset = load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode=mode)
 
     args.eval_batch_size = args.per_gpu_eval_batch_size * max(1, args.n_gpu)
@@ -262,6 +278,15 @@ def evaluate(args, model, tokenizer, labels, pad_token_label_id, mode, prefix=""
 
 
 def load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode):
+    """
+    Loads examples. examples.
+
+    Args:
+        tokenizer: (todo): write your description
+        labels: (str): write your description
+        pad_token_label_id: (str): write your description
+        mode: (str): write your description
+    """
     if args.local_rank not in [-1, 0] and not evaluate:
         torch.distributed.barrier()  # Make sure only the first process in distributed training process the dataset, and the others will use the cache
 
@@ -307,6 +332,11 @@ def load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode):
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     parser = argparse.ArgumentParser()
 
     ## Required parameters

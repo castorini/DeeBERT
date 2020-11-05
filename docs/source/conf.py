@@ -181,6 +181,12 @@ epub_title = project
 epub_exclude_files = ['search.html']
 
 def setup(app):
+    """
+    Add the setupheet.
+
+    Args:
+        app: (todo): write your description
+    """
     app.add_stylesheet('css/huggingface.css')
     app.add_stylesheet('css/code-snippets.css')
     app.add_js_file('js/custom.js')

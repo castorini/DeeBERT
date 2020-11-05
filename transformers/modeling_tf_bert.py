@@ -75,6 +75,12 @@ def gelu_new(x):
     return x * cdf
 
 def swish(x):
+    """
+    Swish function.
+
+    Args:
+        x: (int): write your description
+    """
     return x * tf.sigmoid(x)
 
 
@@ -88,6 +94,13 @@ class TFBertEmbeddings(tf.keras.layers.Layer):
     """Construct the embeddings from word, position and token_type embeddings.
     """
     def __init__(self, config, **kwargs):
+        """
+        Initialize the embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertEmbeddings, self).__init__(**kwargs)
         self.vocab_size = config.vocab_size
         self.hidden_size = config.hidden_size
@@ -183,6 +196,13 @@ class TFBertEmbeddings(tf.keras.layers.Layer):
 
 class TFBertSelfAttention(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertSelfAttention, self).__init__(**kwargs)
         if config.hidden_size % config.num_attention_heads != 0:
             raise ValueError(
@@ -208,10 +228,26 @@ class TFBertSelfAttention(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(config.attention_probs_dropout_prob)
 
     def transpose_for_scores(self, x, batch_size):
+        """
+        Transpose a transpose.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            batch_size: (int): write your description
+        """
         x = tf.reshape(x, (batch_size, -1, self.num_attention_heads, self.attention_head_size))
         return tf.transpose(x, perm=[0, 2, 1, 3])
 
     def call(self, inputs, training=False):
+        """
+        Parameters ---------- inputs : np. array shape ( int ].
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         hidden_states, attention_mask, head_mask = inputs
 
         batch_size = tf.shape(hidden_states)[0]
@@ -255,6 +291,13 @@ class TFBertSelfAttention(tf.keras.layers.Layer):
 
 class TFBertSelfOutput(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertSelfOutput, self).__init__(**kwargs)
         self.dense = tf.keras.layers.Dense(config.hidden_size,
                                            kernel_initializer=get_initializer(config.initializer_range),
@@ -263,6 +306,14 @@ class TFBertSelfOutput(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(config.hidden_dropout_prob)
 
     def call(self, inputs, training=False):
+        """
+        Perform_states.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         hidden_states, input_tensor = inputs
 
         hidden_states = self.dense(hidden_states)
@@ -273,14 +324,36 @@ class TFBertSelfOutput(tf.keras.layers.Layer):
 
 class TFBertAttention(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the kwargs.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertAttention, self).__init__(**kwargs)
         self.self_attention = TFBertSelfAttention(config, name='self')
         self.dense_output = TFBertSelfOutput(config, name='output')
 
     def prune_heads(self, heads):
+        """
+        Prune a list of the specified bytestring.
+
+        Args:
+            self: (todo): write your description
+            heads: (list): write your description
+        """
         raise NotImplementedError
 
     def call(self, inputs, training=False):
+        """
+        Parameters ---------- inputs : list of tensor.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         input_tensor, attention_mask, head_mask = inputs
 
         self_outputs = self.self_attention([input_tensor, attention_mask, head_mask], training=training)
@@ -291,6 +364,13 @@ class TFBertAttention(tf.keras.layers.Layer):
 
 class TFBertIntermediate(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertIntermediate, self).__init__(**kwargs)
         self.dense = tf.keras.layers.Dense(config.intermediate_size,
                                            kernel_initializer=get_initializer(config.initializer_range),
@@ -301,6 +381,13 @@ class TFBertIntermediate(tf.keras.layers.Layer):
             self.intermediate_act_fn = config.hidden_act
 
     def call(self, hidden_states):
+        """
+        Call the hidden states.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (int): write your description
+        """
         hidden_states = self.dense(hidden_states)
         hidden_states = self.intermediate_act_fn(hidden_states)
         return hidden_states
@@ -308,6 +395,13 @@ class TFBertIntermediate(tf.keras.layers.Layer):
 
 class TFBertOutput(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertOutput, self).__init__(**kwargs)
         self.dense = tf.keras.layers.Dense(config.hidden_size,
                                            kernel_initializer=get_initializer(config.initializer_range),
@@ -316,6 +410,14 @@ class TFBertOutput(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(config.hidden_dropout_prob)
 
     def call(self, inputs, training=False):
+        """
+        Perform_states.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         hidden_states, input_tensor = inputs
 
         hidden_states = self.dense(hidden_states)
@@ -326,12 +428,27 @@ class TFBertOutput(tf.keras.layers.Layer):
 
 class TFBertLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the robot
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertLayer, self).__init__(**kwargs)
         self.attention = TFBertAttention(config, name='attention')
         self.intermediate = TFBertIntermediate(config, name='intermediate')
         self.bert_output = TFBertOutput(config, name='output')
 
     def call(self, inputs, training=False):
+        """
+        Perform the network.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         hidden_states, attention_mask, head_mask = inputs
 
         attention_outputs = self.attention([hidden_states, attention_mask, head_mask], training=training)
@@ -344,12 +461,27 @@ class TFBertLayer(tf.keras.layers.Layer):
 
 class TFBertEncoder(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertEncoder, self).__init__(**kwargs)
         self.output_attentions = config.output_attentions
         self.output_hidden_states = config.output_hidden_states
         self.layer = [TFBertLayer(config, name='layer_._{}'.format(i)) for i in range(config.num_hidden_layers)]
 
     def call(self, inputs, training=False):
+        """
+        Parameters ---------- inputs : np.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            training: (bool): write your description
+        """
         hidden_states, attention_mask, head_mask = inputs
 
         all_hidden_states = ()
@@ -378,6 +510,13 @@ class TFBertEncoder(tf.keras.layers.Layer):
 
 class TFBertPooler(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertPooler, self).__init__(**kwargs)
         self.dense = tf.keras.layers.Dense(config.hidden_size,
                                            kernel_initializer=get_initializer(config.initializer_range),
@@ -385,6 +524,13 @@ class TFBertPooler(tf.keras.layers.Layer):
                                            name='dense')
 
     def call(self, hidden_states):
+        """
+        Parameters ---------- hidden_states : list of hidden states.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (int): write your description
+        """
         # We "pool" the model by simply taking the hidden state corresponding
         # to the first token.
         first_token_tensor = hidden_states[:, 0]
@@ -394,6 +540,13 @@ class TFBertPooler(tf.keras.layers.Layer):
 
 class TFBertPredictionHeadTransform(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertPredictionHeadTransform, self).__init__(**kwargs)
         self.dense = tf.keras.layers.Dense(config.hidden_size,
                                            kernel_initializer=get_initializer(config.initializer_range),
@@ -405,6 +558,13 @@ class TFBertPredictionHeadTransform(tf.keras.layers.Layer):
         self.LayerNorm = tf.keras.layers.LayerNormalization(epsilon=config.layer_norm_eps, name='LayerNorm')
 
     def call(self, hidden_states):
+        """
+        Calculate method.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (int): write your description
+        """
         hidden_states = self.dense(hidden_states)
         hidden_states = self.transform_act_fn(hidden_states)
         hidden_states = self.LayerNorm(hidden_states)
@@ -413,6 +573,14 @@ class TFBertPredictionHeadTransform(tf.keras.layers.Layer):
 
 class TFBertLMPredictionHead(tf.keras.layers.Layer):
     def __init__(self, config, input_embeddings, **kwargs):
+        """
+        Initialize the embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            input_embeddings: (todo): write your description
+        """
         super(TFBertLMPredictionHead, self).__init__(**kwargs)
         self.vocab_size = config.vocab_size
         self.transform = TFBertPredictionHeadTransform(config, name='transform')
@@ -422,6 +590,13 @@ class TFBertLMPredictionHead(tf.keras.layers.Layer):
         self.input_embeddings = input_embeddings
 
     def build(self, input_shape):
+        """
+        Builds the module.
+
+        Args:
+            self: (todo): write your description
+            input_shape: (list): write your description
+        """
         self.bias = self.add_weight(shape=(self.vocab_size,),
                                     initializer='zeros',
                                     trainable=True,
@@ -429,6 +604,13 @@ class TFBertLMPredictionHead(tf.keras.layers.Layer):
         super(TFBertLMPredictionHead, self).build(input_shape)
 
     def call(self, hidden_states):
+        """
+        Calculate computation.
+
+        Args:
+            self: (todo): write your description
+            hidden_states: (int): write your description
+        """
         hidden_states = self.transform(hidden_states)
         hidden_states = self.input_embeddings(hidden_states, mode="linear")
         hidden_states = hidden_states + self.bias
@@ -437,28 +619,64 @@ class TFBertLMPredictionHead(tf.keras.layers.Layer):
 
 class TFBertMLMHead(tf.keras.layers.Layer):
     def __init__(self, config, input_embeddings, **kwargs):
+        """
+        Initialize the embeddings.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            input_embeddings: (todo): write your description
+        """
         super(TFBertMLMHead, self).__init__(**kwargs)
         self.predictions = TFBertLMPredictionHead(config, input_embeddings, name='predictions')
 
     def call(self, sequence_output):
+        """
+        Call the model outputs.
+
+        Args:
+            self: (todo): write your description
+            sequence_output: (bool): write your description
+        """
         prediction_scores = self.predictions(sequence_output)
         return prediction_scores
 
 
 class TFBertNSPHead(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertNSPHead, self).__init__(**kwargs)
         self.seq_relationship = tf.keras.layers.Dense(2,
                                                       kernel_initializer=get_initializer(config.initializer_range),
                                                       name='seq_relationship')
 
     def call(self, pooled_output):
+        """
+        Evaluates the relationship function.
+
+        Args:
+            self: (todo): write your description
+            pooled_output: (todo): write your description
+        """
         seq_relationship_score = self.seq_relationship(pooled_output)
         return seq_relationship_score
 
 
 class TFBertMainLayer(tf.keras.layers.Layer):
     def __init__(self, config, **kwargs):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+        """
         super(TFBertMainLayer, self).__init__(**kwargs)
         self.num_hidden_layers = config.num_hidden_layers
 
@@ -467,9 +685,22 @@ class TFBertMainLayer(tf.keras.layers.Layer):
         self.pooler = TFBertPooler(config, name='pooler')
 
     def get_input_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.embeddings
 
     def _resize_token_embeddings(self, new_num_tokens):
+        """
+        Resize token embeddings.
+
+        Args:
+            self: (todo): write your description
+            new_num_tokens: (int): write your description
+        """
         raise NotImplementedError
 
     def _prune_heads(self, heads_to_prune):
@@ -480,6 +711,19 @@ class TFBertMainLayer(tf.keras.layers.Layer):
         raise NotImplementedError
 
     def call(self, inputs, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None, training=False):
+        """
+        Apply the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            attention_mask: (int): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             attention_mask = inputs[1] if len(inputs) > 1 else attention_mask
@@ -677,10 +921,25 @@ class TFBertModel(TFBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the superclass method.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFBertModel, self).__init__(config, *inputs, **kwargs)
         self.bert = TFBertMainLayer(config, name='bert')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the function to the given inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.bert(inputs, **kwargs)
         return outputs
 
@@ -716,6 +975,14 @@ class TFBertForPreTraining(TFBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize an embedding.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFBertForPreTraining, self).__init__(config, *inputs, **kwargs)
 
         self.bert = TFBertMainLayer(config, name='bert')
@@ -723,9 +990,22 @@ class TFBertForPreTraining(TFBertPreTrainedModel):
         self.mlm = TFBertMLMHead(config, self.bert.embeddings, name='mlm___cls')
 
     def get_output_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.bert.embeddings
 
     def call(self, inputs, **kwargs):
+        """
+        Parameters ---------- inputs : list of sequence
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.bert(inputs, **kwargs)
 
         sequence_output, pooled_output = outputs[:2]
@@ -765,15 +1045,36 @@ class TFBertForMaskedLM(TFBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize an embedding.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFBertForMaskedLM, self).__init__(config, *inputs, **kwargs)
 
         self.bert = TFBertMainLayer(config, name='bert')
         self.mlm = TFBertMLMHead(config, self.bert.embeddings, name='mlm___cls')
 
     def get_output_embeddings(self):
+        """
+        Returns a list of embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.bert.embeddings
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.bert(inputs, **kwargs)
 
         sequence_output = outputs[0]
@@ -812,12 +1113,27 @@ class TFBertForNextSentencePrediction(TFBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the input configuration.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFBertForNextSentencePrediction, self).__init__(config, *inputs, **kwargs)
 
         self.bert = TFBertMainLayer(config, name='bert')
         self.nsp = TFBertNSPHead(config, name='nsp___cls')
 
     def call(self, inputs, **kwargs):
+        """
+        Execute the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.bert(inputs, **kwargs)
 
         pooled_output = outputs[1]
@@ -857,6 +1173,14 @@ class TFBertForSequenceClassification(TFBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFBertForSequenceClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -867,6 +1191,13 @@ class TFBertForSequenceClassification(TFBertPreTrainedModel):
                                                 name='classifier')
 
     def call(self, inputs, **kwargs):
+        """
+        Evaluate the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.bert(inputs, **kwargs)
 
         pooled_output = outputs[1]
@@ -910,6 +1241,14 @@ class TFBertForMultipleChoice(TFBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initializer.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFBertForMultipleChoice, self).__init__(config, *inputs, **kwargs)
 
         self.bert = TFBertMainLayer(config, name='bert')
@@ -919,6 +1258,19 @@ class TFBertForMultipleChoice(TFBertPreTrainedModel):
                                                 name='classifier')
 
     def call(self, inputs, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None, inputs_embeds=None, training=False):
+        """
+        Compute the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+            attention_mask: (int): write your description
+            token_type_ids: (str): write your description
+            position_ids: (str): write your description
+            head_mask: (array): write your description
+            inputs_embeds: (todo): write your description
+            training: (bool): write your description
+        """
         if isinstance(inputs, (tuple, list)):
             input_ids = inputs[0]
             attention_mask = inputs[1] if len(inputs) > 1 else attention_mask
@@ -994,6 +1346,14 @@ class TFBertForTokenClassification(TFBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFBertForTokenClassification, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -1004,6 +1364,13 @@ class TFBertForTokenClassification(TFBertPreTrainedModel):
                                                 name='classifier')
 
     def call(self, inputs, **kwargs):
+        """
+        Call the model.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.bert(inputs, **kwargs)
 
         sequence_output = outputs[0]
@@ -1047,6 +1414,14 @@ class TFBertForQuestionAnswering(TFBertPreTrainedModel):
 
     """
     def __init__(self, config, *inputs, **kwargs):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            config: (todo): write your description
+            inputs: (list): write your description
+        """
         super(TFBertForQuestionAnswering, self).__init__(config, *inputs, **kwargs)
         self.num_labels = config.num_labels
 
@@ -1056,6 +1431,13 @@ class TFBertForQuestionAnswering(TFBertPreTrainedModel):
                                                 name='qa_outputs')
 
     def call(self, inputs, **kwargs):
+        """
+        Compute the sequence.
+
+        Args:
+            self: (todo): write your description
+            inputs: (dict): write your description
+        """
         outputs = self.bert(inputs, **kwargs)
 
         sequence_output = outputs[0]
