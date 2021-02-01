@@ -2,7 +2,7 @@
 
 This is the code base for the paper [DeeBERT: Dynamic Early Exiting for Accelerating BERT Inference](https://www.aclweb.org/anthology/2020.acl-main.204/).
 
-Code in this repository is also available in the Huggingface Transformer [repo](https://github.com/huggingface/transformers/tree/master/examples/deebert) (with minor modification for version compatibility). Check [this page](https://huggingface.co/ji-xin) for models that we have trained in advance (the latest version of Huggingface Transformers Library is needed).
+Code in this repository is also available in the Huggingface Transformer [repo](https://github.com/huggingface/transformers/tree/master/examples/research_projects/deebert) (with minor modification for version compatibility). Check [this page](https://huggingface.co/ji-xin) for models that we have trained in advance (the latest version of Huggingface Transformers Library is needed).
 
 ## Installation
 
