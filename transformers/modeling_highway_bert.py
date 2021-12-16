@@ -7,10 +7,8 @@ from .modeling_bert import BertLayer, BertLayerNorm, BertPreTrainedModel
 
 def entropy(x):
     # x: torch.Tensor, logits BEFORE softmax
-    exp_x = torch.exp(x)
-    A = torch.sum(exp_x, dim=1)    # sum of exp(x_i)
-    B = torch.sum(x*exp_x, dim=1)  # sum of x_i * exp(x_i)
-    return torch.log(A) - B/A
+    x = torch.softmax(x, dim=-1)               # softmax normalized prob distribution
+    return -torch.sum(x*torch.log(x), dim=-1)  # entropy calculation on probs: -\sum(p \ln(p))
 
 
 class BertEmbeddings(nn.Module):
