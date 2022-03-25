@@ -534,10 +534,12 @@ def main():
 
     if args.model_type == "bert":
         model.bert.encoder.set_early_exit_entropy(args.early_exit_entropy)
-        model.bert.init_highway_pooler()
+        if args.do_train:
+            model.bert.init_highway_pooler()
     else:
         model.roberta.encoder.set_early_exit_entropy(args.early_exit_entropy)
-        model.roberta.init_highway_pooler()
+        if args.do_train:
+            model.roberta.init_highway_pooler()
 
     if args.local_rank == 0:
         torch.distributed.barrier()  # Make sure only the first process in distributed training will download model & vocab
